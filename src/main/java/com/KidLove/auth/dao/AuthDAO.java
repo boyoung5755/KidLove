@@ -4,6 +4,9 @@
 package com.KidLove.auth.dao;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import com.KidLove.mber.vo.MberVO;
 
 /**
  * @packageName	: com.KidLove.auth.dao
@@ -18,5 +21,9 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface AuthDAO {
+	
+	
+	public MberVO  findOneWithAuthoritiesByUserId(@Param("mberId") String mberId);
+	
 
 }
