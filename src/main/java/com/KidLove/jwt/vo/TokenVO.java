@@ -1,31 +1,30 @@
 /**
  * 
  */
-package com.KidLove.auth.vo;
+package com.KidLove.jwt.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
 /**
- * @packageName	: com.KidLove.auth.vo
- * @since		: 2024.08.19
+ * @packageName	: com.KidLove.jwt.vo
+ * @since		: 2024.08.21
  * @author		: Boyoung
  * @description	: 
  * ================================================
  * DATE 			AUTHOR			NOTE
  * ------------------------------------------------
- * 2024.08.19		Boyoung			최초생성
+ * 2024.08.21		Boyoung			최초생성
  */
 
 @Data
-@AllArgsConstructor
 @Builder
+@AllArgsConstructor
 public class TokenVO {
 	
-	private String refreshToken;
+	private String grantType;
 	private String accessToken;
-	private String mberId;
-	private String mberRole;
-	
+	private String refreshtoken;
+	private Long accessTokenExpiresIn;
 }

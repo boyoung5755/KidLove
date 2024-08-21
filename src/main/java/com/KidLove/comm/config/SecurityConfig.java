@@ -21,7 +21,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.KidLove.jwt.JwtAccessDeniedHandler;
 import com.KidLove.jwt.JwtAuthenticationEntryPoint;
-import com.KidLove.jwt.JwtVerifyFilter;
+import com.KidLove.jwt.JwtTokenFilter;
+import com.KidLove.jwt.TokenProvider;
 
 import lombok.RequiredArgsConstructor;
 
@@ -44,6 +45,7 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 	
 	
+	private final TokenProvider tokenProvider;
 	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 	private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 	
@@ -69,7 +71,9 @@ public class SecurityConfig {
     	http.httpBasic(AbstractHttpConfigurer::disable); //HTTP 기본인증 비활성
     	
     	//jwt 필터추가
-    	http.addFilterBefore(new JwtVerifyFilter(), UsernamePasswordAuthenticationFilter.class);
+    	http.addFilterBefore(new JwtTokenFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
+    	
+    	//handler
     	http.exceptionHandling((exceptionHandling) -> exceptionHandling
     			.authenticationEntryPoint(jwtAuthenticationEntryPoint)
     			.accessDeniedHandler(jwtAccessDeniedHandler)

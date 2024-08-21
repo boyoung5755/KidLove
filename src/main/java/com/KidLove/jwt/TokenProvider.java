@@ -1,15 +1,22 @@
 package com.KidLove.jwt;
 
 import java.security.Key;
+import java.util.Date;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
+
+import com.KidLove.jwt.vo.TokenVO;
 
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @packageName	: com.KidLove.jwt
@@ -22,6 +29,7 @@ import io.jsonwebtoken.security.Keys;
  * 2024.08.19		Boyoung			최초생성
  */
 
+@Slf4j
 @Component
 public class TokenProvider  implements InitializingBean{
 	
@@ -39,12 +47,12 @@ public class TokenProvider  implements InitializingBean{
 	private final String secret;
 	private final long tokenValidityInMilliseconds;
 	
-	private Key key;
+	private final Key key;
 	
-	public TokenProvider(@Value("${jwt.secret}") String secret,
-			@Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds) {
-		this.secret = secret;
-		this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000;
+	public TokenProvider(@Value("${jwt.secret}") String secretKey) {
+		
+		byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+		this.key = Keys.hmacShaKeyFor(keyBytes);
 	}
 
 	@Override
@@ -53,6 +61,15 @@ public class TokenProvider  implements InitializingBean{
 		this.key = Keys.hmacShaKeyFor(keyBytes);
 	}
 	
+	
+	public TokenVO createAccessToken (Authentication authentication) {
+		
+		String authorities = authentication.getAuthorities().stream()
+				.map(GrantedAuthority :: getAuthority)
+				.collect(Collectors.joining(","));
+		
+		long now =(new Date().getTime());
+	}
 	
 
 }

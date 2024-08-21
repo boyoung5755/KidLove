@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.KidLove.auth.vo.LoginVO;
 import com.KidLove.auth.vo.TokenVO;
 import com.KidLove.comm.vo.ResultVO;
+import com.KidLove.jwt.TokenProvider;
 
 /**
  * @packageName	: com.KidLove.auth.web
@@ -39,6 +40,9 @@ public class AuthController {
 	
 	@Inject
 	private UserDetailsService userDetailsService;
+	
+	@Inject
+	private TokenProvider tokenProvider;
 
 	
 	@PostMapping
