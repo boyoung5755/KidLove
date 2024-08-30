@@ -25,6 +25,6 @@ public class TokenVO {
 	
 	private String grantType;
 	private String accessToken;
-	private String refreshtoken;
+	private String refreshToken;
 	private Long accessTokenExpiresIn;
 }
