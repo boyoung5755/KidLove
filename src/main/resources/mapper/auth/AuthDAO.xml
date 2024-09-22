@@ -2,14 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.KidLove.auth.dao.AuthDAO">
 
+		
 	<select id="findOneWithAuthoritiesByUserId"  parameterType="String">
-		select 
-			a.AUTHOR_NM as mberRole
-			, m.*
-		from mber m
-		left outer join author a
-		on m.MBER_NO = a.MBER_NO 
-		where MBER_ID= #{mberId}
+		SELECT 
+			A.AUTHOR_NM AS mberRole
+			, M.*
+		FROM mber M
+		LEFT OUTER JOIN author A
+		ON M.MBER_NO = A.MBER_NO 
+		WHERE MBER_ID= #{mberId}
 	</select>
 	
+	<update  id="saveToken" parameterType="com.KidLove.mber.vo.MberVO">
+		UPDATE mber
+		SET  
+			REFRESH_TOKEN=#{refreshToken}
+		WHERE MBER_ID=#{mberId}
+	</update>
 </mapper>

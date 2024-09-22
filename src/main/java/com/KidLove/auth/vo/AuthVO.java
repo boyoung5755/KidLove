@@ -12,8 +12,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-
 /**
  * @packageName	: com.KidLove.auth.vo
  * @since		: 2024.08.19
@@ -28,7 +26,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 public class AuthVO  extends User implements UserDetails{
 	
-	
+	private static final long serialVersionUID = -3714832548392724631L;
 	private final String mberPw;
 	private final String mberId;
 	private final String mberRole;

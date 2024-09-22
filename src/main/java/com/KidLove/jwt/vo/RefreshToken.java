@@ -6,7 +6,6 @@ package com.KidLove.jwt.vo;
 import org.springframework.stereotype.Component;
 
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

@@ -7,6 +7,9 @@ import org.springframework.http.ResponseEntity;
 
 import com.KidLove.auth.vo.LoginVO;
 import com.KidLove.comm.vo.ResultVO;
+import com.KidLove.jwt.vo.TokenRequestVO;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * @packageName	: com.KidLove.auth.service
@@ -22,6 +25,8 @@ import com.KidLove.comm.vo.ResultVO;
 public interface AuthService {
 
 	public ResponseEntity<ResultVO<Object>> login(LoginVO loginRequest);
+
+	public ResponseEntity<ResultVO<Object>> reissue(TokenRequestVO tokenRequestDto, HttpServletRequest request);
 
 	
 	

@@ -24,6 +24,8 @@ public interface AuthDAO {
 	
 	
 	public MberVO  findOneWithAuthoritiesByUserId(@Param("mberId") String mberId);
+
+	public int saveToken(MberVO mberVO);
 	
 
 }

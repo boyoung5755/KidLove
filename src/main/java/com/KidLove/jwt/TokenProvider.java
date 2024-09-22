@@ -6,9 +6,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -71,9 +68,6 @@ public class TokenProvider{
 				.collect(Collectors.joining(","));
 		
 		long now =(new Date().getTime());
-		
-		
-		//access 토큰 생성  -> api 통신용
 		
 		// Access Token 생성
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);

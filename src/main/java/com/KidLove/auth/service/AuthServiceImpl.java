@@ -5,6 +5,8 @@ package com.KidLove.auth.service;
 
 
 
+import java.util.Arrays;
+
 import javax.inject.Inject;
 
 import org.springframework.http.HttpStatus;
@@ -17,26 +19,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.KidLove.auth.dao.AuthDAO;
-import com.KidLove.auth.vo.AuthVO;
 import com.KidLove.auth.vo.LoginVO;
 import com.KidLove.comm.vo.ResultVO;
 import com.KidLove.jwt.TokenProvider;
 import com.KidLove.jwt.vo.RefreshToken;
+import com.KidLove.jwt.vo.TokenRequestVO;
 import com.KidLove.jwt.vo.TokenVO;
 import com.KidLove.mber.vo.MberVO;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-
-/**
- * @packageName	: com.KidLove.auth.service
- * @since		: 2024.08.19
- * @author		: Boyoung
- * @description	: 
- * ================================================
- * DATE 			AUTHOR			NOTE
- * ------------------------------------------------
- * 2024.08.19		Boyoung			최초생성
- */
 
 @Service
 @RequiredArgsConstructor
@@ -51,7 +44,9 @@ public class AuthServiceImpl implements AuthService{
 	@Inject
 	private AuthDAO authDao;
 	
-	
+	/** 
+	 * 최초 login 시 refresh토큰과 access토큰 발급
+	 */
 	@Transactional
 	public ResponseEntity<ResultVO<Object>> login(LoginVO loginRequest) {
 		// TODO Auto-generated method stub
@@ -65,17 +60,72 @@ public class AuthServiceImpl implements AuthService{
 
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
         TokenVO tokenVO = tokenProvider.generateTokenDto(authentication);
-
-        // 4. RefreshToken 저장
+        
+        
+	     // 4. RefreshToken 저장 (데이터베이스)
         RefreshToken refreshToken = RefreshToken.builder()
                 .key(authentication.getName())
                 .value(tokenVO.getRefreshToken())
                 .build();
 
-        //refreshTokenRepository.save(refreshToken);
+        MberVO mberVO = new MberVO();
+        mberVO.setMberId(loginRequest.getMberId());
+        mberVO.setRefreshToken(refreshToken.getValue());
+        authDao.saveToken(mberVO);
         
-
         // 5. 토큰 발급
+        return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success",tokenVO));
+	}
+
+	
+	
+	/**
+	 * 토큰으로 로그인시 유효기간 확인 및 재발급
+	 */
+	@Transactional
+	public ResponseEntity<ResultVO<Object>> reissue(TokenRequestVO tokenRequestDto ,HttpServletRequest request) {
+		
+		// 1. 쿠키에서 Refresh Token 값 확인
+		
+		String refreshTokenFromCookie  = Arrays.stream(request.getCookies())
+		        .filter(cookie -> cookie.getName().equals("refreshToken")) 
+		        .findFirst()
+		        .map(Cookie::getValue)
+		        .orElseThrow(() -> new RuntimeException("Refresh Token 쿠키가 존재하지 않습니다."));
+		
+		
+		// 2. Refresh Token 검증
+        if (!tokenProvider.validateToken(refreshTokenFromCookie)) {
+            throw new RuntimeException("Refresh Token 이 유효하지 않습니다.");
+        }
+
+        // 3. Access Token 에서 Member ID 가져오기
+        Authentication authentication = tokenProvider.getAuthentication(tokenRequestDto.getAccessToken());
+
+        //@@@@@@@@@@@@@@@@@@ 여기 확인할차례  -> db에서 비교하기 0923
+        // 4. Refresh Token 일치하는지 검사
+        if (!refreshToken.getValue().equals(tokenRequestDto.getRefreshToken())) {
+            throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
+        }
+
+        // 5. 새로운 토큰 생성
+        TokenVO tokenVO = null;
+        if (tokenProvider.refreshTokenPeriodCheck(refreshToken.getValue())) {
+            // 5-1. Refresh Token의 유효기간이 3일 미만일 경우 전체(Access / Refresh) 재발급
+        	tokenVO = tokenProvider.generateTokenDto(authentication);
+
+            // 6. Refresh Token httpOnly쿠키에 저장
+        	/*
+            RefreshToken newRefreshToken = refreshToken.updateValue(tokenDto.getRefreshToken());
+            refreshTokenRepository.save(newRefreshToken);
+            */
+        	
+        } else {
+            // 5-2. Refresh Token의 유효기간이 3일 이상일 경우 Access Token만 재발급
+        	tokenVO = tokenProvider.createAccessToken(authentication);
+        }
+
+        // 토큰 발급
         return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success",tokenVO));
 	}
 	

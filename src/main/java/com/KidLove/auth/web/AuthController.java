@@ -12,10 +12,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.KidLove.auth.service.AuthService;
-import com.KidLove.auth.vo.AuthVO;
 import com.KidLove.auth.vo.LoginVO;
 import com.KidLove.comm.vo.ResultVO;
+import com.KidLove.jwt.vo.TokenRequestVO;
+import com.KidLove.jwt.vo.TokenVO;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -39,23 +43,38 @@ public class AuthController {
 	
 	
 	@PostMapping("/login")
-	public ResponseEntity<ResultVO<Object>> login(@RequestBody LoginVO loginRequest) {
-		return authService.login(loginRequest);
+	public ResponseEntity<ResultVO<Object>> login(@RequestBody LoginVO loginRequest ,  HttpServletResponse response ) {
+		
+		ResponseEntity<ResultVO<Object>> result   = authService.login(loginRequest);
+		
+		TokenVO tokenVO = (TokenVO) result.getBody().getData();
+		String setCookieWithRefreshToken = tokenVO.getRefreshToken();
+		
+		// HTTPOnly 쿠키에 저장
+	    Cookie cookie = new Cookie("refreshToken", setCookieWithRefreshToken);
+	    cookie.setHttpOnly(true);
+	    cookie.setSecure(true);
+	    cookie.setPath("/");
+	    cookie.setMaxAge(7 * 24 * 60 * 60); //만료 7일
+	    
+	    response.addCookie(cookie);
+		
+	    return result;
 	}
-	
 	
 	/*
 	 @PostMapping("/signup")
 	    public ResponseEntity<UserResponseDto> signup(@RequestBody JoinRequest joinRequest) {
 	    return ResponseEntity.ok(authService.signup(joinRequest));
 	}
+	*/
 
 
     @PostMapping("/reissue")
-    public ResponseEntity<TokenDto> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
-	    return ResponseEntity.ok(authService.reissue(tokenRequestDto));
+    public ResponseEntity<ResultVO<Object>> reissue(@RequestBody TokenRequestVO tokenRequestDto , HttpServletRequest request) {
+	    return authService.reissue(tokenRequestDto , request);
 	}
-	*/
+	
 
 		
 }

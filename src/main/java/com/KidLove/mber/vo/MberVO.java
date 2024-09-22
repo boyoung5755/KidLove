@@ -25,5 +25,6 @@ public class MberVO {
 	private String mberId;
 	private String mberPw;
 	private String mberRole;
+	private String refreshToken;
 
 }
