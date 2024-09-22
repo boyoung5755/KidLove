@@ -40,9 +40,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		
-		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+		//HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 		String jwt = resolveToken(request);
-		String requestURI = httpServletRequest.getRequestURI();
+		//String requestURI = httpServletRequest.getRequestURI();
 		
 		if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
 	        Authentication authentication = tokenProvider.getAuthentication(jwt);
@@ -66,7 +66,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 		String bearerToken  = request.getHeader(AUTHORIZATION_HEADER);
 		
 		if(StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
-			return bearerToken.split("")[1].trim();
+			return bearerToken.substring(BEARER_PREFIX.length()).trim();
 		}
 		return null;
 	}

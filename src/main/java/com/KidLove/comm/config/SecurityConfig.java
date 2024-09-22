@@ -82,7 +82,7 @@ public class SecurityConfig {
     	
     	//권한 규칙 작성
     	http.authorizeHttpRequests(authorize -> authorize
-    			.requestMatchers("/authenticate").permitAll()
+    			.requestMatchers("/authenticate/**").permitAll()
     			.anyRequest().authenticated()
     	); 
     	

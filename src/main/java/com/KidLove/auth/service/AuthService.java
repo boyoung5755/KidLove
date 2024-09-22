@@ -3,6 +3,11 @@
  */
 package com.KidLove.auth.service;
 
+import org.springframework.http.ResponseEntity;
+
+import com.KidLove.auth.vo.LoginVO;
+import com.KidLove.comm.vo.ResultVO;
+
 /**
  * @packageName	: com.KidLove.auth.service
  * @since		: 2024.08.19
@@ -15,5 +20,13 @@ package com.KidLove.auth.service;
  */
 
 public interface AuthService {
+
+	public ResponseEntity<ResultVO<Object>> login(LoginVO loginRequest);
+
+	
+	
+	
+	
+	
 
 }

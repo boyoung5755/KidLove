@@ -8,12 +8,12 @@ import javax.inject.Inject;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.KidLove.auth.dao.AuthDAO;
-import com.KidLove.auth.vo.LoginVO;
+import com.KidLove.auth.vo.AuthVO;
 import com.KidLove.mber.vo.MberVO;
-import com.fasterxml.jackson.annotation.JacksonInject;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,10 +38,11 @@ public class UserDetailsServiceImpl  implements  UserDetailsService {
 	@Inject
 	private AuthDAO authDao;
 	
-	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
+		
+
 		
 		log.info("################## UserDetailsService ##################");
         log.info("################## loadUserByUsername ##################");
@@ -56,7 +57,7 @@ public class UserDetailsServiceImpl  implements  UserDetailsService {
         log.info("member = {}", member);
         log.info("member's role = {}", List.of(member.getMberRole()));
         
-        return new LoginVO(member.getMberId(), member.getMberPw(), List.of(member.getMberRole()));
+        return new AuthVO(member.getMberId(), member.getMberPw(), List.of(member.getMberRole()));
         
 	}
 
