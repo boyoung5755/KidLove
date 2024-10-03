@@ -12,17 +12,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
-/**
- * @packageName	: com.KidLove.auth.vo
- * @since		: 2024.08.19
- * @author		: Boyoung
- * @description	: 
- * ================================================
- * DATE 			AUTHOR			NOTE
- * ------------------------------------------------
- * 2024.08.19		Boyoung			최초생성
- */
-
 
 public class AuthVO  extends User implements UserDetails{
 	

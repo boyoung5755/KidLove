@@ -17,17 +17,6 @@ import com.KidLove.mber.vo.MberVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * @packageName	: com.KidLove.auth.vo
- * @since		: 2024.08.19
- * @author		: Boyoung
- * @description	: 
- * ================================================
- * DATE 			AUTHOR			NOTE
- * ------------------------------------------------
- * 2024.08.19		Boyoung			최초생성
- */
-
 
 @Slf4j
 @Service

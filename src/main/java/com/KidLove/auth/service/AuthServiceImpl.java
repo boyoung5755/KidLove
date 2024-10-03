@@ -17,8 +17,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.KidLove.auth.dao.AuthDAO;
+import com.KidLove.auth.vo.JoinVO;
 import com.KidLove.auth.vo.LoginVO;
 import com.KidLove.comm.vo.ResultVO;
 import com.KidLove.jwt.TokenProvider;
@@ -48,6 +50,7 @@ public class AuthServiceImpl implements AuthService{
 	 * 최초 login 시 refresh토큰과 access토큰 발급
 	 */
 	@Transactional
+	@Override
 	public ResponseEntity<ResultVO<Object>> login(LoginVO loginRequest) {
 		// TODO Auto-generated method stub
 		
@@ -83,6 +86,7 @@ public class AuthServiceImpl implements AuthService{
 	 * 토큰으로 로그인시 유효기간 확인 및 재발급
 	 */
 	@Transactional
+	@Override
 	public ResponseEntity<ResultVO<Object>> reissue(TokenRequestVO tokenRequestDto ,HttpServletRequest request) {
 		
 		// 1. 쿠키에서 Refresh Token 값 확인
@@ -101,36 +105,49 @@ public class AuthServiceImpl implements AuthService{
 
         // 3. Access Token 에서 Member ID 가져오기
         Authentication authentication = tokenProvider.getAuthentication(tokenRequestDto.getAccessToken());
-
-        //@@@@@@@@@@@@@@@@@@ 여기 확인할차례  -> db에서 비교하기 0923
+        		
+        String savedRefreshToken = authDao.findByKey(authentication.getName());
+        
         // 4. Refresh Token 일치하는지 검사
-        if (!refreshToken.getValue().equals(tokenRequestDto.getRefreshToken())) {
+        if (!savedRefreshToken.equals(refreshTokenFromCookie)) {
             throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
         }
 
         // 5. 새로운 토큰 생성
         TokenVO tokenVO = null;
-        if (tokenProvider.refreshTokenPeriodCheck(refreshToken.getValue())) {
+        if (tokenProvider.refreshTokenPeriodCheck(savedRefreshToken)) {
             // 5-1. Refresh Token의 유효기간이 3일 미만일 경우 전체(Access / Refresh) 재발급
         	tokenVO = tokenProvider.generateTokenDto(authentication);
 
-            // 6. Refresh Token httpOnly쿠키에 저장
-        	/*
-            RefreshToken newRefreshToken = refreshToken.updateValue(tokenDto.getRefreshToken());
-            refreshTokenRepository.save(newRefreshToken);
-            */
+            // 6. Refresh Token 저장 
+            RefreshToken newRefreshToken = refreshToken.updateValue(tokenVO.getRefreshToken());
+            
+            MberVO mberVO = new MberVO();
+            mberVO.setMberId(authentication.getName());
+            mberVO.setRefreshToken(newRefreshToken.getValue());
+            authDao.saveToken(mberVO);
         	
         } else {
             // 5-2. Refresh Token의 유효기간이 3일 이상일 경우 Access Token만 재발급
         	tokenVO = tokenProvider.createAccessToken(authentication);
         }
-
         // 토큰 발급
         return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success",tokenVO));
 	}
+
+
+
+	@Transactional
+	@Override
+	public ResponseEntity<ResultVO<Object>> signup(JoinVO joinRequest ,  MultipartFile file) {
+		
+		
+		
+		return null;
+	}
 	
 	
-	
+
 	
 
 

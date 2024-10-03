@@ -3,28 +3,31 @@
  */
 package com.KidLove.mber.vo;
 
+import java.time.LocalDateTime;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-/**
- * @packageName	: com.KidLove.auth.vo
- * @since		: 2024.08.19
- * @author		: Boyoung
- * @description	: 
- * ================================================
- * DATE 			AUTHOR			NOTE
- * ------------------------------------------------
- * 2024.08.19		Boyoung			최초생성
- */
 
 @EqualsAndHashCode
 @Data
 public class MberVO {
 	
+	private String mberRole;
+	private String refreshToken;
+	
 	private Integer mberNo;
 	private String mberId;
 	private String mberPw;
-	private String mberRole;
-	private String refreshToken;
+	private String mberNcnm;
+	private String mberEml;
+	private String mberTel;
+	private String mberAddr;
+	private String mberZip;
+	private String mberSexdstn;
+	private String atchCode;
+	private String cnrsCd;
+	private LocalDateTime crtDt;
+	private LocalDateTime mberLastConectdt;
 
 }

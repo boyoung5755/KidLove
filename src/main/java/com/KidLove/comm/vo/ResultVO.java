@@ -8,18 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
-
-/**
- * @packageName	: com.KidLove.comm.vo
- * @since		: 2024.08.19
- * @author		: Boyoung
- * @description	: 
- * ================================================
- * DATE 			AUTHOR			NOTE
- * ------------------------------------------------
- * 2024.08.19		Boyoung			최초생성
- */
-
 @Data
 @Builder
 @NoArgsConstructor

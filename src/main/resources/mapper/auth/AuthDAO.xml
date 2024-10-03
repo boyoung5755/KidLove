@@ -19,4 +19,11 @@
 			REFRESH_TOKEN=#{refreshToken}
 		WHERE MBER_ID=#{mberId}
 	</update>
+	
+	<select id="findByKey"  parameterType="String">
+		SELECT M.REFRESH_TOKEN 
+		FROM mber M 
+		WHERE  MBER_ID =#{mberId}
+	</select>
+	
 </mapper>
