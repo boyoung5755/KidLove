@@ -30,8 +30,6 @@ public class UserDetailsServiceImpl  implements  UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
 		
-
-		
 		log.info("################## UserDetailsService ##################");
         log.info("################## loadUserByUsername ##################");
         log.info("username = {}", username);

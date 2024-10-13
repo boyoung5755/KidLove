@@ -26,17 +26,6 @@ import com.KidLove.jwt.TokenProvider;
 
 import lombok.RequiredArgsConstructor;
 
-/**
- * @packageName	: com.KidLove.comm.config
- * @since		: 2024.08.19
- * @author		: Boyoung
- * @description	: 
- * ================================================
- * DATE 			AUTHOR			NOTE
- * ------------------------------------------------
- * 2024.08.19		Boyoung			최초생성
- */
-
 
 @Configuration
 @EnableMethodSecurity(prePostEnabled = true)
@@ -70,6 +59,12 @@ public class SecurityConfig {
     	http.formLogin((form) -> form.disable()); //폼 로그인 비활성
     	http.httpBasic(AbstractHttpConfigurer::disable); //HTTP 기본인증 비활성
     	
+    	//권한 규칙 작성
+    	http.authorizeHttpRequests(authorize -> authorize
+    			.requestMatchers("/authenticate/**").permitAll()
+    			.anyRequest().authenticated()
+    		); 
+    	
     	//jwt 필터추가
     	http.addFilterBefore(new JwtTokenFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
     	
@@ -80,11 +75,6 @@ public class SecurityConfig {
     			
     	);
     	
-    	//권한 규칙 작성
-    	http.authorizeHttpRequests(authorize -> authorize
-    			.requestMatchers("/authenticate/**").permitAll()
-    			.anyRequest().authenticated()
-    	); 
     	
 		return http.build();
 	}

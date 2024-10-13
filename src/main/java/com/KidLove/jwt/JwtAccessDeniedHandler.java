@@ -15,16 +15,6 @@ import com.KidLove.comm.utils.ErrorResponseUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-/**
- * @packageName	: com.KidLove.jwt
- * @since		: 2024.08.19
- * @author		: Boyoung
- * @description	: 
- * ================================================
- * DATE 			AUTHOR			NOTE
- * ------------------------------------------------
- * 2024.08.19		Boyoung			최초생성
- */
 @Component
 public class JwtAccessDeniedHandler implements AccessDeniedHandler {
 	@Override

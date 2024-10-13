@@ -5,13 +5,17 @@ package com.KidLove.mber.vo;
 
 import java.time.LocalDateTime;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Builder
 @EqualsAndHashCode
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class MberVO {
 	
 	private String mberRole;

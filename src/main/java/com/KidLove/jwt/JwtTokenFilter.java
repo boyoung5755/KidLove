@@ -16,17 +16,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
-/**
- * @packageName	: com.KidLove.jwt
- * @since		: 2024.08.19
- * @author		: Boyoung
- * @description	: 
- * ================================================
- * DATE 			AUTHOR			NOTE
- * ------------------------------------------------
- * 2024.08.19		Boyoung			최초생성
- */
-
 @RequiredArgsConstructor
 public class JwtTokenFilter extends OncePerRequestFilter {
 	
@@ -52,15 +41,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 	}
 
 
-	/**
-	 * @MethodName	: resolveToken
-	 * @author		: Boyoung
-	 * @date 		: 2024.08.20
-	 * @description	: request Header 에서 토큰 정보를 꺼내오기 위한 메소드
-	 * @return 		: String
-	 * @param request
-	 * @return
-	 */
 	private String resolveToken(HttpServletRequest request) {
 		
 		String bearerToken  = request.getHeader(AUTHORIZATION_HEADER);

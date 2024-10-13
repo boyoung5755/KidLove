@@ -37,9 +37,6 @@
 				, CURRENT_TIMESTAMP
 			)
 	</insert>	
-	
-
-	
 
 	<select id="findOneWithAuthoritiesByUserId"  parameterType="String">
 		SELECT 
