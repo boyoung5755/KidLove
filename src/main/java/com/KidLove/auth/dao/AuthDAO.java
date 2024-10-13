@@ -6,6 +6,7 @@ package com.KidLove.auth.dao;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.KidLove.auth.vo.JoinVO;
 import com.KidLove.mber.vo.MberVO;
 
 @Mapper
@@ -17,6 +18,9 @@ public interface AuthDAO {
 	public int saveToken(MberVO mberVO);
 
 	public String findByKey(@Param("mberId") String mberId);
+
+	public void join(MberVO mberVO);
+
 
 
 	

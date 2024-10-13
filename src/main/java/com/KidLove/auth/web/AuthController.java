@@ -44,11 +44,11 @@ public class AuthController {
 	}
 	
 	
-	 @PostMapping("/signup")
-	    public ResponseEntity<ResultVO<Object>> signup(
-	    		@RequestPart("Member") JoinVO joinRequest 
-	    		,@RequestPart(value = "file", required = false) MultipartFile file ) {
-	    return authService.signup(joinRequest,file);
+	@PostMapping("/signup")
+    public ResponseEntity<ResultVO<Object>> signup(
+    		@RequestPart("Member") JoinVO joinRequest 
+    		,@RequestPart(value = "file", required = false) MultipartFile file ) {
+    return authService.signup(joinRequest,file);
 	}
 	
 

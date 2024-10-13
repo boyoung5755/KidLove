@@ -19,9 +19,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.KidLove.atch.dao.AtchDAO;
+import com.KidLove.atch.service.AtchService;
+import com.KidLove.atch.service.AtchServiceImpl;
+import com.KidLove.atch.vo.AtchVO;
 import com.KidLove.auth.dao.AuthDAO;
 import com.KidLove.auth.vo.JoinVO;
 import com.KidLove.auth.vo.LoginVO;
+import com.KidLove.comm.FileTypeEnum;
+import com.KidLove.comm.utils.RandomStringGenerator;
 import com.KidLove.comm.vo.ResultVO;
 import com.KidLove.jwt.TokenProvider;
 import com.KidLove.jwt.vo.RefreshToken;
@@ -42,9 +48,11 @@ public class AuthServiceImpl implements AuthService{
 	private final TokenProvider tokenProvider;
 	private final RefreshToken refreshToken;
 	
-	
 	@Inject
 	private AuthDAO authDao;
+	
+	@Inject
+	private AtchService atchService;
 	
 	/** 
 	 * 최초 login 시 refresh토큰과 access토큰 발급
@@ -71,9 +79,11 @@ public class AuthServiceImpl implements AuthService{
                 .value(tokenVO.getRefreshToken())
                 .build();
 
-        MberVO mberVO = new MberVO();
-        mberVO.setMberId(loginRequest.getMberId());
-        mberVO.setRefreshToken(refreshToken.getValue());
+        MberVO mberVO = MberVO.builder()
+        		.mberId(loginRequest.getMberId())
+        		.refreshToken(refreshToken.getValue())
+        		.build();
+        
         authDao.saveToken(mberVO);
         
         // 5. 토큰 발급
@@ -122,9 +132,10 @@ public class AuthServiceImpl implements AuthService{
             // 6. Refresh Token 저장 
             RefreshToken newRefreshToken = refreshToken.updateValue(tokenVO.getRefreshToken());
             
-            MberVO mberVO = new MberVO();
-            mberVO.setMberId(authentication.getName());
-            mberVO.setRefreshToken(newRefreshToken.getValue());
+            MberVO mberVO = MberVO.builder()
+            		.mberId(authentication.getName())
+            		.refreshToken(newRefreshToken.getValue())
+            		.build();
             authDao.saveToken(mberVO);
         	
         } else {
@@ -141,16 +152,35 @@ public class AuthServiceImpl implements AuthService{
 	@Override
 	public ResponseEntity<ResultVO<Object>> signup(JoinVO joinRequest ,  MultipartFile file) {
 		
-		
-		
-		return null;
+		try {
+			
+			String makeFileCode = RandomStringGenerator.generateRandomString(15);
+			String makeCnrsCode = RandomStringGenerator.generateRandomString(10);
+			
+			MberVO mberVO = MberVO.builder()
+					.mberId(joinRequest.getMberId())
+					.mberPw(passwordEncoder.encode(joinRequest.getMberPw()))
+					.mberNcnm(joinRequest.getMberNcnm())
+					.mberEml(joinRequest.getMberEml())
+					.mberAddr(joinRequest.getMberAddr())
+					.mberZip(joinRequest.getMberZip())
+					.mberSttus(joinRequest.getMberSttus())
+					.mberSexdstn(joinRequest.getMberSexdstn())
+					.atchCode(makeFileCode)
+					.cnrsCd(makeCnrsCode)
+					.build();
+			authDao.join(mberVO);
+			
+			
+			AtchVO atchVO = AtchVO.builder()
+					.atchCode(makeFileCode)
+					.atchTy(FileTypeEnum.PROFILE)
+					.build();
+			atchService.saveFile(file, atchVO);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success",""));
 	}
-	
-	
-
-	
-
-
-	
-
 }

@@ -2,10 +2,13 @@ package com.KidLove.comm.utils;
 
 import java.security.SecureRandom;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class RandomStringGenerator {
 	
 	private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    private static final int LENGTH = 8;
+    private static final int LENGTH = 10;
     private static final SecureRandom RANDOM = new SecureRandom();
 
     public static void main(String[] args) {

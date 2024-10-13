@@ -28,16 +28,6 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * @packageName	: com.KidLove.jwt
- * @since		: 2024.08.19
- * @author		: Boyoung
- * @description	: 
- * ================================================
- * DATE 			AUTHOR			NOTE
- * ------------------------------------------------
- * 2024.08.19		Boyoung			최초생성
- */
 
 @Slf4j
 @Component

@@ -2,6 +2,8 @@ package com.KidLove.atch.vo;
 
 import java.time.LocalDateTime;
 
+import com.KidLove.comm.FileTypeEnum;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +21,7 @@ public class AtchVO {
 	private String atchCode; 
 	private String atchFlpth;
 	private Integer atchSz;
-	private String atchTy;
+	private FileTypeEnum atchTy;
 	
 	private String atchResizedAt;
 	private LocalDateTime crtDt;

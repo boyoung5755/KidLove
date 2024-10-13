@@ -7,6 +7,8 @@ import com.KidLove.atch.vo.AtchVO;
 @Mapper
 public interface AtchDAO {
 
-	public AtchVO save(AtchVO makeAtch);
+	public void save(AtchVO makeAtch);
+
+	
 
 }

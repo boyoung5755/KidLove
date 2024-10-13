@@ -2,7 +2,45 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.KidLove.auth.dao.AuthDAO">
 
-		
+	
+	<insert  id="join" parameterType = "com.KidLove.mber.vo.MberVO">
+		INSERT INTO mber
+			(
+				MBER_ID
+				, MBER_PW
+				, MBER_NCNM
+				, MBER_EML
+				, MBER_TEL
+				, MBER_ADDR
+				, MBER_ZIP
+				, MBER_STTUS
+				, MBER_SEXDSTN
+				, ATCH_CODE
+				, CNRS_CD
+				, CRT_DT
+				, MBER_LAST_CONECTDT
+			)
+		VALUES
+			(
+				#{mberId}
+				, #{mberPw}
+				, #{mberNcnm}
+				, #{mberEml}
+				, #{mberTel}
+				, #{mberAddr}
+				, #{mberZip}
+				, #{mberSttus}
+				, #{mberSexdstn}
+				, #{atchCode}
+				, #{cnrsCd}
+				, CURRENT_TIMESTAMP
+				, CURRENT_TIMESTAMP
+			)
+	</insert>	
+	
+
+	
+
 	<select id="findOneWithAuthoritiesByUserId"  parameterType="String">
 		SELECT 
 			A.AUTHOR_NM AS mberRole

@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
-
 @Getter
 @NoArgsConstructor
 public class JoinVO {
@@ -17,5 +16,6 @@ public class JoinVO {
 	private String mberAddr;
 	private String mberZip;
 	private String mberSexdstn;
+	private String mberSttus;
 	
 }
