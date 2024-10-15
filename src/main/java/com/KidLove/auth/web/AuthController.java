@@ -34,7 +34,6 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 	
 	
-	
 	@Inject
 	private final AuthService authService;
 	

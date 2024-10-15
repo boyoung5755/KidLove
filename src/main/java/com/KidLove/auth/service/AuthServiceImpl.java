@@ -3,10 +3,9 @@
  */
 package com.KidLove.auth.service;
 
-
-
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -15,6 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -199,7 +201,6 @@ public class AuthServiceImpl implements AuthService{
 		}
 	}
 
-
 	@Override
 	@Transactional
 	public ResponseEntity<ResultVO<Object>> loginWithGoogle(Authentication authentication) {
@@ -308,14 +309,22 @@ public class AuthServiceImpl implements AuthService{
 		int mberNo = authDao.findMberNo(joinRequest.getMberId());
 		authDao.setMberAuthor(mberNo,"GNRL");
 		
+		List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_GNRL"));
+		
 		//토큰발급
-		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(joinRequest.getMberId(), null,Collections.emptyList());
-		Authentication authentication = authenticationManageBuilder.getObject().authenticate(authenticationToken);
-		TokenVO tokenVO = tokenProvider.generateTokenDto(authentication);
+		Authentication  authenticationToken = new UsernamePasswordAuthenticationToken(
+				joinRequest.getMberId()
+				, null
+				,authorities
+			);
+		
+		SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+		
+		TokenVO tokenVO = tokenProvider.generateTokenDto(authenticationToken);
 		
 		// 4. RefreshToken 저장 (데이터베이스)
 		RefreshToken refreshToken = RefreshToken.builder()
-				.key(authentication.getName())
+				.key(authenticationToken.getName())
 				.value(tokenVO.getRefreshToken())
 				.build();
 		
