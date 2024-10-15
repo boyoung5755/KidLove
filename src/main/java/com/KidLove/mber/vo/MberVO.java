@@ -35,5 +35,6 @@ public class MberVO {
 	private String mberSttus;
 	private LocalDateTime crtDt;
 	private LocalDateTime mberLastConectdt;
+	private String mberLoginTy;
 
 }

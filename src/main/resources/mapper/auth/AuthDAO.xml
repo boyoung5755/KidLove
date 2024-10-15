@@ -2,6 +2,64 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.KidLove.auth.dao.AuthDAO">
 
+	<select id="findMberNo" parameterType="String">
+		SELECT	
+			M.MBER_NO 
+		FROM mber M
+		WHERE MBER_ID = #{mberId}
+	</select>
+	
+	<insert id="setMberAuthor" parameterType="map">
+		INSERT INTO author
+			(
+				MBER_NO
+				, AUTHOR_NM
+			)
+		VALUES
+			(
+				#{mberNo}
+				,#{authorNm}
+			)
+	</insert>
+
+
+	<insert  id="joinSSO" parameterType = "com.KidLove.mber.vo.MberVO">
+		INSERT INTO mber
+			(
+				MBER_ID
+				, ATCH_CODE
+				, CNRS_CD
+				, CRT_DT
+				, MBER_LAST_CONECTDT
+				, MBER_LOGIN_TY
+			)
+		VALUES
+			(
+				#{mberId}
+				, #{atchCode}
+				, #{cnrsCd}
+				, CURRENT_TIMESTAMP
+				, CURRENT_TIMESTAMP
+				, #{mberLoginTy}
+			)
+	</insert>	
+	
+	
+	<select id="loginWithKakao" parameterType= "String" >
+		SELECT	
+			M.MBER_ID 
+		FROM mber M 
+		WHERE M.MBER_ID = #{loginId}
+		AND M.MBER_LOGIN_TY ="KAKAO"
+	</select>
+	
+	<select id="loginWithGoogle" parameterType= "String" >
+		SELECT	
+			M.MBER_ID 
+		FROM mber M 
+		WHERE M.MBER_ID = #{loginId}
+		AND M.MBER_LOGIN_TY ="GOOGLE"
+	</select>
 	
 	<insert  id="join" parameterType = "com.KidLove.mber.vo.MberVO">
 		INSERT INTO mber
@@ -19,6 +77,7 @@
 				, CNRS_CD
 				, CRT_DT
 				, MBER_LAST_CONECTDT
+				, MBER_LOGIN_TY
 			)
 		VALUES
 			(
@@ -35,6 +94,7 @@
 				, #{cnrsCd}
 				, CURRENT_TIMESTAMP
 				, CURRENT_TIMESTAMP
+				, #{mberLoginTy}
 			)
 	</insert>	
 

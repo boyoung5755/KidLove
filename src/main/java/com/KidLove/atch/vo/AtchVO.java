@@ -2,7 +2,7 @@ package com.KidLove.atch.vo;
 
 import java.time.LocalDateTime;
 
-import com.KidLove.comm.FileTypeEnum;
+import com.KidLove.comm.constant.FileTypeEnum;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

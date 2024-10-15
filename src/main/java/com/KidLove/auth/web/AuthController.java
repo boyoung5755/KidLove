@@ -5,7 +5,9 @@ package com.KidLove.auth.web;
 
 import javax.inject.Inject;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -31,24 +33,75 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthController {
 	
+	
+	
 	@Inject
 	private final AuthService authService;
+	
+	
+	@PostMapping("/sign-with-kakao")
+    public ResponseEntity<ResultVO<Object>> signWithKakao(@RequestBody JoinVO joinRequest) {
+		try {
+			ResponseEntity<ResultVO<Object>> result = authService.signWithKakao(joinRequest);
+			return result;
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	                .body(ResultVO.res(HttpStatus.BAD_REQUEST, "Failed to create user", ""));
+		}
+    }
+	
+	@PostMapping("/sign-with-google")
+	public ResponseEntity<ResultVO<Object>> signWithGoogle(@RequestBody JoinVO joinRequest) {
+		try {
+			ResponseEntity<ResultVO<Object>> result = authService.signWithGoogle(joinRequest);
+			return result;
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(ResultVO.res(HttpStatus.BAD_REQUEST, "Failed to create user", ""));
+		}
+	}
+	
+	@PostMapping("/login-with-kakao")
+    public ResponseEntity<ResultVO<Object>> loginWithKakao(Authentication authentication ,  HttpServletResponse response) {
+		ResponseEntity<ResultVO<Object>> result = authService.loginWithKakao(authentication);
+		TokenVO tokenVO = (TokenVO) result.getBody().getData();
+		setHttpOnlyCookie(tokenVO.getRefreshToken(),response);
+        return result;
+    }
+	
+	@PostMapping("/login-with-google")
+	public ResponseEntity<ResultVO<Object>> loginWithGoogle(Authentication authentication, HttpServletResponse response) {
+		ResponseEntity<ResultVO<Object>> result =  authService.loginWithGoogle(authentication);
+		TokenVO tokenVO = (TokenVO) result.getBody().getData();
+		setHttpOnlyCookie(tokenVO.getRefreshToken(),response);
+        return result;
+	}
 	
 	
 	@PostMapping("/login")
 	public ResponseEntity<ResultVO<Object>> login(@RequestBody LoginVO loginRequest ,  HttpServletResponse response ) {
 		ResponseEntity<ResultVO<Object>> result   = authService.login(loginRequest);
-		TokenVO tokenVO = (TokenVO) result.getBody().getData();
-		setHttpOnlyCookie(tokenVO.getRefreshToken(),response);
+		if (result.getBody().getResult().equals(HttpStatus.OK)){
+			TokenVO tokenVO = (TokenVO) result.getBody().getData();
+			setHttpOnlyCookie(tokenVO.getRefreshToken(),response);
+		}else {
+			return result;
+		}
 	    return result;
 	}
-	
 	
 	@PostMapping("/signup")
     public ResponseEntity<ResultVO<Object>> signup(
     		@RequestPart("Member") JoinVO joinRequest 
-    		,@RequestPart(value = "file", required = false) MultipartFile file ) {
-    return authService.signup(joinRequest,file);
+    		,@RequestPart(value = "file", required = false) MultipartFile file ) throws Exception{
+		
+		try {
+			ResponseEntity<ResultVO<Object>> result = authService.signup(joinRequest,file);
+			return result;
+		} catch (Exception e) {
+			 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+		                .body(ResultVO.res(HttpStatus.BAD_REQUEST, "Failed to create user", ""));
+		}
 	}
 	
 
