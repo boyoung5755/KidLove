@@ -33,6 +33,9 @@ dependencies {
 	implementation group: 'javax.inject', name: 'javax.inject', version: '1'
 	implementation group: 'org.json', name: 'json', version: '20240303'
 	
+	//fireBase
+	implementation 'com.google.firebase:firebase-admin:9.2.0'
+	implementation 'com.fasterxml.jackson.core:jackson-core:2.16.1'
 	
 	//security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
