@@ -4,6 +4,7 @@ import javax.inject.Inject;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,8 +27,9 @@ public class ChldrnController {
 	
 	@PostMapping("/createChldrnInfo")
     public ResponseEntity<ResultVO<Object>> createChldrnInfo(
-    		@RequestBody ChldrnVO chldrnRequest) {
+    		@RequestBody ChldrnVO chldrnRequest , Authentication auth) {
 		try {
+			System.out.println(auth);
 			ResponseEntity<ResultVO<Object>> result = chldrnService.createChldrnInfo(chldrnRequest );
 			return result;
 		} catch (Exception e) {

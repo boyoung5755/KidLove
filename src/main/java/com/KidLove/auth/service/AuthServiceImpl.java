@@ -190,7 +190,7 @@ public class AuthServiceImpl implements AuthService{
 			atchService.saveFile(file, atchVO);
 			
 			int mberNo = authDao.findMberNo(joinRequest.getMberId());
-			authDao.setMberAuthor(mberNo,"ROLE_GNRL");
+			authDao.setMberAuthor(mberNo,"GNRL");
 			
 			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK, "success", ""));
 		
@@ -309,7 +309,7 @@ public class AuthServiceImpl implements AuthService{
 		int mberNo = authDao.findMberNo(joinRequest.getMberId());
 		authDao.setMberAuthor(mberNo,"GNRL");
 		
-		List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_GNRL"));
+		List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("GNRL"));
 		
 		//토큰발급
 		Authentication  authenticationToken = new UsernamePasswordAuthenticationToken(
