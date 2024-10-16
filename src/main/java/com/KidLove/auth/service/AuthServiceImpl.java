@@ -190,7 +190,7 @@ public class AuthServiceImpl implements AuthService{
 			atchService.saveFile(file, atchVO);
 			
 			int mberNo = authDao.findMberNo(joinRequest.getMberId());
-			authDao.setMberAuthor(mberNo,"GNRL");
+			authDao.setMberAuthor(mberNo,"ROLE_GNRL");
 			
 			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK, "success", ""));
 		

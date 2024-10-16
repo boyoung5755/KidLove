@@ -31,12 +31,15 @@ public class ChldrnVO {
 	private String chldrnNm;              			// 이름
 	private Integer chldrnNo;             			// 자녀번호
 	private String chldrnSexdstn;         			// 성별   F,M,N
-	private String chldrnTy;              			// 자녀타입
+	private String chldrnTy;              			// 자녀타입 'FETUS','NWNBB','BABY','INFANT','CHILD'
 	private String cnrsCd;                			// 공유코드
 	private LocalDateTime crtDt;          			// 생성일
+	private String chldrnHideAt;					// 자녀 숨김여부
+	private String chldrnDelAt;						// 자녀 정보 삭제 여부
 	
-	//1:1
-	private MberVO mberUnity;
+	
+	//N:N
+	private List<MberVO> mberList;		
 	
 	//1:N
 	private List<SignificantVO> significantList;
@@ -49,6 +52,7 @@ public class ChldrnVO {
 	private List<SleepVO> sleepList;
 	private List<VacntnRcordVO> vacntnRcordList;
 	private List<MdexmnRcordVO> mdexmnRcordList;
+	private List<ChldrnMemoVO> chldrnMemoList;
 	
 	
 	
