@@ -23,10 +23,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class VacntnRcordVO {
 	
-	private Integer chldrnNo;             			// 자녀번호
+	private Long chldrnNo;             			// 자녀번호
 	private LocalDateTime crtDt;          			// 생성일(접종일)
 	private Integer hsptlNo;              			// 병원번호
-	private String vacinTy;               			// 백신종류
+	private String vacinTy;               			// 백신종류 
 	private Integer vacntnNo;             			// 예방접종번호
 	private Integer vacntnRcordNo;        			// 예방접종기록번호
 	private Integer vacntnRemndr;         			// 접종잔여횟수

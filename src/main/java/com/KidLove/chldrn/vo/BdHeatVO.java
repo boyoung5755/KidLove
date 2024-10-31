@@ -22,7 +22,7 @@ public class BdHeatVO {
 	
 	private String atchCode;              			// 파일코드
 	private String bdheatMemo;            			// 체온메모
-	private Integer bdheatNo;             			// 체온번호
+	private Long bdheatNo;             				// 체온번호
 	private Double bdheatTp;              			// 측정온도
 	private Integer chldrnNo;             			// 자녀번호
 	private LocalDateTime crtDt;          			// 생성일

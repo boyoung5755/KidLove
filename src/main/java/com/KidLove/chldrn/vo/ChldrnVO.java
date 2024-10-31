@@ -29,7 +29,7 @@ public class ChldrnVO {
 	private String chldrnBrthdy;          			// 생일
 	private String chldrnNcnm;            			// 별명, 태명
 	private String chldrnNm;              			// 이름
-	private Integer chldrnNo;             			// 자녀번호
+	private Long chldrnNo;             				// 자녀번호
 	private String chldrnSexdstn;         			// 성별   F,M,N
 	private String chldrnTy;              			// 자녀타입 'FETUS','NWNBB','BABY','INFANT','CHILD'
 	private String cnrsCd;                			// 공유코드
@@ -37,6 +37,7 @@ public class ChldrnVO {
 	private String chldrnHideAt;					// 자녀 숨김여부
 	private String chldrnDelAt;						// 자녀 정보 삭제 여부
 	
+	private String mberId ;
 	
 	//N:N
 	private List<MberVO> mberList;		

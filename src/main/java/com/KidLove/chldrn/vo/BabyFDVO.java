@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class BabyFDVO {
 	
-	private Integer babyFdNo;             			// 이유식번호
+	private Long babyFdNo;             			// 이유식번호
 	private String fdNm;                  			// 이유식종류
 	private String fdTy;                  			// 재료타입
 	

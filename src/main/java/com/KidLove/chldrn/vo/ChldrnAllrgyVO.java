@@ -20,9 +20,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ChldrnAllrgyVO {
 	
-	private Integer allrgyNo;             			// 알러지번호
-	private Integer chldrnAllrgyNo;       			// 자녀알레르기번호
-	private Integer chldrnNo;             			// 자녀번호
+	private Long allrgyNo;             				// 알러지번호
+	private Long chldrnAllrgyNo;       			// 자녀알레르기번호
+	private Long chldrnNo;             			// 자녀번호
 
 	//1:1
 	private ChldrnVO chidrnUnity;

@@ -16,8 +16,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AllrgyCrsRespnsVO {
 	
-	private Integer allrgyCrsRespnsNo;    			// 알레르기교차반응번호
-	private Integer allrgyNo;             			// 알러지번호
+	private Long allrgyCrsRespnsNo;    				// 알레르기교차반응번호
+	private Long allrgyNo;             				// 알러지번호
 	private String crsRespnsNm;           			// 교차반응항목
 	private Integer crsRespnsRate;        			// 교차반응률
 	private String crsRespnsTy;           			// 교차반응항목타입

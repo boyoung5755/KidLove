@@ -20,11 +20,11 @@ import lombok.NoArgsConstructor;
 public class UrineVO {
 	
 	private String atchCode;              			// 파일코드
-	private Integer chldrnNo;             			// 자녀번호
+	private Long chldrnNo;             				// 자녀번호
 	private LocalDateTime crtDt;          			// 생성일
 	private String urineColor;            			// 배뇨색상
 	private String urineMemo;             			// 메모
-	private Integer urineNo;              			// 배뇨번호
+	private Long urineNo;              				// 배뇨번호
 	private String urineStle;             			// 1~7 대변형태척도
 	private Integer urineTime;            			// 배뇨시간
 	private String urineTy;               			// 배뇨타입

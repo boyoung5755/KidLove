@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AtchVO {
 
-	private Integer atchNo;
+	private Long atchNo;
 	private String atchOrginlnm;
 	private String atchExtsn;
 	private String atchCode; 

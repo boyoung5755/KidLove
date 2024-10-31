@@ -20,7 +20,7 @@ public class SymptmsVO {
 
 	private String symptmsDtl;            			// 증상상세
 	private String symptmsNm;             			// 증상명
-	private Integer symptmsNo;            			// 질병번호
+	private Long symptmsNo;            				// 질병번호
 	
 	//1:N
 	private List<ChldrnSymptmsVO> chldrnSymptmsList;

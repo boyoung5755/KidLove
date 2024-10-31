@@ -26,10 +26,11 @@ public class MberVO {
 	
 	//권한
 	private String mberRole;
-	private Integer authorNo;             			// 권한번호
+	private Long authorNo;             				// 권한번호
 	
 	//멤버
 	
+	private Long mberNo;               				// 회원번호
 	private String atchCode;              			// 프로필이미지
 	private String cnrsCd;                			// 공유코드
 	private LocalDateTime crtDt;          			// 생성일
@@ -39,13 +40,13 @@ public class MberVO {
 	private LocalDateTime mberLastConectdt;			// 마지막접속일
 	private String mberLoginTy;           			// 
 	private String mberNcnm;              			// 회원별명
-	private Integer mberNo;               			// 회원번호
 	private String mberPw;                			// 회원비밀번호
 	private String mberSexdstn;           			// 성별  F,M,A
 	private String mberSttus;             			// 1. 임신중 2.출산 3.계획중
 	private String mberTel;               			// 회원전화번호
 	private String mberZip;               			// 우편번호
 	private String refreshToken;          			// 
+	private String mberUseSttus;					// 유저 사용 상태 
 	
 	
 	//탈퇴

@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 public class HsptlVO {
 
 	private String hsptlNm;               			// 병원명
-	private Integer hsptlNo;              			// 병원번호
+	private Long hsptlNo;              				// 병원번호
 	
 	//1:1
 	private VacntnRcordVO vacntnRcordUnity;

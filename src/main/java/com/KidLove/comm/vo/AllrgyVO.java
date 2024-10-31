@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 public class AllrgyVO {
 	
 	private String allrgyNm;              			// 알레르기명
-	private Integer allrgyNo;             			// 알러지번호
+	private Long allrgyNo;             				// 알러지번호
 	private String allrgySymptms;         			// 증상
 	private String allrgyTy;              			// 알레르기타입
 	

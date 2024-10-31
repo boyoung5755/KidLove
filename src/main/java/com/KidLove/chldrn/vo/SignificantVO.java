@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SignificantVO {
 	
-	private Integer chldrnNo;             			// 자녀번호
+	private Long chldrnNo;             				// 자녀번호
 	private String significantMemo;       			// 특이사항
 	private Integer significantNo;        			// 특이사항번호
 

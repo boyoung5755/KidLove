@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 public class ParmacyVO {
 	
 	private String parmacyNm;             			// 약국명
-	private Integer parmacyNo;            			// 약국번호
+	private Long parmacyNo;            				// 약국번호
 	
 	//1:1
 	private PrscrptnVO prscrptnUnity;

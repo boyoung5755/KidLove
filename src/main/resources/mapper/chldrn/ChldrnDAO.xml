@@ -1,7 +1,133 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.KidLove.chldrn.dao.ChldrnDAO">
-
+	
+	
+	<insert id="insertChldrnMemo" parameterType="com.KidLove.chldrn.vo.ChldrnMemoVO">
+		INSERT INTO chldrn_memo
+			(
+				CRT_DT, CHLDRN_NO, CHLDRN_MEMO
+			)
+		VALUES
+			(
+				CURRENT_TIMESTAMP
+				, #{chldrnNo}
+				, #{chldrnMemo}
+			)
+	</insert>
+	
+	<insert id="insertChldrnSymptms" parameterType="com.KidLove.chldrn.vo.ChldrnSymptmsVO">
+		INSERT INTO chldrn_symptms
+			(
+				SYMPTMS_NO
+				, SYMPTMS_BGNDT
+				, SYMPTMS_ENDDT
+				, CRT_DT
+				, SYMPTMS_MEMO
+				, ATCH_CODE
+				, CHLDRN_NO
+				, SYMPTMS_TY
+			)
+		VALUES
+			(
+				#{symptmsNo}
+				, CURRENT_TIMESTAMP
+				, #{symptmsBgndt}
+				, CURRENT_TIMESTAMP
+				, #{symptmsMemo}
+				, #{atchCode}
+				, #{chldrnNo}
+				, #{symptmsTy}
+			)
+	</insert>
+	
+	<insert id="insertSymptms" parameterType="String" useGeneratedKeys="true" keyProperty="symptmsNo" >
+		INSERT INTO symptms (SYMPTMS_NM)
+		VALUES(#{symptmsNm})
+	</insert>
+	
+	<select id="getSymptmsIdByName" parameterType="String">
+		SELECT 
+			S.SYMPTMS_NO 
+			,S.SYMPTMS_DTL 
+		FROM symptms S 
+		WHERE S.SYMPTMS_NM =#{symptmsNm}
+	</select>
+	
+	<insert id="insertChldrnAllergy" parameterType="com.KidLove.chldrn.vo.ChldrnAllrgyVO">
+		INSERT INTO chldrn_allrgy
+			(CHLDRN_NO, ALLRGY_NO)
+		VALUES(#{chldrnNo}, #{allrgyNo})
+	</insert>
+	
+	<insert id="insertAllergy" parameterType="String" useGeneratedKeys="true" keyProperty="allrgyNo" >
+		INSERT INTO allrgy (ALLRGY_NM)
+		VALUES (#{allergyNm})
+	</insert>
+	
+	<select id="getAllergyIdByName" parameterType="String">
+		SELECT 
+			A.ALLRGY_NO 
+			,A.ALLRGY_TY 
+			,A.ALLRGY_SYMPTMS 
+		FROM allrgy A 
+		WHERE A.ALLRGY_NM = #{allergyNm}
+	</select>
+	
+	<insert id="insertChldrnInfo" parameterType="com.KidLove.chldrn.vo.ChldrnInfoVO">
+		INSERT INTO chldrn_info
+			(
+				CHLDRN_HEIGHT
+				, CHLDRN_BDWGH
+				, CHLDRN_HEAD
+				, CHLDRN_NO
+				, CRT_DT
+				, CHLDRN_VSPR_RIGHT
+				, CHLDRN_VSPR_LEFT
+				, CHLDRN_HEARAB
+			)
+		VALUES
+			(
+				#{chldrnHeight}
+				, #{chldrnBdwgh}
+				, #{chldrnHead}
+				, #{chldrnNo}
+				, CURRENT_TIMESTAMP
+				, #{chldrnVsprRight}
+				, #{chldrnVsprLeft}
+				, #{chldrnHearab}
+			)
+	</insert>
+	
+	<insert id="insertChldrn" parameterType="com.KidLove.chldrn.vo.ChldrnVO"
+		useGeneratedKeys = "true" keyProperty ="chldrnNo">
+		INSERT INTO chldrn
+			(
+				CHLDRN_BRTHDY
+				, CHLDRN_SEXDSTN
+				, ATCH_CODE
+				, CHLDRN_NM
+				, CHLDRN_NCNM
+				, CNRS_CD
+				, CHLDRN_TY
+				, CRT_DT
+				, CHLDRN_HIDE_AT
+				, CHLDRN_DEL_AT
+			)
+		VALUES
+			(
+				#{chldrnBrthdy}
+				, #{chldrnSexdstn}
+				, #{atchCode}
+				, #{chldrnNm}
+				, #{chldrnNcnm}
+				, #{chldrnNo}
+				, #{chldrnTy}
+				, CURRENT_TIMESTAMP
+				, 'N'
+				, 'N'
+			)
+	</insert>
 
 
 </mapper>

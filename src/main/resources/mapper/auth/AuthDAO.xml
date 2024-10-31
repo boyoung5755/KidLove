@@ -6,7 +6,8 @@
 		SELECT	
 			M.MBER_NO 
 		FROM mber M
-		WHERE MBER_ID = #{mberId}
+		WHERE M.MBER_ID = #{mberId}
+		AND M.MBER_USE_STTUS = "ACTIVE"
 	</select>
 	
 	<insert id="setMberAuthor" parameterType="map">
@@ -51,6 +52,7 @@
 		FROM mber M 
 		WHERE M.MBER_ID = #{loginId}
 		AND M.MBER_LOGIN_TY ="KAKAO"
+		AND M.MBER_USE_STTUS = "ACTIVE"
 	</select>
 	
 	<select id="loginWithGoogle" parameterType= "String" >
@@ -59,6 +61,7 @@
 		FROM mber M 
 		WHERE M.MBER_ID = #{loginId}
 		AND M.MBER_LOGIN_TY ="GOOGLE"
+		AND M.MBER_USE_STTUS = "ACTIVE"
 	</select>
 	
 	<insert  id="join" parameterType = "com.KidLove.mber.vo.MberVO">
@@ -105,7 +108,8 @@
 		FROM mber M
 		LEFT OUTER JOIN author A
 		ON M.MBER_NO = A.MBER_NO 
-		WHERE MBER_ID= #{mberId}
+		WHERE M.MBER_ID= #{mberId}
+		AND M.MBER_USE_STTUS = "ACTIVE"
 	</select>
 	
 	<update  id="saveToken" parameterType="com.KidLove.mber.vo.MberVO">
@@ -118,7 +122,8 @@
 	<select id="findByKey"  parameterType="String">
 		SELECT M.REFRESH_TOKEN 
 		FROM mber M 
-		WHERE  MBER_ID =#{mberId}
+		WHERE M.MBER_ID =#{mberId}
+		AND M.MBER_USE_STTUS = "ACTIVE"
 	</select>
 	
 </mapper>

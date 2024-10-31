@@ -4,13 +4,14 @@ import javax.inject.Inject;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.KidLove.chldrn.dto.ChldrnProfileRequest;
 import com.KidLove.chldrn.service.ChldrnService;
 import com.KidLove.chldrn.vo.ChldrnVO;
 import com.KidLove.comm.vo.ResultVO;
@@ -27,14 +28,11 @@ public class ChldrnController {
 	
 	@PostMapping("/createChldrnInfo")
     public ResponseEntity<ResultVO<Object>> createChldrnInfo(
-    		@RequestBody ChldrnVO chldrnRequest , Authentication auth) {
+    		@RequestBody ChldrnProfileRequest chldrnRequest) {
 		try {
-			System.out.println(auth);
-			ResponseEntity<ResultVO<Object>> result = chldrnService.createChldrnInfo(chldrnRequest );
-			return result;
+			return chldrnService.createChldrnInfo(chldrnRequest );
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-	                .body(ResultVO.res(HttpStatus.BAD_REQUEST, "Failed to create info", ""));
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.BAD_REQUEST,e.getMessage(),""));	
 		}
     }
 	

@@ -2,5 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.KidLove.babyNote.dao.BabyNoteDAO">
 
+	<select id="getBabyNote" parameterType="com.KidLove.chldrn.vo.ChldrnVO"
+		resultType="com.KidLove.babyNote.vo.VacntnRcordVO">
+		SELECT 
+		    VM.MTH_NM
+		    , V.VACNTN_ICTSD
+		    , MAX(V.VACNTN_ODR) AS VACNTN_ODR
+		    , MAX(V.VACNTN_NO) AS VACNTN_NO
+		    , MAX(VR.CRT_DT) AS CRT_DT
+		FROM vacntn_rcord VR 
+		LEFT OUTER JOIN vacntn V 
+		    ON V.VACNTN_NO = VR.VACNTN_NO 
+		LEFT OUTER JOIN vacntn_mth VM 
+		    ON VM.VACNTN_MTH_NO = V.VACNTN_MTH_NO 
+		WHERE VR.CHLDRN_NO = #{chldrnNo}
+		GROUP BY 
+		    VM.MTH_NM,
+		    V.VACNTN_ICTSD
+	</select>
 
 </mapper>

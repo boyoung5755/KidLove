@@ -22,9 +22,10 @@ public class ChldrnInfoVO {
 	private Double chldrnHead;            			// 머리둘레
 	private String chldrnHearab;          			// 청력
 	private Double chldrnHeight;          			// 키
-	private Integer chldrnInfoNo;         			// 자녀건강정보
-	private Integer chldrnNo;             			// 자녀번호
-	private Double chldrnVspr;            			// 시력
+	private Long chldrnInfoNo;         				// 자녀건강정보
+	private Long chldrnNo;             				// 자녀번호
+	private Double chldrnVsprRight;            		// 시력
+	private Double chldrnVsprLeft;            		// 시력
 	private LocalDateTime crtDt;          			// 측정일
 
 	//1:1

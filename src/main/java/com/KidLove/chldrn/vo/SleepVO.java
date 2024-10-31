@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 public class SleepVO {
 	
 	private String atchCode;              			// 파일코드
-	private Integer chldrnNo;             			// 자녀번호
+	private Long chldrnNo;             				// 자녀번호
 	private LocalDateTime crtDt;          			// 생성일
 	private LocalDateTime sleepBgndt;     			// 수면시작시간
 	private LocalDateTime sleepEnddt;     			// 수면종료시간

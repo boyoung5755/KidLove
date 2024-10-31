@@ -21,7 +21,7 @@ public class ChldrnMemoVO {
 	
 	private Integer chldrnMemoNo;
 	private LocalDateTime crtDt;
-	private Integer chldrnNo;
+	private Long chldrnNo;
 	private String chldrnMemo;
 	
 	//1:1
