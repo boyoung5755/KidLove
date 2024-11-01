@@ -24,7 +24,6 @@ public class BabyNoteServiceImpl implements BabyNoteService {
 	@Override
 	public ResponseEntity<ResultVO<Object>> getBabyNote(ChldrnVO chldrnRequest) {
 		try {
-			
 			VacntnVO  vacntnVO = babyNoteDAO.getBabyNote(chldrnRequest);
 			return  ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success",vacntnVO));
 		} catch (RuntimeException e) {

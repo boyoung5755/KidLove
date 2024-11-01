@@ -40,8 +40,8 @@ public class TokenProvider{
 	//Refresh Token의 만료기간이 3일 이내이면 Access Token과 Refresh Token을 클라이언트에 전달해주고, 
 	//Refresh Token의 만료기간이 3일 이상이면, Access Token만 클라이언트에 전달
 	//private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;           // 30분
-	private static final long ACCESS_TOKEN_EXPIRE_TIME =  1000 * 60 * 60 * 24 * 7;   // 7일
-	private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 30;  // 30일
+	private static final long ACCESS_TOKEN_EXPIRE_TIME =  1000L * 60 * 60 * 24 * 7;   // 7일
+	private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 24 * 30;  // 30일
 	private static final long THREE_DAYS = 1000 * 60 * 60 * 24 * 3;  // 3일
 	
 	private final Key key;
@@ -87,6 +87,7 @@ public class TokenProvider{
 
         // Access Token 생성
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
+        
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())      
                 .claim(AUTHORITIES_KEY, authorities)        
@@ -95,8 +96,9 @@ public class TokenProvider{
                 .compact();
 
         // Refresh Token 생성
+        Date refreshTokenExpiresIn = new Date(now + REFRESH_TOKEN_EXPIRE_TIME);
         String refreshToken = Jwts.builder()
-                .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
+                .setExpiration(refreshTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact(); 
 

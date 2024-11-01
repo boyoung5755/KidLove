@@ -29,6 +29,8 @@ public class UrineVO {
 	private Integer urineTime;            			// 배뇨시간
 	private String urineTy;               			// 배뇨타입
 	private Double urineWt;               			// 배뇨무게
+	private String urineAmt;						// 배뇨양
+	
 
 	//1:1
 	private ChldrnVO chldrnUnity ;

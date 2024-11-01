@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.KidLove.report.dao.ReportDAO">
+
+	<insert id="insertSleepHist" parameterType="com.KidLove.chldrn.vo.SleepVO">
+		INSERT INTO sleep
+			(
+				CHLDRN_NO
+				, CRT_DT
+				, SLEEP_TY
+				, SLEEP_MEMO
+				, SLEEP_BGNDT
+				, SLEEP_ENDDT
+			)
+		VALUES
+			(
+				#{chldrnNo}
+				, CURRENT_TIMESTAMP
+				, #{sleepTy}
+				, #{sleepMemo}
+				, #{sleepBgndt}
+				, #{sleepEnddt}
+			)
+	</insert>
+
+
+</mapper>
