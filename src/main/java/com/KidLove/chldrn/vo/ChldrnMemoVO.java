@@ -20,12 +20,12 @@ import lombok.NoArgsConstructor;
 public class ChldrnMemoVO {
 	
 	private Integer chldrnMemoNo;
-	private LocalDateTime crtDt;
+	private LocalDateTime chldrnMemoCrtDt;
 	private Long chldrnNo;
 	private String chldrnMemo;
 	
 	//1:1
-	private ChldrnVO chldrnUnity;
+	private ChldrnVO chldrn;
 	
 
 }

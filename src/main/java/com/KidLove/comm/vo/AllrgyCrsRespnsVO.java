@@ -24,7 +24,7 @@ public class AllrgyCrsRespnsVO {
 
 	
 	//1:1
-	private AllrgyVO allrgyUnity;
+	private AllrgyVO allrgy;
 }
 
 

@@ -2,6 +2,8 @@ package com.KidLove.chldrn.vo;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +18,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ChldrnInfoVO {
 	
 	private Double chldrnBdwgh;           			// 몸무게
@@ -26,10 +29,11 @@ public class ChldrnInfoVO {
 	private Long chldrnNo;             				// 자녀번호
 	private Double chldrnVsprRight;            		// 시력
 	private Double chldrnVsprLeft;            		// 시력
-	private LocalDateTime crtDt;          			// 측정일
+	private LocalDateTime chldrnInfoCrtDt;          // 측정일
+	
 
 	//1:1
-	private ChldrnVO chidrnUnity;
+	private ChldrnVO chldrn;
 	
 	 
 	

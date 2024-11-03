@@ -23,7 +23,7 @@ public class ChldrnSymptmsVO {
 	private String atchCode;              			// 파일코드
 	private Long chldrnNo;             				// 자녀번호
 	private Long chldrnSymptmsNo;      				// 자녀증상번호
-	private LocalDateTime crtDt;          			// 생성일
+	private LocalDateTime symptmsCrtDt;          			// 생성일
 	private LocalDateTime symptmsBgndt;   			// 증상시작일
 	private LocalDateTime symptmsEnddt;   			// 증상종료일
 	private String symptmsMemo;           			// 증상메모
@@ -31,6 +31,6 @@ public class ChldrnSymptmsVO {
 	private String symptmsTy;
 	
 	//1:1
-	private ChldrnVO chldrnUnity;
-	private SymptmsVO symptmsUnity;
+	private ChldrnVO chldrn;
+	private SymptmsVO symptms;
 }

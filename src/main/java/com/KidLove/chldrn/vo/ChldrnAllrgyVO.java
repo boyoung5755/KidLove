@@ -25,7 +25,7 @@ public class ChldrnAllrgyVO {
 	private Long chldrnNo;             			// 자녀번호
 
 	//1:1
-	private ChldrnVO chidrnUnity;
+	private ChldrnVO chidrn;
 	
 	//1:N 
 	private List<AllrgyVO> allrgyList;

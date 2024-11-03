@@ -1,6 +1,242 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.KidLove.report.dao.ReportDAO">
+	
+	<select id="getRecentTakngList" parameterType="Long" resultMap="takngMap">
+		SELECT 
+			T.TAKNG_ENDDT 
+			, T.TAKNG_DT 
+			, T.TAKNG_MDCIN_NM 
+			, T.TAKNG_MDCIN_AMT 
+			, T.TAKNG_MDCIN_UNIT 
+			, C.CHLDRN_NM 
+			, DATEDIFF(CURDATE(), STR_TO_DATE(C.CHLDRN_BRTHDY,'%Y%m%d')) AS dday
+			, CASE
+				WHEN T.TAKNG_MDCIN_TY = 'LIQD' THEN '물약'
+				WHEN T.TAKNG_MDCIN_TY = 'POWD' THEN '가루약'
+				WHEN T.TAKNG_MDCIN_TY = 'PILL' THEN '알약'
+			END AS takngMdcinTy
+		FROM takng T 
+		LEFT OUTER JOIN chldrn C       
+		ON T.CHLDRN_NO  = C.CHLDRN_NO 
+		WHERE T.CHLDRN_NO  = #{chldrn}
+		ORDER BY T.CRT_DT  DESC
+	</select>
+	
+	<insert id="insertTakngHist" parameterType="com.KidLove.chldrn.vo.TakngVO">
+		INSERT INTO takng
+			(
+				CHLDRN_NO
+				, TAKNG_DT
+				, CRT_DT
+				, TAKNG_ENDDT
+				, TAKNG_MDCIN_NM
+				, TAKNG_MDCIN_TY
+				, TAKNG_MDCIN_AMT
+				, TAKNG_MDCIN_UNIT
+				, TAKNG_PD
+				, TAKNG_MEMO
+			)
+		VALUES
+			(
+				#{chldrnNo}
+				, #{takngDt}
+				, CURRENT_TIMESTAMP
+				, #{takngEnddt}
+				, #{takngMdcinNm}
+				, #{takngMdcinTy}
+				, #{takngMdcinAmt}
+				, #{takngMdcinUnit}
+				, #{takngPd}
+				, #{takngMemo}
+			)
+	</insert>
+	
+	<select id="getRecentBdHeatList" parameterType="Long" resultMap="heatMap">
+		SELECT 
+			B.BDHEAT_TP 
+			, B.BDHEAT_MEMO 
+			, B.BDHEAT_BGNDT 
+			, B.BDHEAT_ENDDT
+			, C.CHLDRN_NM 
+			, B.CRT_DT AS bdheatCrtDt 
+			, DATEDIFF(CURDATE(), STR_TO_DATE(C.CHLDRN_BRTHDY,'%Y%m%d')) AS dday 
+		FROM bdheat B 
+		LEFT OUTER JOIN chldrn C 
+		ON C.CHLDRN_NO  = B.CHLDRN_NO 
+		WHERE B.CHLDRN_NO = #{chldrn}
+	</select>
+	
+	<insert id="insertBdHeat" parameterType="com.KidLove.chldrn.vo.BdHeatVO">
+		INSERT INTO bdheat
+			(
+				CHLDRN_NO
+				, ATCH_CODE
+				, CRT_DT
+				, BDHEAT_TP
+				, BDHEAT_MEMO
+				, BDHEAT_BGNDT
+				, BDHEAT_ENDDT
+			)
+		VALUES
+			(
+				#{chldrnNo}
+				, #{atchCode}
+				, CURRENT_TIMESTAMP
+				, #{bdheatTp}
+				, #{bdheatMemo}
+				, #{bdheatBgndt}
+				, #{bdheatEnddt}
+			)
+	</insert>
+	
+	<delete id="deleteRecord" parameterType="Long">
+		<choose>
+	        <when test='table == "sleep"'>
+	            DELETE FROM sleep WHERE SLEEP_NO = #{pk}
+	        </when>
+	        <when test='table == "takng"'>
+	            DELETE FROM takng WHERE TAKNG_NO = #{pk}
+	        </when>
+	        <when test='table == "urine"'>
+	            DELETE FROM urine WHERE URINE_NO = #{pk}
+	        </when>
+	        <when test='table == "meal"'>
+	            DELETE FROM meal WHERE MEAL_NO = #{pk}
+	        </when>
+	        <when test='table == "bdheat"'>
+	            DELETE FROM bdheat WHERE BDHEAT_NO = #{pk}
+	        </when>
+	        <when test='table == "chldrn_info"'>
+	            DELETE FROM chldrn_info WHERE CHLDRN_INFO_NO = #{pk}
+	        </when>
+   	 	</choose>
+	</delete>
+	
+	<select id="getRecentMealList" parameterType="Long" resultMap="mealMap">
+		SELECT
+			CASE 
+				WHEN M.MEAL_TY = 'MHRSM' THEN '모유'
+				WHEN M.MEAL_TY = 'BABYFD' THEN '분유'
+				WHEN M.MEAL_TY = 'FOMULA' THEN '이유식'
+			END AS mealTy
+			, M.MEAL_NO
+			, C.CHLDRN_NM 
+			, M.MEAL_UNIT
+			, M.MEAL_AMOUNT 
+			, DATEDIFF(CURDATE(), STR_TO_DATE(C.CHLDRN_BRTHDY,'%Y%m%d')) AS dday
+		FROM meal M 
+		LEFT OUTER JOIN chldrn C 
+		ON C.CHLDRN_NO = M.CHLDRN_NO
+		WHERE M.CHLDRN_NO = #{chldrn}
+		ORDER BY M.CRT_DT DESC
+		
+	</select>
+	
+	<select id="getRecentUrineList" parameterType="Long" resultMap="urineMap">
+		SELECT
+			CASE 
+				WHEN U.URINE_TY = 'PEE' THEN '소변'
+				WHEN U.URINE_TY = 'POO' THEN '대변'
+				ELSE '알수없음'
+			END AS urineTy
+			, U.CRT_DT AS URINECRTDT
+			, C.CHLDRN_BRTHDY
+			, U.URINE_NO
+			, C.CHLDRN_NM
+			, DATEDIFF(CURDATE(), STR_TO_DATE(C.CHLDRN_BRTHDY,'%Y%m%d')) AS dday
+		FROM urine U 
+		LEFT OUTER JOIN chldrn C 
+		ON C.CHLDRN_NO = U.CHLDRN_NO 
+		WHERE U.CHLDRN_NO = #{chldrn}
+		ORDER BY U.CRT_DT DESC
+	</select>
+	
+	<select id="getRecentSleepList" parameterType="Long" resultMap="sleepMap">
+		SELECT
+			S.CRT_DT AS SLEEPCRTDT
+			, S.SLEEP_BGNDT 
+			, S.SLEEP_ENDDT
+			, C.CHLDRN_BRTHDY
+			, C.CHLDRN_NM 
+			, S.SLEEP_NO
+			, DATEDIFF(CURDATE(), STR_TO_DATE(C.CHLDRN_BRTHDY,'%Y%m%d')) AS dday
+		FROM sleep S
+		LEFT OUTER JOIN chldrn C 
+		ON C.CHLDRN_NO = S.CHLDRN_NO 
+		WHERE S.CHLDRN_NO =#{chldrn}
+		ORDER BY S.CRT_DT DESC
+	</select>
+	
+	<insert id="insertMeal" parameterType="com.KidLove.chldrn.vo.MealVO">
+		INSERT INTO meal
+			(
+				CHLDRN_NO
+				, MEAL_TY
+				, MEAL_MHRSM_LC
+				, MEAL_TIME
+				, BABY_FD_NO
+				, CRT_DT
+				, MEAL_MEMO
+				, MEAL_AMOUNT
+				, MEAL_UNIT
+			)
+		VALUES
+			(
+				#{chldrnNo}
+				, #{mealTy}
+				, #{mealMhrsmLc}
+				, #{mealTime}
+				, #{babyFdNo}
+				, CURRENT_TIMESTAMP
+				, #{mealMemo}
+				, #{mealAmount}
+				, #{mealUnit}
+			)
+	</insert>
+	
+	<insert id="insertUrine" parameterType="com.KidLove.chldrn.vo.UrineVO">
+		INSERT INTO urine
+			(
+				CHLDRN_NO
+				, URINE_TY
+				, URINE_STLE
+				, URINE_COLOR
+				, URINE_TIME
+				, URINE_WT
+				, URINE_MEMO
+				, CRT_DT
+				, URINE_AMT
+			)
+		VALUES
+			(
+				#{chldrnNo}
+				, #{urineTy}
+				, #{urineStle}
+				, #{urineColor}
+				, #{urineTime}
+				, #{urineWt}
+				, #{urineMemo}
+				, CURRENT_TIMESTAMP
+				, #{urineAmt}
+			)
+	</insert>
+
+
+	<select id="getRecentHeWghList" parameterType="Long" resultMap="chldrnMap">
+		SELECT
+			CI.CHLDRN_HEIGHT 
+			, CI.CHLDRN_BDWGH 
+			, CI.CRT_DT AS chldrnInfoCrtDt
+			, C.CHLDRN_BRTHDY
+			, CI.CHLDRN_INFO_NO
+			, DATEDIFF(CURDATE(), STR_TO_DATE(C.CHLDRN_BRTHDY,'%Y%m%d')) AS dday
+		FROM chldrn_info CI 
+		LEFT OUTER JOIN chldrn C 
+		ON CI.CHLDRN_NO  = C.CHLDRN_NO 
+		WHERE CI.CHLDRN_NO = #{chldrn}
+		ORDER BY CI.CRT_DT DESC
+	</select>
 
 	<insert id="insertSleepHist" parameterType="com.KidLove.chldrn.vo.SleepVO">
 		INSERT INTO sleep
@@ -22,6 +258,62 @@
 				, #{sleepEnddt}
 			)
 	</insert>
+	
+	
+	<insert id="insertHeWgh" parameterType="com.KidLove.chldrn.vo.ChldrnInfoVO">
+		INSERT INTO chldrn_info
+			(
+				CHLDRN_HEIGHT
+				, CHLDRN_BDWGH
+				, CHLDRN_HEAD
+				, CHLDRN_NO
+				, CRT_DT
+				, CHLDRN_VSPR_LEFT
+				, CHLDRN_HEARAB
+				, CHLDRN_VSPR_RIGHT
+			)
+		VALUES
+			(
+				#{chldrnHeight}
+				, #{chldrnBdwgh}
+				, #{chldrnHead}
+				, #{chldrnNo}
+				, CURRENT_TIMESTAMP
+				, #{chldrnVsprLeft}
+				, #{chldrnHearab}
+				, #{chldrnVsprRight}
+			)
+	</insert>
 
+
+	<resultMap type="com.KidLove.chldrn.vo.ChldrnInfoVO" id="chldrnMap" autoMapping="true">
+		<id property="chldrnInfoNo" column="CHLDRN_INFO_NO"/>
+		<association property="chldrn" javaType="com.KidLove.chldrn.vo.ChldrnVO" autoMapping="true" />
+	</resultMap>
+	
+	<resultMap type="com.KidLove.chldrn.vo.SleepVO" id="sleepMap" autoMapping="true">
+		<id property="sleepNo" column="SLEEP_NO"/>
+		<association property="chldrn" javaType="com.KidLove.chldrn.vo.ChldrnVO"  autoMapping="true" />
+	</resultMap>
+	
+	<resultMap type="com.KidLove.chldrn.vo.UrineVO" id="urineMap" autoMapping="true">
+		<id property="urineNo" column="URINE_NO"/>
+		<association property="chldrn" javaType="com.KidLove.chldrn.vo.ChldrnVO"  autoMapping="true" />
+	</resultMap>
+	
+	<resultMap type="com.KidLove.chldrn.vo.MealVO" id="mealMap" autoMapping="true">
+		<id property="mealNo" column="MEAL_NO"/>
+		<association property="chldrn" javaType="com.KidLove.chldrn.vo.ChldrnVO"  autoMapping="true" />
+	</resultMap>
+	
+	<resultMap type="com.KidLove.chldrn.vo.BdHeatVO" id="heatMap" autoMapping="true">
+		<id property="bdheatNo" column="BDHEAT_NO"/>
+		<association property="chldrn" javaType="com.KidLove.chldrn.vo.ChldrnVO"  autoMapping="true" />
+	</resultMap>
+	
+	<resultMap type="com.KidLove.chldrn.vo.TakngVO" id="takngMap" autoMapping="true">
+		<id property="takngNo" column="TAKNG_NO"/>
+		<association property="chldrn" javaType="com.KidLove.chldrn.vo.ChldrnVO"  autoMapping="true" />
+	</resultMap>
 
 </mapper>

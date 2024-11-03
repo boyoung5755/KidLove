@@ -2,14 +2,30 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.KidLove.babyNote.dao.BabyNoteDAO">
 
+	<resultMap type="com.KidLove.babyNote.vo.VacntnRcordVO" id="vacntnRcord" autoMapping="true">
+		<id property="vacntnRcordNo" column="VACNTN_RCORD_NO"/>
+		<association property="chldrn" javaType="com.KidLove.chldrn.vo.ChldrnVO" autoMapping="true"/>
+		<collection property="vacntnList" ofType="com.KidLove.comm.vo.VacntnVO" autoMapping="true">
+			<id property="vacntnNo" column="VACNTN_NO" />
+			<collection property="vacntnMthList" ofType="com.KidLove.babyNote.vo.VacntnMthVO" autoMapping="true">
+				<id property="vacntnMthNo" column="VACNTN_MTH_NO" />
+			</collection>	
+		</collection>	
+		<collection property="hsptlList" ofType="com.KidLove.comm.vo.HsptlVO" autoMapping="true">
+			<id property="hsptlNo" column="HSPTL_NO" />
+			<association property="mdexmnRcord" javaType="com.KidLove.checkUp.vo.MdexmnRcordVO" autoMapping="true"/>
+		</collection>	
+	</resultMap>
+
+
 	<select id="getBabyNote" parameterType="com.KidLove.chldrn.vo.ChldrnVO"
-		resultType="com.KidLove.babyNote.vo.VacntnRcordVO">
+		resultMap="vacntnRcord">
 		SELECT 
 		    VM.MTH_NM
 		    , V.VACNTN_ICTSD
-		    , MAX(V.VACNTN_ODR) AS VACNTN_ODR
-		    , MAX(V.VACNTN_NO) AS VACNTN_NO
-		    , MAX(VR.CRT_DT) AS CRT_DT
+		    , MAX(V.VACNTN_ODR) AS vacntnOdr
+		    , MAX(V.VACNTN_NO) AS vacntnNo
+		    , MAX(VR.CRT_DT) AS vacntnRcordCrtDt
 		FROM vacntn_rcord VR 
 		LEFT OUTER JOIN vacntn V 
 		    ON V.VACNTN_NO = VR.VACNTN_NO 

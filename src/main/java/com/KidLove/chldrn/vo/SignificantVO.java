@@ -21,7 +21,7 @@ public class SignificantVO {
 	private Integer significantNo;        			// 특이사항번호
 
 	//1:1
-	private ChldrnVO chidrnUnity;
+	private ChldrnVO chidrn;
 		
 
 }

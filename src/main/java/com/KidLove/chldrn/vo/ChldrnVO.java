@@ -6,6 +6,7 @@ import java.util.List;
 import com.KidLove.babyNote.vo.VacntnRcordVO;
 import com.KidLove.checkUp.vo.MdexmnRcordVO;
 import com.KidLove.mber.vo.MberVO;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +24,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ChldrnVO {
 
 	private String atchCode;              			// 첨부파일코드
@@ -33,11 +35,12 @@ public class ChldrnVO {
 	private String chldrnSexdstn;         			// 성별   F,M,N
 	private String chldrnTy;              			// 자녀타입 'FETUS','NWNBB','BABY','INFANT','CHILD'
 	private String cnrsCd;                			// 공유코드
-	private LocalDateTime crtDt;          			// 생성일
+	private LocalDateTime chldrnCrtDt;          	// 생성일
 	private String chldrnHideAt;					// 자녀 숨김여부
 	private String chldrnDelAt;						// 자녀 정보 삭제 여부
 	
 	private String mberId ;
+	private Integer dday;
 	
 	//N:N
 	private List<MberVO> mberList;		
@@ -54,6 +57,7 @@ public class ChldrnVO {
 	private List<VacntnRcordVO> vacntnRcordList;
 	private List<MdexmnRcordVO> mdexmnRcordList;
 	private List<ChldrnMemoVO> chldrnMemoList;
+	private List<TakngVO> takngList;
 	
 	
 	

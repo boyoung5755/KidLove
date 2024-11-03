@@ -7,6 +7,17 @@ import com.KidLove.comm.vo.ResultVO;
 
 public interface BabyNoteService {
 
-	ResponseEntity<ResultVO<Object>> getBabyNote(ChldrnVO chldrnRequest);
+	/**
+	 * @MethodName	: getBabyNote
+	 * @author		: Boyoung
+	 * @date 		: 2024.11.03
+	 * @description	:
+	 * @return 		: ResponseEntity<ResultVO<Object>>
+	 * @param chldrnNo
+	 * @return
+	 */
+	
+	ResponseEntity<ResultVO<Object>> getBabyNote(String chldrnNo);
 
+	
 }

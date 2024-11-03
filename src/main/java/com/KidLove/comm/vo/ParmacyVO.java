@@ -22,6 +22,6 @@ public class ParmacyVO {
 	private Long parmacyNo;            				// 약국번호
 	
 	//1:1
-	private PrscrptnVO prscrptnUnity;
+	private PrscrptnVO prscrptn;
 
 }

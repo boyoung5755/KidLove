@@ -1,10 +1,13 @@
 package com.KidLove.babyNote.Service;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.KidLove.babyNote.dao.BabyNoteDAO;
 import com.KidLove.chldrn.vo.ChldrnVO;
@@ -22,15 +25,16 @@ public class BabyNoteServiceImpl implements BabyNoteService {
 	private SQLErrorMessage sqlErrorMessage;
 
 	@Override
-	public ResponseEntity<ResultVO<Object>> getBabyNote(ChldrnVO chldrnRequest) {
+	public ResponseEntity<ResultVO<Object>> getBabyNote(@RequestParam String chldrnNo) {
 		try {
-			VacntnVO  vacntnVO = babyNoteDAO.getBabyNote(chldrnRequest);
+			Long chldrn = Long.parseLong(chldrnNo);
+			List<VacntnVO> vacntnVO = babyNoteDAO.getBabyNote(chldrn);
 			return  ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success",vacntnVO));
 		} catch (RuntimeException e) {
 			String sqlErrorMsg = sqlErrorMessage.extractSqlErrorMessage(e.getMessage());
             throw new RuntimeException(sqlErrorMsg, e);
 		}catch (Exception e) {
-			 return ResponseEntity.ok(ResultVO.res(HttpStatus.BAD_REQUEST, "create Failed", ""));
+			 return ResponseEntity.ok(ResultVO.res(HttpStatus.BAD_REQUEST, "retrieve Failed", ""));
 		}	 
 	}
 

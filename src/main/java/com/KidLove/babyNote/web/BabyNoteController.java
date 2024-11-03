@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.KidLove.babyNote.Service.BabyNoteService;
@@ -25,9 +26,9 @@ public class BabyNoteController {
 	
 	
 	@GetMapping("/getBabyNote")
-    public ResponseEntity<ResultVO<Object>> getBabyNote(@ModelAttribute  ChldrnVO chldrnRequest) {
+    public ResponseEntity<ResultVO<Object>> getBabyNote(@RequestParam("chldrnNo")  String chldrnNo) {
 		try {
-			return babyNoteService.getBabyNote(chldrnRequest );
+			return babyNoteService.getBabyNote(chldrnNo );
 		} catch (Exception e) {
 			return ResponseEntity.ok(ResultVO.res(HttpStatus.BAD_REQUEST,e.getMessage(),""));	
 		}

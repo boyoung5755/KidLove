@@ -1,13 +1,15 @@
 package com.KidLove.babyNote.dao;
 
-import org.apache.ibatis.annotations.Mapper;
+import java.util.List;
 
-import com.KidLove.chldrn.vo.ChldrnVO;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
 import com.KidLove.comm.vo.VacntnVO;
 
 @Mapper
 public interface BabyNoteDAO {
 
-	public VacntnVO getBabyNote(ChldrnVO chldrnRequest);
+	public List<VacntnVO> getBabyNote(@Param("chldrnNo") Long chldrnNo);
 
 }

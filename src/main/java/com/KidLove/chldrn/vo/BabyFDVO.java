@@ -21,6 +21,6 @@ public class BabyFDVO {
 	private String fdTy;                  			// 재료타입
 	
 	//1:1
-	private MealVO mealUnity;
+	private MealVO meal;
 	
 }
