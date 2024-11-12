@@ -1,6 +1,5 @@
 package com.KidLove.atch.service;
 
-import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,21 +10,18 @@ import java.util.UUID;
 import javax.inject.Inject;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.KidLove.atch.dao.AtchDAO;
 import com.KidLove.atch.vo.AtchVO;
-import com.KidLove.comm.vo.ResultVO;
 
 
 @Service
 public class AtchServiceImpl implements AtchService {
 	
-	@Value("${imagePath}")
+	@Value("${upload.path}")
 	private String uploadDir;
 	
 	@Inject
@@ -51,7 +47,7 @@ public class AtchServiceImpl implements AtchService {
 			String uuidFileNm = UUID.randomUUID().toString();
 			String storedFilename = uuidFileNm + "." + extension;
 			
-			Path uploadPath = Paths.get(uploadDir+"/"+ String.valueOf(atch.getAtchTy()));
+			Path uploadPath = Paths.get(uploadDir);
 			
 			// uploadPath 디렉토리가 존재하지 않으면 생성
 	        if (!Files.exists(uploadPath)) {
@@ -67,7 +63,7 @@ public class AtchServiceImpl implements AtchService {
 	        }
 			
 	        String setFlpth = 
-	        		"uploads"+File.separatorChar + String.valueOf(atch.getAtchTy()) +File.separatorChar+storedFilename;
+	        		"/imagePath/"+storedFilename;
 			
 			AtchVO makeAtch = AtchVO.builder()
 		                    .atchOrginlnm(originalFilename)
