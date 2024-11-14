@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.KidLove.mdexmn.dao.MdexmnDAO">
+	
+	
+	<resultMap type="com.KidLove.checkUp.vo.MdexmnRcordVO" id="mdexmnMap" autoMapping="true">
+		<id property="mdexmnRcordNo" column="MDEXMN_RCORD_NO" />
+		<association property="chldrn" javaType="com.KidLove.chldrn.vo.ChldrnVO"  autoMapping="true"/>
+		<association property="prscrptn" javaType="com.KidLove.checkUp.vo.PrscrptnVO" autoMapping="true">
+			<collection property="PrscrptnDrugList" ofType="com.KidLove.checkUp.vo.PrscrptnDrugVO" autoMapping="true">
+				<id property="prscrptnDrugNo" column="PRSCRPTN_DRUG_NO" />
+			</collection>
+		</association>
+		<collection property="hsptlList" ofType="com.KidLove.comm.vo.HsptlVO" autoMapping="true">
+			<id property="hsptlNo" column="HSPTL_NO" />
+		</collection>
+	</resultMap>
+	
+	<select id="getMdexmnHsptlRecord" parameterType="com.KidLove.comm.vo.PageVO"
+		resultMap="mdexmnMap"
+	>
+		SELECT 
+			*
+		FROM(
+			SELECT
+				MR.MDEXMN_RCORD_NO 
+				, H.HSPTL_NM 
+				, H.HSPTL_DRCTR
+				, MR.MDEXMN_RCORD_DT 
+				, MR.MDEXMN_DGNSS_NM
+				, H.HSPTL_NO
+				, (
+					SELECT 
+						PD.DRUG_NM
+					FROM prscrptn_drug PD 
+					WHERE PD.PRSCRPTN_NO = P.PRSCRPTN_NO 
+					) AS DRUGNM
+			FROM mdexmn_rcord MR 
+			LEFT OUTER JOIN hsptl H 
+				ON H.HSPTL_NO  = MR.HSPTL_NO 
+			LEFT OUTER JOIN prscrptn P 
+				ON P.MDEXMN_RCORD_NO  = MR.MDEXMN_RCORD_NO
+			WHERE 1=1
+			<if test="type2 != '' and type2 != null">
+				AND MR.MDEXMN_DGNSS_NM = #{type2}
+			</if>   	
+			ORDER BY MR.MDEXMN_RCORD_DT DESC
+		)LIST
+		LIMIT #{startIndexNo}, #{pageSize}
+	</select>
+	
+	<select id="getMdexmnHsptlRecordTotRecCnt" parameterType="com.KidLove.comm.vo.PageVO">
+	
+		SELECT 
+			COUNT(*)
+		FROM(
+			SELECT
+				MR.MDEXMN_RCORD_NO 
+				, H.HSPTL_NM 
+				, H.HSPTL_DRCTR
+				, MR.MDEXMN_RCORD_DT 
+				, MR.MDEXMN_DGNSS_NM
+				, (
+					SELECT 
+						PD.DRUG_NM
+					FROM prscrptn_drug PD 
+					WHERE PD.PRSCRPTN_NO = P.PRSCRPTN_NO 
+					) AS drugNm
+			FROM mdexmn_rcord MR 
+			LEFT OUTER JOIN hsptl H 
+				ON H.HSPTL_NO  = MR.HSPTL_NO 
+			LEFT OUTER JOIN prscrptn P 
+				ON P.MDEXMN_RCORD_NO  = MR.MDEXMN_RCORD_NO
+			WHERE 1=1
+			<if test="type2 != '' and type2 != null">
+				AND MR.MDEXMN_DGNSS_NM = #{type2}
+			</if>   	
+			GROUP BY  MR.MDEXMN_RCORD_NO,H.HSPTL_NM, H.HSPTL_DRCTR, MR.MDEXMN_RCORD_DT,MR.MDEXMN_DGNSS_NM,H.HSPTL_NO, drugNm
+		)LIST
+	
+	</select>
+	
+	<insert id="insertDrug" parameterType="com.KidLove.checkUp.vo.PrscrptnDrugVO">
+	
+		INSERT INTO prscrptn_drug
+			(
+				DRUG_NM
+				, DRUG_UNIT
+				, DRUG_AMOUNT
+				, DRUG_PD
+				, PRSCRPTN_NO
+			)
+		VALUES
+			(
+				#{drugNm}
+				, #{drugUnit}
+				, #{drugAmount}
+				, #{drugPd}
+				, #{prscrptnNo}
+			)
+
+	</insert>
+	
+	<select id="getMdexmnDgnssNmHist" resultMap="mdexmnMap">
+	
+		SELECT 
+			MR.MDEXMN_RCORD_NO 
+			, MR.MDEXMN_DGNSS_NM 
+			, MR.MDEXMN_MDLRT 
+			, MR.MDEXMN_RCORD_DT
+			, PD.DRUG_NM
+			, (
+				SELECT 
+					A.ATCH_FLPTH 
+				FROM atch A 
+				WHERE A.ATCH_CODE = P.ATCH_CODE
+			) AS prscrptnAtchCode
+		FROM mdexmn_rcord MR
+		LEFT OUTER JOIN prscrptn P 
+			ON P.MDEXMN_RCORD_NO = MR.MDEXMN_RCORD_NO 
+		LEFT OUTER JOIN prscrptn_drug PD 
+			ON PD.PRSCRPTN_NO  = P.PRSCRPTN_NO 
+		WHERE MR.CHLDRN_NO = #{chldrnNo}
+			AND MR.MDEXMN_TY ='CLNIC'
+		ORDER BY MR.MDEXMN_RCORD_DT DESC
+		
+	</select>	
+	
+	<insert id="insertPrscrptn" parameterType="com.KidLove.checkUp.vo.PrscrptnVO"
+		useGeneratedKeys="true" keyProperty="prscrptnNo"
+	>
+		INSERT INTO prscrptn
+			(
+				PARMACY_NO
+				, ATCH_CODE
+				, PRSCRPTN_DT
+				, MDEXMN_RCORD_NO
+			)
+		VALUES
+			(
+				#{parmacyNo}
+				, #{atchCode}
+				, #{prscrptnDt}
+				, #{mdexmnRcordNo}
+			)
+	</insert>
+	
+	<insert id="insertMdexmn"  parameterType="com.KidLove.checkUp.vo.MdexmnRcordVO"
+		useGeneratedKeys="true" keyProperty="mdexmnRcordNo"
+	>
+		INSERT INTO mdexmn_rcord
+			(
+				HSPTL_NO
+				, PARMACY_NO
+				, CHLDRN_NO
+				, MDEXMN_DOCTR_OPINION
+				, MDEXMN_DGNSS_NM
+				, MDEXMN_RCORD_DT
+				, MDEXMN_MDLRT
+				, MDEXMN_MEMO
+				, MDEXMN_TY
+			)
+		VALUES
+			(
+				#{hsptlNo}
+				, #{parmacyNo}
+				, #{chldrnNo}
+				, #{mdexmnDoctrOpinion}
+				, #{mdexmnDgnssNm}
+				, #{mdexmnRcordDt}
+				, #{mdexmnMdlrt}
+				, #{mdexmnMemo}
+				, #{mdexmnTy}
+			)
+	</insert>
+	
+	<insert id="insertHsptl" parameterType="com.KidLove.comm.vo.HsptlVO"
+		useGeneratedKeys="true" keyProperty="hsptlNo"
+	>
+		
+		INSERT INTO hsptl
+			(
+				HSPTL_NM
+				, HSPTL_DRCTR
+				, HSPTL_ADDR
+			)
+		VALUES
+			(
+				#{hsptlNm}
+				, #{hsptlDrctr}
+				, #{hsptlAddr}
+			)
+	</insert>
+	
+	<select id="getHstplHist" resultMap="mdexmnMap">
+		
+		SELECT 
+			H.HSPTL_NO 
+			, H.HSPTL_NM 
+			, H.HSPTL_DRCTR 
+			, MR.MDEXMN_RCORD_DT 
+		FROM hsptl H 
+		LEFT OUTER JOIN mdexmn_rcord MR 
+			ON H.HSPTL_NO  = MR.HSPTL_NO
+		LEFT OUTER JOIN chldrn C 
+			ON C.CHLDRN_NO  = MR.CHLDRN_NO 
+		LEFT OUTER JOIN mber_chldrn MC 
+			ON MC.CHLDRN_NO  = C.CHLDRN_NO 
+		WHERE C.CHLDRN_NO = #{chldrnNo}
+		
+	</select>
+
+
+
+
+</mapper>

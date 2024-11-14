@@ -23,6 +23,8 @@ public class HsptlVO {
 
 	private String hsptlNm;               			// 병원명
 	private Long hsptlNo;              				// 병원번호
+	private String hsptlDrctr; 						// 원장이름
+	private String hsptlAddr;						// 병원주소
 	
 	//1:1
 	private VacntnRcordVO vacntnRcord;

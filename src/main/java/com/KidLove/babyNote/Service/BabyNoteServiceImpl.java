@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.KidLove.babyNote.dao.BabyNoteDAO;
@@ -25,6 +26,7 @@ public class BabyNoteServiceImpl implements BabyNoteService {
 	private SQLErrorMessage sqlErrorMessage;
 
 	@Override
+	@Transactional
 	public ResponseEntity<ResultVO<Object>> getBabyNote(@RequestParam String chldrnNo) {
 		try {
 			Long chldrn = Long.parseLong(chldrnNo);
