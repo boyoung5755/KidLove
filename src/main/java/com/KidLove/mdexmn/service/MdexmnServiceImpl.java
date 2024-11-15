@@ -164,7 +164,7 @@ public class MdexmnServiceImpl implements MdexmnService {
 			combinedList.addAll(mdexmnParmacyList);
 			*/
 			
-			 //정렬
+			 //정렬   
 	        combinedList = combinedList.stream()
 	                .sorted(Comparator.comparing(MdexmnRcordVO::getMdexmnRcordDt).reversed())
 	                .collect(Collectors.toList());

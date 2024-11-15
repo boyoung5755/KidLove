@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.KidLove.babyNote.dao.BabyNoteDAO">
 
-	<resultMap type="com.KidLove.babyNote.vo.VacntnRcordVO" id="vacntnRcord" autoMapping="true">
+	<resultMap type="com.KidLove.babyNote.vo.VacntnRcordVO" id="vacntnRcordMap" autoMapping="true">
 		<id property="vacntnRcordNo" column="VACNTN_RCORD_NO"/>
 		<association property="chldrn" javaType="com.KidLove.chldrn.vo.ChldrnVO" autoMapping="true"/>
 		<collection property="vacntnList" ofType="com.KidLove.comm.vo.VacntnVO" autoMapping="true">
@@ -17,9 +17,57 @@
 		</collection>	
 	</resultMap>
 
+	<select id="getVacntnIctsdDtl" resultMap="vacntnRcordMap">
+		
+		SELECT 
+			V.VACNTN_ICTSD
+			, VR.VACNTN_INOCL_DT 
+			, VR.CHLDRN_NO
+			, V.VACNTN_CNT
+			, V.VACNTN_ERA 
+			, VR.VACNTN_REMNDR
+			, V.VACNTN_ODR 
+			, (
+				SELECT 
+					VM.MTH_NM 
+				FROM vacntn_mth VM
+				WHERE  VM.VACNTN_MTH_NO  = V.VACNTN_MTH_NO 
+			) AS mthNm
+		FROM vacntn_rcord VR 
+		LEFT OUTER JOIN vacntn V 
+		ON V.VACNTN_NO  = VR.VACNTN_NO 
+		WHERE V.VACNTN_ICTSD  = #{vacntnIctsd}
+		AND VR.CHLDRN_NO = #{chldrnNo}
+		
+	</select>
+
+	<insert id="insertVacntnRcord" parameterType="com.KidLove.babyNote.vo.VacntnRcordVO"
+		useGeneratedKeys="true" keyProperty="vacntnRcordNo"
+	>
+		INSERT INTO vacntn_rcord
+			(
+				VACNTN_NO
+				, HSPTL_NO
+				, CHLDRN_NO
+				, VACIN_TY
+				, VACNTN_SPORT_AT
+				, VACNTN_REMNDR
+				, VACNTN_INOCL_DT
+			)
+		VALUES
+			(
+				#{vacntnNo}
+				, #{hsptlNo}
+				, #{chldrnNo}
+				, #{vacinTy}
+				, #{vacntnSportAt}
+				, #{vacntnRemndr}
+				, #{vacntnInoclDt}
+			)
+	</insert>
 
 	<select id="getBabyNote" parameterType="com.KidLove.chldrn.vo.ChldrnVO"
-		resultMap="vacntnRcord">
+		resultMap="vacntnRcordMap">
 		SELECT 
 		    VM.MTH_NM
 		    , V.VACNTN_ICTSD

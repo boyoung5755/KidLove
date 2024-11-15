@@ -1,6 +1,9 @@
 package com.KidLove.babyNote.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -11,16 +14,21 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.KidLove.babyNote.dao.BabyNoteDAO;
-import com.KidLove.chldrn.vo.ChldrnVO;
+import com.KidLove.babyNote.vo.VacntnRcordVO;
 import com.KidLove.comm.utils.SQLErrorMessage;
+import com.KidLove.comm.vo.HsptlVO;
 import com.KidLove.comm.vo.ResultVO;
 import com.KidLove.comm.vo.VacntnVO;
+import com.KidLove.mdexmn.dao.MdexmnDAO;
 
 @Service
 public class BabyNoteServiceImpl implements BabyNoteService {
 	
 	@Inject
 	private BabyNoteDAO babyNoteDAO;
+	
+	@Inject
+	private MdexmnDAO mdexmnDAO;
 	
 	@Inject
 	private SQLErrorMessage sqlErrorMessage;
@@ -38,6 +46,60 @@ public class BabyNoteServiceImpl implements BabyNoteService {
 		}catch (Exception e) {
 			 return ResponseEntity.ok(ResultVO.res(HttpStatus.BAD_REQUEST, "retrieve Failed", ""));
 		}	 
+	}
+
+	@Override
+	@Transactional
+	public ResponseEntity<ResultVO<Object>> createVacntnRecord(Map<String, String> param) {
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		
+		
+		try {
+			long hsptlNo = 0;
+			
+			HsptlVO hsptl = new HsptlVO();
+			
+			if(param.get("hsptlNo").equals(null)||param.get("hsptlNo").equals("")) {
+				
+				hsptl = HsptlVO.builder()
+					.hsptlNm(param.get("hsptlNm"))
+					.hsptlDrctr(param.get("hsptlDrctr"))
+					.hsptlAddr(param.get("hsptlAddr"))
+					.build();
+				
+				mdexmnDAO.insertHsptl(hsptl);
+				hsptlNo = hsptl.getHsptlNo();
+			}else {
+				hsptlNo = Long.parseLong(param.get("hsptlNo"));
+			}
+			
+			
+			VacntnRcordVO vacntn  = VacntnRcordVO.builder()
+					.chldrnNo(Long.parseLong(param.get("chldrnNo"))) 
+					.vacntnInoclDt(LocalDateTime.parse(param.get("vacntnInoclDt"), formatter)) 
+					.vacntnNo(Long.parseLong(param.get("vacntnNo")))
+					.hsptlNo(hsptlNo)
+					.build();
+			
+			babyNoteDAO.insertVacntnRcord(vacntn);
+			
+			param.put("vacntnRcordNo",String.valueOf(vacntn.getVacntnRcordNo()));
+			
+			return  ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success",param));
+			
+		} catch (RuntimeException e) {
+			String sqlErrorMsg = sqlErrorMessage.extractSqlErrorMessage(e.getMessage());
+            throw new RuntimeException(sqlErrorMsg, e);
+		}catch (Exception e) {
+			 return ResponseEntity.ok(ResultVO.res(HttpStatus.BAD_REQUEST, "create Failed", ""));
+		}	
+	}
+
+	@Override
+	public ResponseEntity<ResultVO<Object>> getVacntnIctsdDtl(Map<String, String> param) {
+		List<VacntnRcordVO>  vacntnRcord = babyNoteDAO.getVacntnIctsdDtl(param);
+		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success",vacntnRcord));
 	}
 
 }

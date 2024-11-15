@@ -27,12 +27,13 @@ public class VacntnRcordVO {
 	
 	private Long chldrnNo;             				// 자녀번호
 	private LocalDateTime vacntnRcordCrtDt;          			// 생성일(접종일)
-	private Integer hsptlNo;              			// 병원번호
+	private Long hsptlNo;              			// 병원번호
 	private String vacinTy;               			// 백신종류 
 	private Long vacntnNo;             				// 예방접종번호
 	private Long vacntnRcordNo;        				// 예방접종기록번호
 	private Integer vacntnRemndr;         			// 접종잔여횟수
 	private String vacntnSportAt;         			// N 유료, Y무료
+	private LocalDateTime vacntnInoclDt;			// 실제 접종일
 
 	//1:1
 	private ChldrnVO chldrn;

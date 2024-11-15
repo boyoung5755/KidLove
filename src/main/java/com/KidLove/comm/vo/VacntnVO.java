@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 public class VacntnVO {
 	
 	private Integer vacntnCnt;            			// 접종횟수
-	private Integer vacntnEra;            			// 접종시기
+	private String vacntnEra;            			// 접종시기
 	private String vacntnIctsd;           			// 대상전염병명
 	private Long vacntnNo;             			    // 예방접종번호
 	private String mthNm;							// 백신명
