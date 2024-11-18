@@ -2,7 +2,7 @@ package com.KidLove.chldrn.vo;
 
 import java.time.LocalDateTime;
 
-import com.KidLove.mber.vo.MberVO;
+import com.KidLove.comm.vo.HsptlVO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,8 +29,13 @@ public class ChldrnSymptmsVO {
 	private String symptmsMemo;           			// 증상메모
 	private Long symptmsNo;            				// 질병번호
 	private String symptmsTy;
+	private Long hsptlNo;      
+	
+	private LocalDateTime  symptmsVisitdt; 			//병원방문일
 	
 	//1:1
 	private ChldrnVO chldrn;
 	private SymptmsVO symptms;
+	private SymptmsFrsaidVO  symptmsFrsaid;
+	private HsptlVO   hsptl;
 }

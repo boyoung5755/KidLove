@@ -3,6 +3,9 @@
  */
 package com.KidLove.report.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,12 +18,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.KidLove.chldrn.vo.BdHeatVO;
 import com.KidLove.chldrn.vo.ChldrnInfoVO;
+import com.KidLove.chldrn.vo.ChldrnSymptmsVO;
+import com.KidLove.chldrn.vo.ChldrnVO;
 import com.KidLove.chldrn.vo.MealVO;
 import com.KidLove.chldrn.vo.SleepVO;
+import com.KidLove.chldrn.vo.SymptmsFrsaidVO;
+import com.KidLove.chldrn.vo.SymptmsVO;
 import com.KidLove.chldrn.vo.TakngVO;
 import com.KidLove.chldrn.vo.UrineVO;
+import com.KidLove.comm.utils.RandomStringGenerator;
 import com.KidLove.comm.utils.SQLErrorMessage;
+import com.KidLove.comm.vo.HsptlVO;
 import com.KidLove.comm.vo.ResultVO;
+import com.KidLove.mdexmn.dao.MdexmnDAO;
 import com.KidLove.report.dao.ReportDAO;
 
 /**
@@ -41,7 +51,12 @@ public class ReportServiceImpl implements ReportService {
 	private ReportDAO  reportDAO;
 	
 	@Inject
+	private MdexmnDAO mdexmnDAO;
+	
+	@Inject
 	private SQLErrorMessage sqlErrorMessage;
+	
+	private  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
   
 	@Override
 	@Transactional
@@ -259,6 +274,102 @@ public class ReportServiceImpl implements ReportService {
 		} catch (Exception e) {
 			 return ResponseEntity.ok(ResultVO.res(HttpStatus.BAD_REQUEST, "retrieve Failed", ""));
 		}	 
+	}
+
+	@Override
+	@Transactional
+	public ResponseEntity<ResultVO<Object>> createSymptms(Map<String, String> param) {
+		try {
+			
+			Long userSymptms ;
+			if( ! param.get("symptms").isEmpty()) {
+				SymptmsVO symptms = SymptmsVO.builder()
+						.symptmsNm(param.get("symptms"))
+						.build();
+				
+				reportDAO.insertSymptms(symptms);
+				userSymptms = symptms.getSymptmsNo();
+				
+			}else {
+				userSymptms = Long.parseLong(param.get("symptmsNo"));
+			}
+			
+			Long userHsptlNo;
+			if( param.get("hsptlNo").isEmpty()) {
+				
+				HsptlVO hsptl = HsptlVO.builder()
+						.hsptlNm(param.get("hsptlNm"))
+						.hsptlDrctr(param.get("hsptlDrctr"))
+						.hsptlAddr(param.get("hsptlAddr"))
+						.build();
+				
+				mdexmnDAO.insertHsptl(hsptl);
+				userHsptlNo = hsptl.getHsptlNo();
+				
+			}else {
+				userHsptlNo = Long.parseLong(param.get("hsptlNo"));
+			}
+			
+			String makeFileCode = RandomStringGenerator.generateRandomString(15);
+			
+			ChldrnSymptmsVO chldrnSymptms = ChldrnSymptmsVO.builder()
+					.chldrnNo(Long.parseLong(param.get("chldrnNo"))) 
+					.symptmsBgndt(LocalDateTime.parse(param.get("symptmsBgndt"), formatter))
+					.symptmsEnddt(LocalDateTime.parse(param.get("symptmsEnddt"), formatter))
+					.symptmsNo(userSymptms)
+					.symptmsVisitdt(LocalDateTime.parse(param.get("symptmsVisitdt"), formatter))
+					.hsptlNo(userHsptlNo)
+					.atchCode(makeFileCode)
+					.build();
+			
+			reportDAO.insertChldrnSymptms(chldrnSymptms);
+			
+			SymptmsFrsaidVO symptmsFrsaid = SymptmsFrsaidVO.builder()
+					.chldrnSymptmsNo(chldrnSymptms.getChldrnSymptmsNo())
+					.frsaidCn(param.get("frsaidCn"))
+					.build();
+			
+			reportDAO.insertSymptmsFrsaid(symptmsFrsaid);
+			
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success",param));
+		} catch (RuntimeException e) {
+			String sqlErrorMsg = sqlErrorMessage.extractSqlErrorMessage(e.getMessage());
+            throw new RuntimeException(sqlErrorMsg, e);
+		} catch (Exception e) {
+			 return ResponseEntity.ok(ResultVO.res(HttpStatus.BAD_REQUEST, "create Failed", ""));
+		}	 
+	}
+
+	@Override
+	public ResponseEntity<ResultVO<Object>> getBabyHome(String chldrnNo) {
+		Map<String, Object> combinedMap =  new HashMap<String, Object>();
+		
+		int num = Integer.parseInt(chldrnNo);
+		
+		//1.아이정보
+		ChldrnVO chldrn = reportDAO.getChldrnInfo(num);
+		combinedMap.put("info", chldrn);
+		
+		//2.아이증상
+		List<SymptmsVO> symptms = reportDAO.getChldrnSymptms(num);
+		combinedMap.put("symptms", symptms);
+		
+		//3.체온기록
+		List<BdHeatVO>  bdHeat = reportDAO.getChldrnBdHeat(num);
+		combinedMap.put("bdHeat", bdHeat);
+		
+		//4.수면패턴
+		List<SleepVO> sleep = reportDAO.getChldrnSleep(num);
+		combinedMap.put("sleep", sleep);
+		
+		//5.식사패턴
+		//6.배뇨횟수
+		//7.치료기록
+		//8.약국기록
+		//9.접종기록
+		//10.특이사항기록
+		
+		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success",combinedMap));
 	}
 
 }

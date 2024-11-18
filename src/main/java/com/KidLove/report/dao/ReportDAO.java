@@ -10,8 +10,12 @@ import org.apache.ibatis.annotations.Param;
 
 import com.KidLove.chldrn.vo.BdHeatVO;
 import com.KidLove.chldrn.vo.ChldrnInfoVO;
+import com.KidLove.chldrn.vo.ChldrnSymptmsVO;
+import com.KidLove.chldrn.vo.ChldrnVO;
 import com.KidLove.chldrn.vo.MealVO;
 import com.KidLove.chldrn.vo.SleepVO;
+import com.KidLove.chldrn.vo.SymptmsFrsaidVO;
+import com.KidLove.chldrn.vo.SymptmsVO;
 import com.KidLove.chldrn.vo.TakngVO;
 import com.KidLove.chldrn.vo.UrineVO;
 
@@ -177,5 +181,80 @@ public interface ReportDAO {
 	 */
 	
 	public List<TakngVO> getRecentTakngList(@Param("chldrn") Long chldrn);
+
+	/**
+	 * @MethodName	: insertSymptms
+	 * @author		: Boyoung
+	 * @date 		: 2024.11.18
+	 * @description	: 사용자 증상 등록
+	 * @return 		: void
+	 * @param symptms
+	 */
+	public void insertSymptms(SymptmsVO symptms);
+
+	/**
+	 * @MethodName	: insertChldrnSymptms
+	 * @author		: Boyoung
+	 * @date 		: 2024.11.18
+	 * @description	: 자녀증상등록
+	 * @return 		: void
+	 * @param chldrnSymptms
+	 */
+	public void insertChldrnSymptms(ChldrnSymptmsVO chldrnSymptms);
+
+	/**
+	 * @MethodName	: insertSymptmsFrsaid
+	 * @author		: Boyoung
+	 * @date 		: 2024.11.18
+	 * @description	: 증상응급처치 등록
+	 * @return 		: void
+	 * @param symptmsFrsaid
+	 */
+	public void insertSymptmsFrsaid(SymptmsFrsaidVO symptmsFrsaid);
+
+
+	/**
+	 * @MethodName	: getChldrnInfo
+	 * @author		: Boyoung
+	 * @date 		: 2024.11.18
+	 * @description	: 아이정보
+	 * @return 		: ChldrnVO
+	 * @param int1
+	 * @return
+	 */
+	public ChldrnVO getChldrnInfo(@Param("chldrnNo") int chldrnNo);
+
+	/**
+	 * @MethodName	: getChldrnSymptms
+	 * @author		: Boyoung
+	 * @date 		: 2024.11.18
+	 * @description	:
+	 * @return 		: SymptmsVO
+	 * @param num
+	 * @return
+	 */
+	public List<SymptmsVO> getChldrnSymptms(@Param("chldrnNo") int chldrnNo);
+
+	/**
+	 * @MethodName	: getChldrnBdHeat
+	 * @author		: Boyoung
+	 * @date 		: 2024.11.18
+	 * @description	:
+	 * @return 		: BdHeatVO
+	 * @param num
+	 * @return
+	 */
+	public List<BdHeatVO> getChldrnBdHeat(@Param("chldrnNo") int chldrnNo);
+
+	/**
+	 * @MethodName	: getChldrnSleep
+	 * @author		: Boyoung
+	 * @date 		: 2024.11.18
+	 * @description	:
+	 * @return 		: List<SleepVO>
+	 * @param num
+	 * @return
+	 */
+	public List<SleepVO> getChldrnSleep(@Param("chldrnNo") int chldrnNo);
 
 }

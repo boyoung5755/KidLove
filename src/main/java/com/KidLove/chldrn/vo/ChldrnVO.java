@@ -38,9 +38,15 @@ public class ChldrnVO {
 	private LocalDateTime chldrnCrtDt;          	// 생성일
 	private String chldrnHideAt;					// 자녀 숨김여부
 	private String chldrnDelAt;						// 자녀 정보 삭제 여부
+	private String atchFlpth;      					 //파일경로
+	
 	
 	private String mberId ;
 	private Integer dday;
+	
+	private int age;
+	private int weeks;
+	private int days;
 	
 	//N:N
 	private List<MberVO> mberList;		

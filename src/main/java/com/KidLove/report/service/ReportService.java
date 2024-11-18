@@ -182,4 +182,26 @@ public interface ReportService {
 	
 	public ResponseEntity<ResultVO<Object>> getRecentTakngList(String chldrnNo);
 
+	/**
+	 * @MethodName	: createSymptms
+	 * @author		: Boyoung
+	 * @date 		: 2024.11.18
+	 * @description	: 아이증상 기록하기
+	 * @return 		: ResponseEntity<ResultVO<Object>>
+	 * @param paramMap
+	 * @return
+	 */
+	public ResponseEntity<ResultVO<Object>> createSymptms(Map<String, String> paramMap);
+
+	/**
+	 * @MethodName	: getBabyHome
+	 * @author		: Boyoung
+	 * @date 		: 2024.11.18
+	 * @description	: 레포트 아기홈
+	 * @return 		: ResponseEntity<ResultVO<Object>>
+	 * @param chldrnNo
+	 * @return
+	 */
+	public ResponseEntity<ResultVO<Object>> getBabyHome(String chldrnNo);
+
 }

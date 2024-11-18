@@ -44,6 +44,27 @@ public class ReportController {
 
 	private final ReportService  reportService;
 	
+	
+	@GetMapping("/getBabyHome")
+	public ResponseEntity<ResultVO<Object>> getBabyHome ( @RequestParam("chldrnNo")  String chldrnNo) {
+		try {
+			return reportService.getBabyHome(chldrnNo);
+		} catch (Exception e) {
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.BAD_REQUEST,e.getMessage(),""));	
+		}
+	} 
+	
+	
+	@PostMapping("/createSymptms")
+	public ResponseEntity<ResultVO<Object>> createSymptms (@RequestBody Map<String, String> param) {
+		try {
+			return reportService.createSymptms(param);
+		} catch (Exception e) {
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.BAD_REQUEST,e.getMessage(),""));	
+		}
+	} 
+	
+	
 	@DeleteMapping("/removeRecord")
 	public ResponseEntity<ResultVO<Object>> removeRecord (@RequestBody Map<String, Object> paramMap) {
 		try {

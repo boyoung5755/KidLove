@@ -1,6 +1,157 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.KidLove.report.dao.ReportDAO">
+
+	
+	
+	<select id="getChldrnSleep" resultType="com.KidLove.chldrn.vo.SleepVO">
+	
+		WITH SleepIntervals AS (
+		    SELECT 
+		        DATE(s.CRT_DT) AS recordDate
+		        , S.SLEEP_BGNDT
+		        , S.SLEEP_ENDDT
+		        , TIMESTAMPDIFF(
+		        	SECOND, LAG(S.SLEEP_BGNDT) 
+		        	OVER (
+			        		PARTITION BY DATE(S.CRT_DT) 
+			        		ORDER BY S.SLEEP_BGNDT)
+			        		, S.SLEEP_BGNDT
+		        		) AS intervalSeconds
+		        ,
+		        CASE
+		            WHEN S.SLEEP_ENDDT >= S.SLEEP_BGNDT 
+		            THEN TIMESTAMPDIFF(SECOND, S.SLEEP_BGNDT, S.SLEEP_ENDDT) / 3600
+		            ELSE NULL 
+		        END AS sleepDuration 
+		    FROM sleep S
+		)
+		SELECT 
+		    recordDate
+		    , COUNT(*) AS sleepCount
+		    , AVG(intervalSeconds) / 3600 AS avgIntervalHours
+		    , AVG(sleepDuration) AS avgSleepHours 
+		FROM SleepIntervals
+		WHERE recordDate >= DATE_SUB(CURDATE(), INTERVAL 3 DAY) 
+		GROUP BY recordDate
+		ORDER BY recordDate DESC
+				
+	</select>
+
+	<select id="getChldrnBdHeat" resultType="com.KidLove.chldrn.vo.BdHeatVO">
+	 <![CDATA[
+		SELECT 
+		    DATE(B.CRT_DT) AS recordDate
+		    , AVG(B.BDHEAT_TP) AS avgBdheat 
+		FROM bdheat B
+		WHERE B.CHLDRN_NO = #{chldrnNo}
+		  AND B.CRT_DT >= DATE_SUB(CURDATE(), INTERVAL 3 DAY) 
+		  AND B.CRT_DT < CURDATE() + INTERVAL 1 DAY 
+		GROUP BY DATE(B.CRT_DT) 
+		ORDER BY recordDate DESC
+	]]>			
+	</select>
+	
+	<resultMap type="com.KidLove.chldrn.vo.ChldrnVO" id="chldrnInfoMap" autoMapping="true">
+		<id  property="chldrnNo" column="CHLDRN_NO"/>
+		<collection property="chldrnInfoList" ofType="com.KidLove.chldrn.vo.ChldrnInfoVO" autoMapping="true">
+			<id property="chldrnInfoNo"  column="CHLDRN_INFO_NO"/>
+		</collection>
+	</resultMap>
+	
+	
+	<select id="getChldrnSymptms" resultType="com.KidLove.chldrn.vo.SymptmsVO">
+	
+		SELECT 
+			(
+				SELECT
+					S.SYMPTMS_NM 
+				FROM symptms S
+				WHERE S.SYMPTMS_NO = CS.SYMPTMS_NO 
+			) AS symptmsNm 
+		FROM chldrn_symptms CS 
+		WHERE CS.CHLDRN_NO = #{chldrnNo}
+			AND DATE(CS.CRT_DT) = CURDATE() 
+		ORDER BY CS.CRT_DT DESC
+	
+	</select>
+	
+
+	<select id="getChldrnInfo" resultMap="chldrnInfoMap">
+	
+		SELECT 
+			C.CHLDRN_BRTHDY 
+			, C.CHLDRN_NM 
+			, C.ATCH_CODE 
+			, (
+				SELECT A.ATCH_FLPTH 
+				FROM atch A 
+				WHERE A.ATCH_CODE = C.ATCH_CODE 
+			) AS atchFlpth
+			, MAX(CI.CHLDRN_HEIGHT) AS chldrnHeight
+			, MAX(CI.CHLDRN_BDWGH) AS chldrnBdwgh
+			, MAX(CI.CHLDRN_HEAD) AS chldrnHead
+			,CASE 
+		        WHEN date_format(C.CHLDRN_BRTHDY, '%M%D') > date_format(curdate(), '%M%D') 
+		        THEN year(curdate()) - year(C.CHLDRN_BRTHDY) 
+		    END AS age
+		    ,floor(datediff(curdate(), C.CHLDRN_BRTHDY) / 7) AS weeks
+		    ,mod(datediff(curdate(), C.CHLDRN_BRTHDY), 7) AS days
+		FROM chldrn C
+		LEFT OUTER JOIN chldrn_info CI 
+		ON CI.CHLDRN_NO  = C.CHLDRN_NO  
+		WHERE C.CHLDRN_NO = #{chldrnNo}
+
+	</select>
+	
+
+	<insert id="insertSymptmsFrsaid" parameterType="com.KidLove.chldrn.vo.SymptmsFrsaidVO"
+		useGeneratedKeys="true" keyProperty="symptmsFrsaidNo"
+	>
+		INSERT INTO symptms_frsaid
+			(CHLDRN_SYMPTMS_NO, FRSAID_CN)
+		VALUES
+			(#{chldrnSymptmsNo}, #{frsaidCn})
+	
+	</insert>
+
+	<insert id="insertChldrnSymptms" parameterType="com.KidLove.chldrn.vo.ChldrnSymptmsVO"
+		useGeneratedKeys="true" keyProperty="chldrnSymptmsNo">
+		
+		INSERT INTO chldrn_symptms
+			(
+				SYMPTMS_NO
+				, SYMPTMS_BGNDT
+				, SYMPTMS_ENDDT
+				, SYMPTMS_MEMO
+				, ATCH_CODE
+				, CHLDRN_NO
+				, SYMPTMS_TY
+				, SYMPTMS_VISITDT
+			)
+		VALUES
+			(
+				#{symptmsNo}
+				, #{symptmsBgndt}
+				, #{symptmsEnddt}
+				, #{symptmsMemo}
+				, #{atchCode}
+				, #{chldrnNo}
+				, #{symptmsTy}
+				, #{symptmsVisitdt}
+			)
+			
+	</insert>
+
+	<insert id="insertSymptms" parameterType="com.KidLove.chldrn.vo.SymptmsVO"
+		useGeneratedKeys="true" keyProperty="symptmsNo">
+		INSERT INTO symptms
+			(SYMPTMS_NM, SYMPTMS_DTL)
+		VALUES
+			(#{symptmsNm}, #{symptmsDtl})
+	
+	</insert>
+
 	
 	<select id="getRecentTakngList" parameterType="Long" resultMap="takngMap">
 		SELECT 

@@ -32,6 +32,9 @@ public class BdHeatVO {
 	private LocalDateTime bdheatBgndt;     			// 체온측정 시작
 	private LocalDateTime bdheatEnddt;     		    // 체온측정 완료
 	
+	private LocalDateTime recordDate;
+	private Double avgBdheat;
+	
 	
 	//1:1
 	private ChldrnVO chldrn;

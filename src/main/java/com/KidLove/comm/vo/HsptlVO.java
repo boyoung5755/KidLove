@@ -2,6 +2,7 @@ package com.KidLove.comm.vo;
 
 import com.KidLove.babyNote.vo.VacntnRcordVO;
 import com.KidLove.checkUp.vo.MdexmnRcordVO;
+import com.KidLove.chldrn.vo.ChldrnSymptmsVO;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;
@@ -29,5 +30,6 @@ public class HsptlVO {
 	//1:1
 	private VacntnRcordVO vacntnRcord;
 	private MdexmnRcordVO mdexmnRcord;
+	private ChldrnSymptmsVO chldrnSymptms; 
 	
 }

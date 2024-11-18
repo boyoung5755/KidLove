@@ -36,5 +36,5 @@ public class VacntnVO {
 	
 	//1:N
 	private List<VacntnMthVO> vacntnMthList;
-	
+	 
 }
