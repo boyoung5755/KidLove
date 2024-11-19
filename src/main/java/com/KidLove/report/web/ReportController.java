@@ -46,9 +46,9 @@ public class ReportController {
 	
 	
 	@GetMapping("/getBabyHome")
-	public ResponseEntity<ResultVO<Object>> getBabyHome ( @RequestParam("chldrnNo")  String chldrnNo) {
+	public ResponseEntity<ResultVO<Object>> getBabyHome ( @RequestParam Map<String, String> param) {
 		try {
-			return reportService.getBabyHome(chldrnNo);
+			return reportService.getBabyHome(param);
 		} catch (Exception e) {
 			return ResponseEntity.ok(ResultVO.res(HttpStatus.BAD_REQUEST,e.getMessage(),""));	
 		}

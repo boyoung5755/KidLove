@@ -199,9 +199,9 @@ public interface ReportService {
 	 * @date 		: 2024.11.18
 	 * @description	: 레포트 아기홈
 	 * @return 		: ResponseEntity<ResultVO<Object>>
-	 * @param chldrnNo
+	 * @param param
 	 * @return
 	 */
-	public ResponseEntity<ResultVO<Object>> getBabyHome(String chldrnNo);
+	public ResponseEntity<ResultVO<Object>> getBabyHome(Map<String, String> param);
 
 }

@@ -1,5 +1,7 @@
 package com.KidLove.chldrn.vo;
 
+import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +21,7 @@ public class SignificantVO {
 	private Long chldrnNo;             				// 자녀번호
 	private String significantMemo;       			// 특이사항
 	private Integer significantNo;        			// 특이사항번호
+	private LocalDateTime significantCrtDt;
 
 	//1:1
 	private ChldrnVO chidrn;

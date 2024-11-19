@@ -8,11 +8,15 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.KidLove.babyNote.vo.VacntnRcordVO;
+import com.KidLove.checkUp.vo.MdexmnRcordVO;
+import com.KidLove.checkUp.vo.PrscrptnDrugVO;
 import com.KidLove.chldrn.vo.BdHeatVO;
 import com.KidLove.chldrn.vo.ChldrnInfoVO;
 import com.KidLove.chldrn.vo.ChldrnSymptmsVO;
 import com.KidLove.chldrn.vo.ChldrnVO;
 import com.KidLove.chldrn.vo.MealVO;
+import com.KidLove.chldrn.vo.SignificantVO;
 import com.KidLove.chldrn.vo.SleepVO;
 import com.KidLove.chldrn.vo.SymptmsFrsaidVO;
 import com.KidLove.chldrn.vo.SymptmsVO;
@@ -256,5 +260,74 @@ public interface ReportDAO {
 	 * @return
 	 */
 	public List<SleepVO> getChldrnSleep(@Param("chldrnNo") int chldrnNo);
+
+	/**
+	 * @MethodName	: getChlrnMeal
+	 * @author		: Boyoung
+	 * @param mealTy 
+	 * @date 		: 2024.11.19
+	 * @description	:
+	 * @return 		: List<MealVO>
+	 * @param num
+	 * @return
+	 */
+	public List<MealVO> getChldrnMeal(@Param("chldrnNo") int chldrnNo,@Param("mealTy") String mealTy);
+
+	/**
+	 * @MethodName	: getChldrnUrine
+	 * @author		: Boyoung
+	 * @date 		: 2024.11.19
+	 * @description	:
+	 * @return 		: List<UrineVO>
+	 * @param num
+	 * @return
+	 */
+	public List<UrineVO> getChldrnUrine(int num);
+
+	/**
+	 * @MethodName	: getChldrnMdexmnRcord
+	 * @author		: Boyoung
+	 * @date 		: 2024.11.19
+	 * @description	:
+	 * @return 		: MdexmnRcordVO
+	 * @param num
+	 * @return
+	 */
+	public MdexmnRcordVO getChldrnMdexmnRcord(@Param("chldrnNo") int chldrnNo);
+
+	/**
+	 * @MethodName	: getDrugList
+	 * @author		: Boyoung
+	 * @date 		: 2024.11.19
+	 * @description	:
+	 * @return 		: List<PrscrptnDrugVO>
+	 * @param num
+	 * @return
+	 */
+	public List<PrscrptnDrugVO> getDrugList(@Param("chldrnNo") int chldrnNo);
+
+	/**
+	 * @MethodName	: getChldrnVacntnRcord
+	 * @author		: Boyoung
+	 * @date 		: 2024.11.19
+	 * @description	:
+	 * @return 		: List<VacntnRcordVO>
+	 * @param num
+	 * @return
+	 */
+	public List<VacntnRcordVO> getChldrnVacntnRcord(@Param("chldrnNo") int chldrnNo);
+
+	/**
+	 * @MethodName	: getChldrnSignificant
+	 * @author		: Boyoung
+	 * @date 		: 2024.11.19
+	 * @description	:
+	 * @return 		: List<SignificantVO>
+	 * @param num
+	 * @return
+	 */
+	public List<SignificantVO> getChldrnSignificant(@Param("chldrnNo") int chldrnNo);
+
+	
 
 }

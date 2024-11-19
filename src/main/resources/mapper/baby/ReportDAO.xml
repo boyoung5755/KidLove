@@ -1,8 +1,137 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.KidLove.report.dao.ReportDAO">
+	
+	
+	<select id="getChldrnSignificant" resultType="com.KidLove.chldrn.vo.SignificantVO">
+	
+		SELECT 
+			S.SIGNIFICANT_MEMO 
+			, S.SIGNIFICANT_NO 
+		FROM significant S 
+		WHERE S.CHLDRN_NO  = #{chldrnNo}
+		ORDER BY S.CRT_DT  DESC
+		LIMIT 5
+		
+	</select>
+
+	<select id="getChldrnVacntnRcord" resultMap="vacntnMap">
+	
+		SELECT 	
+			VR.VACNTN_INOCL_DT 
+			, VM.MTH_NM 
+			, V.VACNTN_CNT 
+		FROM vacntn_rcord VR 
+		LEFT OUTER JOIN vacntn V 
+		ON VR.VACNTN_NO = V.VACNTN_NO
+		LEFT OUTER JOIN vacntn_mth VM 
+		ON VM.VACNTN_MTH_NO  = V.VACNTN_MTH_NO 
+		WHERE VR.CHLDRN_NO = #{chldrnNo}
+		ORDER BY VACNTN_INOCL_DT DESC
+		LIMIT 2
+	
+	</select>
+
+	<select id="getDrugList" resultType="com.KidLove.checkUp.vo.PrscrptnDrugVO">
+	
+		SELECT 
+		    PD.DRUG_NM 
+		    , PD.DRUG_UNIT
+		    , PD.DRUG_AMOUNT
+		FROM mdexmn_rcord MR
+		LEFT OUTER JOIN prscrptn P 
+		    ON MR.MDEXMN_RCORD_NO = P.MDEXMN_RCORD_NO
+		LEFT OUTER JOIN prscrptn_drug PD 
+		    ON PD.PRSCRPTN_NO = P.PRSCRPTN_NO
+		WHERE MR.CHLDRN_NO = #{chldrnNo}
+		AND MR.MDEXMN_RCORD_DT = (
+		      SELECT 
+		      	MAX(MR2.MDEXMN_RCORD_DT)
+		      FROM mdexmn_rcord MR2
+		      WHERE MR2.CHLDRN_NO = #{chldrnNo}
+		  )
+		
+	</select>
+
+	<select id="getChldrnMdexmnRcord" resultMap="mdexmnMap">
+	
+		SELECT 
+		    MR.MDEXMN_RCORD_DT AS mdexmnRcordDt
+		    , H.HSPTL_NM AS hsptlNm
+		    , MR.MDEXMN_DOCTR_OPINION 
+		    , MR.MDEXMN_DGNSS_NM 
+		    , MR.MDEXMN_MDLRT 
+		    , MR.MDEXMN_MEMO 
+		    , MR.MDEXMN_TY
+		    , MR.MDEXMN_RCORD_NO
+		    , (
+		    	SELECT 
+		    		A.ATCH_FLPTH
+		    	FROM atch A
+		    	WHERE  A.ATCH_CODE = P.ATCH_CODE
+		    ) AS mdexmnRcordatchFlpth
+		    , (
+		    	SELECT 
+		    		P2.PARMACY_NM
+		    	FROM parmacy P2 
+		    	WHERE P2.PARMACY_NO = P.PARMACY_NO
+		    ) AS parmacyNm
+		FROM mdexmn_rcord MR
+		LEFT OUTER JOIN hsptl H 
+		    ON H.HSPTL_NO = MR.HSPTL_NO
+		LEFT OUTER JOIN prscrptn P 
+			ON MR.MDEXMN_RCORD_NO  = P.MDEXMN_RCORD_NO 
+		WHERE MR.CHLDRN_NO = #{chldrnNo}
+		ORDER BY MR.MDEXMN_RCORD_DT DESC
+		LIMIT 1
+		
+	</select>
 
 	
+	<select id="getChldrnUrine" resultType="com.KidLove.chldrn.vo.UrineVO">
+	
+		SELECT 
+		    U.URINE_TY AS urineTy
+		    , COUNT(*) AS urineCount
+		    , DATE(U.CRT_DT) AS urineCrtDt
+		    , U.URINE_NO
+		FROM urine U
+		WHERE U.CRT_DT >= DATE_SUB(NOW(), INTERVAL 3 DAY) 
+		GROUP BY U.URINE_TY , urineCrtDt , U.URINE_NO
+	</select>
+	
+	
+	<select id="getChldrnMeal" resultType="com.KidLove.chldrn.vo.MealVO">
+	
+		WITH MealIntervals AS (
+		    SELECT 
+		        DATE(M.CRT_DT) AS recordDate
+		        , TIMESTAMPDIFF(
+		            SECOND, 
+		            LAG(M.CRT_DT) OVER (
+		                PARTITION BY DATE(M.CRT_DT) 
+		                ORDER BY M.CRT_DT
+		            )
+		        , M.CRT_DT
+		        ) AS intervalSeconds
+		        , M.MEAL_TY AS mealTy
+		        , M.MEAL_NO AS mealNo
+		    FROM meal M
+		    WHERE M.CHLDRN_NO = #{chldrnNo}
+		)
+		SELECT 
+		 	recordDate AS mealCrtDt
+		 	, COUNT(*) AS mealCount
+		 	, AVG(intervalSeconds) / 3600 AS avgIntervalHours
+		 	, mealTy
+		 	, mealNo
+		FROM MealIntervals
+		WHERE recordDate  >= DATE_SUB(CURDATE(), INTERVAL 3 DAY) 
+		AND mealTy = #{mealTy}
+		GROUP BY recordDate, mealTy, mealNo
+		ORDER BY recordDate DESC  
+	
+	</select>
 	
 	<select id="getChldrnSleep" resultType="com.KidLove.chldrn.vo.SleepVO">
 	
@@ -10,7 +139,8 @@
 		    SELECT 
 		        DATE(s.CRT_DT) AS recordDate
 		        , S.SLEEP_BGNDT
-		        , S.SLEEP_ENDDT
+		        , S.SLEEP_NO AS sleepNo
+		        , S.SLEEP_ENDDT 
 		        , TIMESTAMPDIFF(
 		        	SECOND, LAG(S.SLEEP_BGNDT) 
 		        	OVER (
@@ -31,9 +161,10 @@
 		    , COUNT(*) AS sleepCount
 		    , AVG(intervalSeconds) / 3600 AS avgIntervalHours
 		    , AVG(sleepDuration) AS avgSleepHours 
+		    , sleepNo
 		FROM SleepIntervals
 		WHERE recordDate >= DATE_SUB(CURDATE(), INTERVAL 3 DAY) 
-		GROUP BY recordDate
+		GROUP BY recordDate , sleepNo
 		ORDER BY recordDate DESC
 				
 	</select>
@@ -43,11 +174,12 @@
 		SELECT 
 		    DATE(B.CRT_DT) AS recordDate
 		    , AVG(B.BDHEAT_TP) AS avgBdheat 
+		    , B.BDHEAT_NO
 		FROM bdheat B
 		WHERE B.CHLDRN_NO = #{chldrnNo}
 		  AND B.CRT_DT >= DATE_SUB(CURDATE(), INTERVAL 3 DAY) 
 		  AND B.CRT_DT < CURDATE() + INTERVAL 1 DAY 
-		GROUP BY DATE(B.CRT_DT) 
+		GROUP BY DATE(B.CRT_DT) , B.BDHEAT_NO
 		ORDER BY recordDate DESC
 	]]>			
 	</select>
@@ -83,6 +215,7 @@
 			C.CHLDRN_BRTHDY 
 			, C.CHLDRN_NM 
 			, C.ATCH_CODE 
+			, C.CHLDRN_NO
 			, (
 				SELECT A.ATCH_FLPTH 
 				FROM atch A 
@@ -435,7 +568,17 @@
 				, #{chldrnVsprRight}
 			)
 	</insert>
-
+	
+	
+	<resultMap type="com.KidLove.babyNote.vo.VacntnRcordVO" id="vacntnMap" autoMapping="true">
+		<id property="vacntnRcordNo"  column="VACNTN_RCORD_NO"/>
+		<collection property="vacntnList" ofType="com.KidLove.comm.vo.VacntnVO" autoMapping="true">
+			<id property="vacntnNo" column="VACNTN_NO"/>
+			<collection property="vacntnMthList" ofType="com.KidLove.babyNote.vo.VacntnMthVO" autoMapping="true">
+				<id property="vacntnMthNo" column="VACNTN_MTH_NO"/>
+			</collection>
+		</collection>
+	</resultMap>
 
 	<resultMap type="com.KidLove.chldrn.vo.ChldrnInfoVO" id="chldrnMap" autoMapping="true">
 		<id property="chldrnInfoNo" column="CHLDRN_INFO_NO"/>
@@ -466,5 +609,17 @@
 		<id property="takngNo" column="TAKNG_NO"/>
 		<association property="chldrn" javaType="com.KidLove.chldrn.vo.ChldrnVO"  autoMapping="true" />
 	</resultMap>
-
+	
+	<resultMap type="com.KidLove.checkUp.vo.MdexmnRcordVO" id="mdexmnMap" autoMapping="true">
+		<id property="mdexmnRcordNo" column="MDEXMN_RCORD_NO" />
+		<association property="prscrptn" javaType="com.KidLove.checkUp.vo.PrscrptnVO" autoMapping="true">
+			<collection property="PrscrptnDrugList" ofType="com.KidLove.checkUp.vo.PrscrptnDrugVO" autoMapping="true">
+				<id property="prscrptnDrugNo" column="PRSCRPTN_DRUG_NO" />
+			</collection>
+		</association>
+		<collection property="hsptlList" ofType="com.KidLove.comm.vo.HsptlVO" autoMapping="true">
+			<id property="hsptlNo" column="HSPTL_NO" />
+		</collection>
+	</resultMap>
+	
 </mapper>

@@ -16,11 +16,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.KidLove.babyNote.vo.VacntnRcordVO;
+import com.KidLove.checkUp.vo.MdexmnRcordVO;
+import com.KidLove.checkUp.vo.PrscrptnDrugVO;
 import com.KidLove.chldrn.vo.BdHeatVO;
 import com.KidLove.chldrn.vo.ChldrnInfoVO;
 import com.KidLove.chldrn.vo.ChldrnSymptmsVO;
 import com.KidLove.chldrn.vo.ChldrnVO;
 import com.KidLove.chldrn.vo.MealVO;
+import com.KidLove.chldrn.vo.SignificantVO;
 import com.KidLove.chldrn.vo.SleepVO;
 import com.KidLove.chldrn.vo.SymptmsFrsaidVO;
 import com.KidLove.chldrn.vo.SymptmsVO;
@@ -341,10 +345,11 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	@Override
-	public ResponseEntity<ResultVO<Object>> getBabyHome(String chldrnNo) {
+	public ResponseEntity<ResultVO<Object>> getBabyHome(Map<String, String> param) {
 		Map<String, Object> combinedMap =  new HashMap<String, Object>();
 		
-		int num = Integer.parseInt(chldrnNo);
+		int num = Integer.parseInt(param.get("chldrnNo"));
+		String mealTy = param.get("mealTy");
 		
 		//1.아이정보
 		ChldrnVO chldrn = reportDAO.getChldrnInfo(num);
@@ -363,11 +368,29 @@ public class ReportServiceImpl implements ReportService {
 		combinedMap.put("sleep", sleep);
 		
 		//5.식사패턴
+		List<MealVO> meal  = reportDAO.getChldrnMeal(num,mealTy);
+		combinedMap.put("meal", meal);
+		
 		//6.배뇨횟수
-		//7.치료기록
-		//8.약국기록
+		List<UrineVO> urine  = reportDAO.getChldrnUrine(num);
+		combinedMap.put("urine", urine);
+		
+		//7.치료기록  8.약국기록
+		MdexmnRcordVO mdexmnRcord = reportDAO.getChldrnMdexmnRcord(num);
+		combinedMap.put("mdexmnRcord", mdexmnRcord);
+		
+		//8.1 처방약목록
+		List<PrscrptnDrugVO> prscrptnDrug = reportDAO.getDrugList(num);
+		combinedMap.put("prscrptnDrugList", prscrptnDrug);
+		
 		//9.접종기록
+		List<VacntnRcordVO> vacntnRcord = reportDAO.getChldrnVacntnRcord(num);
+		combinedMap.put("vacntnRcord", vacntnRcord);
+		
 		//10.특이사항기록
+		List<SignificantVO> significant = reportDAO.getChldrnSignificant(num);
+		combinedMap.put("significant", significant);
+		
 		
 		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success",combinedMap));
 	}

@@ -43,7 +43,7 @@ public class ChldrnVO {
 	
 	private String mberId ;
 	private Integer dday;
-	
+
 	private int age;
 	private int weeks;
 	private int days;

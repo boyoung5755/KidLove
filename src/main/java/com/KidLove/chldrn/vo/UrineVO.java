@@ -34,6 +34,7 @@ public class UrineVO {
 	private Double urineWt;               			// 배뇨무게
 	private String urineAmt;						// 배뇨양
 	
+	private int urineCount;
 
 	//1:1
 	private ChldrnVO chldrn;

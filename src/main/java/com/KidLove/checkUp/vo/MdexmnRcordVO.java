@@ -36,6 +36,8 @@ public class MdexmnRcordVO {
 	private String mdexmnMemo;	
 	private String mdexmnTy;					//enum('CLNIC','MDEXMN')  일반진료, 검진
 	
+	private String mdexmnRcordatchFlpth;
+	
 	//1:N
 	private List<HsptlVO> hsptlList;
 	
