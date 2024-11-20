@@ -229,7 +229,7 @@ public class AuthServiceImpl implements AuthService{
 		} catch (RuntimeException  e) {
 			return ResponseEntity.ok(ResultVO.res(HttpStatus.BAD_REQUEST, "Failed Created", ""));
 		} catch (Exception e) {
-			 return ResponseEntity.ok(ResultVO.res(HttpStatus.INTERNAL_SERVER_ERROR, "Failed Login", ""));
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.INTERNAL_SERVER_ERROR, "Failed Login", ""));
 		}	 
 	}
 

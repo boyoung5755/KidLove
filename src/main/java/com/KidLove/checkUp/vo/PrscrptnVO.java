@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 public class PrscrptnVO {
 	
 	private String atchCode;              			// 파일코드
-	private String prscrptnAtchCode;              			// 파일코드
+	private String prscrptnAtchCode;              	// 파일코드
 	private LocalDateTime crtDt;          			// 생성일
 	private Long mdexmnRcordNo;        			// 검진기록번호
 	private Long parmacyNo;            			// 약국번호

@@ -47,7 +47,7 @@ public class MberVO {
 	private String mberZip;               			// 우편번호
 	private String refreshToken;          			// 
 	private String mberUseSttus;					// 유저 사용 상태 
-	
+	private String mberPushToken;
 	
 	//탈퇴
 	private LocalDateTime whdwlDt;        			// 탈퇴일

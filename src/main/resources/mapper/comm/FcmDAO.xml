@@ -3,4 +3,64 @@
 <mapper namespace="com.KidLove.fcm.dao.FcmDAO">
 
 
+	<select id="getPushReadYn" resultType="com.KidLove.fcm.vo.FcmSendVO">
+	
+		SELECT 
+			FH.*
+			, FM.READ_YN
+			, FM.FCM_HIST_NO 
+		FROM fcm_mber FM
+		LEFT OUTER JOIN fcm_hist FH 
+		ON FM.FCM_HIST_NO  = FH.FCM_HIST_NO 
+		WHERE FM.MBER_NO = #{mberNo}
+	
+	</select>
+	
+	<update id="updateToken">
+	
+		UPDATE mber
+		SET MBER_PUSH_TOKEN=#{token}
+		WHERE MBER_ID=#{loginId}
+	
+	</update>
+	
+	<insert id="insertFcmMber" parameterType="com.KidLove.fcm.vo.FcmSendVO">
+	
+		INSERT INTO fcm_mber
+			(
+				FCM_HIST_NO
+				, MBER_NO
+			)
+		VALUES
+			(
+				#{fcmHistNo}
+				, #{mberNo}
+			)
+	
+	</insert>
+
+	<insert id="insertFcmHist" parameterType="com.KidLove.fcm.vo.FcmSendVO"
+		useGeneratedKeys="true" keyProperty="fcmHistNo">
+	
+		INSERT INTO fcm_hist
+			(
+				TITLE
+				, BODY
+				, `TYPE`
+				, TOPIC
+				, STATUS
+				, SENDER
+			)
+		VALUES
+			(
+				#{title}
+				, #{body}
+				, #{type}
+				, #{topic}
+				, #{status}
+				, #{sender}
+			)
+	
+	</insert>
+
 </mapper>

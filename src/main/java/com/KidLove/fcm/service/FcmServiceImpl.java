@@ -5,16 +5,25 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
+import com.KidLove.comm.utils.SQLErrorMessage;
 import com.KidLove.comm.vo.ResultVO;
 import com.KidLove.fcm.dao.FcmDAO;
 import com.KidLove.fcm.vo.FcmMessageVO;
 import com.KidLove.fcm.vo.FcmSendVO;
 import com.KidLove.mber.dao.MberDAO;
+import com.KidLove.mber.vo.MberVO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -28,16 +37,54 @@ public class FcmServiceImpl implements FcmService {
 	@Inject
 	private MberDAO mberDao;
 	
+	
+	@Value("${fcm.secret-file}")
+	private String secretFileName;
+	
+	@Value("${fcm.api-url}")
+	private String fcmUrl;
+	
+	@Inject
+	private SQLErrorMessage sqlErrorMessage;
+	
+	
 	@Override
+	@Transactional
 	public ResponseEntity<ResultVO<Object>> pushMessage(FcmSendVO fcmRequest) {
 		
 		try {
+			List<MberVO> memeberList = mberDao.getMemberPushToken(fcmRequest);
 			
+			for(MberVO mber : memeberList) {
+				
+				if(mber.getMberPushToken() ==  null) continue;
+				
+				fcmRequest.setToken(mber.getMberPushToken());
+				String message = makeMessage(fcmRequest);
+				RestTemplate restTemplate = new RestTemplate();
+				
+				HttpHeaders headers = new HttpHeaders();
+				headers.set("Content-Type", "application/json");
+                headers.set("Authorization", "Bearer " + getAccessToken());
+                
+                HttpEntity<String> entity = new HttpEntity<String>(message, headers);
+				
+                String API_URL =fcmUrl;
+                ResponseEntity<String> response = restTemplate.exchange(API_URL, HttpMethod.POST, entity, String.class);
+				
+                
+            	fcmRequest.setStatus((HttpStatus) response.getStatusCode());
+            	fcmDao.insertFcmHist(fcmRequest);
+            	
+            	fcmRequest.setMberNo(mber.getMberNo());
+                fcmDao.insertFcmMber(fcmRequest);
+			}
+		} catch (RuntimeException e) {
+			String sqlErrorMsg = sqlErrorMessage.extractSqlErrorMessage(e.getMessage());
+            throw new RuntimeException(sqlErrorMsg, e);
 		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		
-		
+			 return ResponseEntity.ok(ResultVO.res(HttpStatus.BAD_REQUEST, "fcm_send_failed", ""));
+		}	 
 		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success",""));
 	}
 	
@@ -47,8 +94,9 @@ public class FcmServiceImpl implements FcmService {
 	 * @return
 	 * @throws IOException
 	 */
-    private String getAccessToken() throws IOException {
-    	ClassPathResource cps = new ClassPathResource("firebase/today-s-i-firebase-adminsdk-j4l67-ded9c5e249.json");
+	@Override
+	public String getAccessToken() throws IOException {
+    	ClassPathResource cps = new ClassPathResource("/"+secretFileName);
 
         GoogleCredentials googleCredentials = GoogleCredentials
         		.fromStream(cps.getInputStream())
@@ -81,5 +129,23 @@ public class FcmServiceImpl implements FcmService {
         return om.writeValueAsString(fcmMessageVO);
     }
 
+
+	@Override
+	public ResponseEntity<ResultVO<Object>> updateToken(FcmSendVO fcmRequest, Authentication authentication) {
+		String loginId = authentication.getName();
+		try {
+			fcmDao.updateToken(fcmRequest.getToken(),loginId);
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK, "Update success", ""));
+		} catch (Exception e) {
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK, "Update failed", ""));
+		}
+	}
+
+
+	@Override
+	public ResponseEntity<ResultVO<Object>> getPushReadYn(String mberNo) {
+		List<FcmSendVO> fcm = fcmDao.getPushReadYn(Long.parseLong(mberNo));
+		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success",fcm));
+	}
 	
 }
