@@ -3,6 +3,8 @@
  */
 package com.KidLove.comm.vo;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,6 +21,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PageVO {
 
 	private int page;

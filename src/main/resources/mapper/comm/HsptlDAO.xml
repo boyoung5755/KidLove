@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.KidLove.hsptl.dao.HsptlDAO">
+
+
+	<select id="getAllHsptl" parameterType="com.KidLove.comm.vo.PageVO" resultType="com.KidLove.comm.vo.HsptlVO">
+		
+		SELECT 
+			*
+		FROM (
+			SELECT 
+				H.*
+			FROM hsptl H
+		)LIST
+		LIMIT #{startIndexNo} , #{pageSize}
+			
+	</select>
+
+	<select id="getAllHsptlRecordTotRecCnt" parameterType="com.KidLove.comm.vo.PageVO">
+	
+		SELECT 
+			COUNT(*)
+		FROM (
+			SELECT 
+				H.*
+			FROM hsptl H
+		)LIST 
+	
+	</select>
+	
+	<insert id="insertHsptl" parameterType="com.KidLove.comm.vo.HsptlVO">
+		
+		INSERT INTO hsptl
+			(
+				id
+				, dutyAddr
+				, dutyAddr1Depth
+				, dutyAddr2Depth
+				, dutyAddr3Depth
+				, dutyEtc
+				, dutyName
+				, dutyTel1
+				, dutyTime1c
+				, dutyTime1s
+				, dutyTime2c
+				, dutyTime2s
+				, dutyTime3c
+				, dutyTime3s
+				, dutyTime4c
+				, dutyTime4s
+				, dutyTime5c
+				, dutyTime5s
+				, dutyTime6c
+				, dutyTime6s
+				, dutyTime7c
+				, dutyTime7s
+				, dutyTime8c
+				, dutyTime8s
+				, wgs84Lat
+				, wgs84Lon
+			)
+		VALUES
+			(
+				#{id}
+				, #{dutyAddr}
+				, #{dutyAddr1Depth}
+				, #{dutyAddr2Depth}
+				, #{dutyAddr3Depth}
+				, #{dutyEtc}
+				, #{dutyName}
+				, #{dutyTel1}
+				, #{dutyTime1c}
+				, #{dutyTime1s}
+				, #{dutyTime2c}
+				, #{dutyTime2s}
+				, #{dutyTime3c}
+				, #{dutyTime3s}
+				, #{dutyTime4c}
+				, #{dutyTime4s}
+				, #{dutyTime5c}
+				, #{dutyTime5s}
+				, #{dutyTime6c}
+				, #{dutyTime6s}
+				, #{dutyTime7c}
+				, #{dutyTime7s}
+				, #{dutyTime8c}
+				, #{dutyTime8s}
+				, #{wgs84Lat}
+				, #{wgs84Lat}
+			)		
+	
+	</insert>
+
+	<select id="checkHsptlId" resultType="com.KidLove.comm.vo.HsptlVO">
+	
+		SELECT *
+		FROM hsptl H 
+		WHERE H.ID = #{id}
+	
+	</select>
+
+
+</mapper>

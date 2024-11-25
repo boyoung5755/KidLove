@@ -12,7 +12,7 @@
 			</collection>
 		</association>
 		<collection property="hsptlList" ofType="com.KidLove.comm.vo.HsptlVO" autoMapping="true">
-			<id property="hsptlNo" column="HSPTL_NO" />
+			<id property="id" column="id" />
 		</collection>
 	</resultMap>
 	
@@ -24,11 +24,11 @@
 		FROM(
 			SELECT
 				MR.MDEXMN_RCORD_NO 
-				, H.HSPTL_NM 
-				, H.HSPTL_DRCTR
+				, H.dutyName 
+				, MH.HSPTL_DRCTR
 				, MR.MDEXMN_RCORD_DT 
 				, MR.MDEXMN_DGNSS_NM
-				, H.HSPTL_NO
+				, H.id
 				, (
 					SELECT 
 						PD.DRUG_NM
@@ -37,9 +37,11 @@
 					) AS DRUGNM
 			FROM mdexmn_rcord MR 
 			LEFT OUTER JOIN hsptl H 
-				ON H.HSPTL_NO  = MR.HSPTL_NO 
+				ON H.id  = MR.HSPTL_NO 
 			LEFT OUTER JOIN prscrptn P 
 				ON P.MDEXMN_RCORD_NO  = MR.MDEXMN_RCORD_NO
+			LEFT OUTER JOIN mber_hsptl MH 
+				ON H.id  = MH.HSPTL_NO 
 			WHERE 1=1
 			<if test="type2 != '' and type2 != null">
 				AND MR.MDEXMN_DGNSS_NM = #{type2}
@@ -56,10 +58,11 @@
 		FROM(
 			SELECT
 				MR.MDEXMN_RCORD_NO 
-				, H.HSPTL_NM 
-				, H.HSPTL_DRCTR
+				, H.dutyName 
+				, MH.HSPTL_DRCTR
 				, MR.MDEXMN_RCORD_DT 
 				, MR.MDEXMN_DGNSS_NM
+				, H.id
 				, (
 					SELECT 
 						PD.DRUG_NM
@@ -68,14 +71,16 @@
 					) AS drugNm
 			FROM mdexmn_rcord MR 
 			LEFT OUTER JOIN hsptl H 
-				ON H.HSPTL_NO  = MR.HSPTL_NO 
+				ON H.id  = MR.HSPTL_NO 
 			LEFT OUTER JOIN prscrptn P 
 				ON P.MDEXMN_RCORD_NO  = MR.MDEXMN_RCORD_NO
+			LEFT OUTER JOIN mber_hsptl MH 
+				ON H.id  = MH.HSPTL_NO	
 			WHERE 1=1
 			<if test="type2 != '' and type2 != null">
 				AND MR.MDEXMN_DGNSS_NM = #{type2}
 			</if>   	
-			GROUP BY  MR.MDEXMN_RCORD_NO,H.HSPTL_NM, H.HSPTL_DRCTR, MR.MDEXMN_RCORD_DT,MR.MDEXMN_DGNSS_NM,H.HSPTL_NO, drugNm
+			GROUP BY  MR.MDEXMN_RCORD_NO,H.dutyName, MH.HSPTL_DRCTR, MR.MDEXMN_RCORD_DT,MR.MDEXMN_DGNSS_NM,H.id, drugNm
 		)LIST
 	
 	</select>
@@ -175,42 +180,47 @@
 	</insert>
 	
 	<insert id="insertHsptl" parameterType="com.KidLove.comm.vo.HsptlVO"
-		useGeneratedKeys="true" keyProperty="hsptlNo"
+		useGeneratedKeys="true" keyProperty="mberHsptlNo"
 	>
 		
-		INSERT INTO hsptl
+		INSERT INTO mber_hsptl
 			(
-				HSPTL_NM
-				, HSPTL_DRCTR
-				, HSPTL_ADDR
+				HSPTL_DRCTR
+				, HSPTL_NO
+				, MDEXMN_RCORD_NO
+				, VACNTN_RCORD_NO
+				, CHLDRN_SYMPTMS_NO
 			)
 		VALUES
 			(
-				#{hsptlNm}
-				, #{hsptlDrctr}
-				, #{hsptlAddr}
+				#{hsptlDrctr}
+				, #{id}
+				, #{mdexmnRcordNo}
+				, #{vacntnRcordNo}
+				, #{chldrnSymptmsNo}
 			)
 	</insert>
 	
 	<select id="getHstplHist" resultMap="mdexmnMap">
 		
 		SELECT 
-			H.HSPTL_NO 
-			, H.HSPTL_NM 
-			, H.HSPTL_DRCTR 
-			, MR.MDEXMN_RCORD_DT 
+			H.id
+			, H.dutyName 
+			, MH.HSPTL_DRCTR 
+			, MR.MDEXMN_RCORD_DT
+			, MR.MDEXMN_RCORD_NO  
 		FROM hsptl H 
 		LEFT OUTER JOIN mdexmn_rcord MR 
-			ON H.HSPTL_NO  = MR.HSPTL_NO
+			ON H.id  = MR.HSPTL_NO
 		LEFT OUTER JOIN chldrn C 
 			ON C.CHLDRN_NO  = MR.CHLDRN_NO 
 		LEFT OUTER JOIN mber_chldrn MC 
-			ON MC.CHLDRN_NO  = C.CHLDRN_NO 
+			ON MC.CHLDRN_NO  = C.CHLDRN_NO
+		LEFT OUTER JOIN mber_hsptl MH 	
+			ON MH.HSPTL_NO  = MH.HSPTL_NO 
 		WHERE C.CHLDRN_NO = #{chldrnNo}
 		
 	</select>
-
-
 
 
 </mapper>

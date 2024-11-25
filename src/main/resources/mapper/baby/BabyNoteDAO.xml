@@ -12,7 +12,7 @@
 			</collection>	
 		</collection>	
 		<collection property="hsptlList" ofType="com.KidLove.comm.vo.HsptlVO" autoMapping="true">
-			<id property="hsptlNo" column="HSPTL_NO" />
+			<id property="id" column="id" />
 			<association property="mdexmnRcord" javaType="com.KidLove.checkUp.vo.MdexmnRcordVO" autoMapping="true"/>
 		</collection>	
 	</resultMap>

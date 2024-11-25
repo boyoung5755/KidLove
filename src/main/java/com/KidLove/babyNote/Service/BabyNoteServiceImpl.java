@@ -56,35 +56,27 @@ public class BabyNoteServiceImpl implements BabyNoteService {
 		
 		
 		try {
-			long hsptlNo = 0;
 			
 			HsptlVO hsptl = new HsptlVO();
-			
-			if(param.get("hsptlNo").equals(null)||param.get("hsptlNo").equals("")) {
-				
-				hsptl = HsptlVO.builder()
-					.hsptlNm(param.get("hsptlNm"))
-					.hsptlDrctr(param.get("hsptlDrctr"))
-					.hsptlAddr(param.get("hsptlAddr"))
-					.build();
-				
-				mdexmnDAO.insertHsptl(hsptl);
-				hsptlNo = hsptl.getHsptlNo();
-			}else {
-				hsptlNo = Long.parseLong(param.get("hsptlNo"));
-			}
-			
 			
 			VacntnRcordVO vacntn  = VacntnRcordVO.builder()
 					.chldrnNo(Long.parseLong(param.get("chldrnNo"))) 
 					.vacntnInoclDt(LocalDateTime.parse(param.get("vacntnInoclDt"), formatter)) 
 					.vacntnNo(Long.parseLong(param.get("vacntnNo")))
-					.hsptlNo(hsptlNo)
+					.hsptlNo(Long.parseLong(param.get("hsptlNo")))
 					.build();
 			
 			babyNoteDAO.insertVacntnRcord(vacntn);
 			
 			param.put("vacntnRcordNo",String.valueOf(vacntn.getVacntnRcordNo()));
+			
+			hsptl = HsptlVO.builder()
+					.hsptlDrctr(param.get("hsptlDrctr"))
+					.id(Long.parseLong(param.get("hsptlNo")))
+					.vacntnRcordNo(vacntn.getVacntnRcordNo())
+					.build();
+			
+			mdexmnDAO.insertHsptl(hsptl);
 			
 			return  ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success",param));
 			

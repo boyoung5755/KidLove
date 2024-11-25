@@ -299,21 +299,7 @@ public class ReportServiceImpl implements ReportService {
 			}
 			
 			Long userHsptlNo;
-			if( param.get("hsptlNo").isEmpty()) {
 				
-				HsptlVO hsptl = HsptlVO.builder()
-						.hsptlNm(param.get("hsptlNm"))
-						.hsptlDrctr(param.get("hsptlDrctr"))
-						.hsptlAddr(param.get("hsptlAddr"))
-						.build();
-				
-				mdexmnDAO.insertHsptl(hsptl);
-				userHsptlNo = hsptl.getHsptlNo();
-				
-			}else {
-				userHsptlNo = Long.parseLong(param.get("hsptlNo"));
-			}
-			
 			String makeFileCode = RandomStringGenerator.generateRandomString(15);
 			
 			ChldrnSymptmsVO chldrnSymptms = ChldrnSymptmsVO.builder()
@@ -322,7 +308,7 @@ public class ReportServiceImpl implements ReportService {
 					.symptmsEnddt(LocalDateTime.parse(param.get("symptmsEnddt"), formatter))
 					.symptmsNo(userSymptms)
 					.symptmsVisitdt(LocalDateTime.parse(param.get("symptmsVisitdt"), formatter))
-					.hsptlNo(userHsptlNo)
+					.hsptlNo(Long.parseLong(param.get("hsptlNo")))
 					.atchCode(makeFileCode)
 					.build();
 			
@@ -332,6 +318,14 @@ public class ReportServiceImpl implements ReportService {
 					.chldrnSymptmsNo(chldrnSymptms.getChldrnSymptmsNo())
 					.frsaidCn(param.get("frsaidCn"))
 					.build();
+			
+			HsptlVO hsptl = HsptlVO.builder()
+					.hsptlDrctr(param.get("hsptlDrctr"))
+					.id(Long.parseLong(param.get("hsptlNo")))
+					.chldrnSymptmsNo(chldrnSymptms.getChldrnSymptmsNo())
+					.build();
+			
+			mdexmnDAO.insertHsptl(hsptl);
 			
 			reportDAO.insertSymptmsFrsaid(symptmsFrsaid);
 			

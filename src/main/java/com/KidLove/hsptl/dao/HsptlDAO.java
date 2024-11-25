@@ -1,0 +1,71 @@
+/**
+ * 
+ */
+package com.KidLove.hsptl.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import com.KidLove.comm.vo.HsptlVO;
+import com.KidLove.comm.vo.PageVO;
+
+/**
+ * @packageName	: com.KidLove.hsptl.dao
+ * @since		: 2024.11.25
+ * @author		: Boyoung
+ * @description	: 
+ * ================================================
+ * DATE 			AUTHOR			NOTE
+ * ------------------------------------------------
+ * 2024.11.25		Boyoung			최초생성
+ */
+
+@Mapper
+public interface HsptlDAO {
+
+	/**
+	 * @MethodName	: checkHsptlId
+	 * @author		: Boyoung
+	 * @date 		: 2024.11.25
+	 * @description	: 기존의 저장된 병원인지 확인
+	 * @return 		: HsptlVO
+	 * @param id
+	 * @return
+	 */
+	HsptlVO checkHsptlId(@Param("id") Long id);
+
+	/**
+	 * @MethodName	: insertHsptl
+	 * @author		: Boyoung
+	 * @date 		: 2024.11.25
+	 * @description	: 병원저장하기
+	 * @return 		: void
+	 * @param ele
+	 */
+	void insertHsptl(HsptlVO hsptl);
+
+	/**
+	 * @MethodName	: getAllHsptlRecordTotRecCnt
+	 * @author		: Boyoung
+	 * @date 		: 2024.11.25
+	 * @description	: 모든병원 레코드 수
+	 * @return 		: int
+	 * @param page
+	 * @return
+	 */
+	int getAllHsptlRecordTotRecCnt(PageVO page);
+
+	/**
+	 * @MethodName	: getAllHsptl
+	 * @author		: Boyoung
+	 * @date 		: 2024.11.25
+	 * @description	: 모든 병원 목록 조회
+	 * @return 		: List<HsptlVO>
+	 * @param newPage
+	 * @return
+	 */
+	List<HsptlVO> getAllHsptl(PageVO newPage);
+
+}

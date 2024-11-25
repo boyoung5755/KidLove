@@ -23,9 +23,41 @@ import lombok.NoArgsConstructor;
 public class HsptlVO {
 
 	private String hsptlNm;               			// 병원명
+	private Long id;              					// 병원번호 (DB용)
 	private Long hsptlNo;              				// 병원번호
 	private String hsptlDrctr; 						// 원장이름
-	private String hsptlAddr;						// 병원주소
+	
+	private String dutyAddr;						// 병원주소
+	private String dutyAddr1Depth;
+	private String dutyAddr2Depth;
+	private String dutyAddr3Depth;
+	private String dutyEtc;
+	private String dutyName;
+	private String dutyTel1;
+	private String dutyTime1c;
+	private String dutyTime1s;
+	private String dutyTime2c;
+	private String dutyTime2s;
+	private String dutyTime3c;
+	private String dutyTime3s;
+	private String dutyTime4c;
+	private String dutyTime4s;
+	private String dutyTime5c;
+	private String dutyTime5s;
+	private String dutyTime6c;
+	private String dutyTime6s;
+	private String dutyTime7c;
+	private String dutyTime7s;
+	private String dutyTime8c;
+	private String dutyTime8s;
+	private Double wgs84Lat;
+	private Double wgs84Lon;
+	
+	private Long vacntnRcordNo;    
+	private Long mdexmnRcordNo;  
+	private Long chldrnSymptmsNo; 
+	private Long mberHsptlNo;
+	
 	
 	//1:1
 	private VacntnRcordVO vacntnRcord;

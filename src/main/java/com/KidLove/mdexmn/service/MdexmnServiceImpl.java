@@ -74,21 +74,8 @@ public class MdexmnServiceImpl implements MdexmnService {
 		
 		try {
 			
-			long hsptlNo = 0;
+			long hsptlNo = Long.parseLong(param.get("hsptlNo"));
 			
-			if(param.get("hsptlNo").isEmpty()) {
-				
-				HsptlVO hsptl = HsptlVO.builder()
-					.hsptlNm(param.get("hsptlNm"))
-					.hsptlDrctr(param.get("hsptlDrctr"))
-					.hsptlAddr(param.get("hsptlAddr"))
-					.build();
-				
-				mdexmnDAO.insertHsptl(hsptl);
-				hsptlNo = hsptl.getHsptlNo();
-			}else {
-				hsptlNo = Long.parseLong(param.get("hsptlNo"));
-			}
 			
 			MdexmnRcordVO mdexmn = MdexmnRcordVO.builder()
 					.chldrnNo(Long.parseLong(param.get("chldrnNo"))) 
@@ -102,6 +89,14 @@ public class MdexmnServiceImpl implements MdexmnService {
 			
 			mdexmnDAO.insertMdexmn(mdexmn);
 			param.put("mdexmnRcordNo",  String.valueOf(mdexmn.getMdexmnRcordNo()));
+			
+			HsptlVO hsptl = HsptlVO.builder()
+					.hsptlDrctr(param.get("hsptlDrctr"))
+					.id(hsptlNo)
+					.mdexmnRcordNo(mdexmn.getMdexmnRcordNo())
+					.build();
+			
+			mdexmnDAO.insertHsptl(hsptl);
 			
 			if(! file.isEmpty()) {
 				AtchVO atchVO = AtchVO.builder()
@@ -130,7 +125,7 @@ public class MdexmnServiceImpl implements MdexmnService {
 			String sqlErrorMsg = sqlErrorMessage.extractSqlErrorMessage(e.getMessage());
             throw new RuntimeException(sqlErrorMsg, e);
 		}catch (Exception e) {
-			 return ResponseEntity.ok(ResultVO.res(HttpStatus.BAD_REQUEST, "create Failed", ""));
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.BAD_REQUEST, "create Failed", ""));
 		}
 	}
 

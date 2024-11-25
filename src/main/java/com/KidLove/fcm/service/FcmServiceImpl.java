@@ -69,9 +69,7 @@ public class FcmServiceImpl implements FcmService {
                 
                 HttpEntity<String> entity = new HttpEntity<String>(message, headers);
 				
-                String API_URL =fcmUrl;
-                ResponseEntity<String> response = restTemplate.exchange(API_URL, HttpMethod.POST, entity, String.class);
-				
+                ResponseEntity<String> response = restTemplate.exchange(fcmUrl, HttpMethod.POST, entity, String.class);
                 
             	fcmRequest.setStatus((HttpStatus) response.getStatusCode());
             	fcmDao.insertFcmHist(fcmRequest);

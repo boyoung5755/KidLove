@@ -61,7 +61,7 @@ public class SecurityConfig {
     	
     	//권한 규칙 작성
     	http.authorizeHttpRequests(authorize -> authorize
-    			.requestMatchers("/test/**", "/authenticate/**", "/imagePath/**","/fcm/**").permitAll()
+    			.requestMatchers("/test/**", "/authenticate/**", "/imagePath/**","/fcm/**","/api/data/**").permitAll()
     			.requestMatchers("/api/v1/**").hasRole("GNRL")
     			.anyRequest().authenticated()
     		); 

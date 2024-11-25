@@ -57,7 +57,7 @@
 	
 		SELECT 
 		    MR.MDEXMN_RCORD_DT AS mdexmnRcordDt
-		    , H.HSPTL_NM AS hsptlNm
+		    , H.dutyName AS dutyName
 		    , MR.MDEXMN_DOCTR_OPINION 
 		    , MR.MDEXMN_DGNSS_NM 
 		    , MR.MDEXMN_MDLRT 
@@ -78,7 +78,7 @@
 		    ) AS parmacyNm
 		FROM mdexmn_rcord MR
 		LEFT OUTER JOIN hsptl H 
-		    ON H.HSPTL_NO = MR.HSPTL_NO
+		    ON H.id = MR.HSPTL_NO
 		LEFT OUTER JOIN prscrptn P 
 			ON MR.MDEXMN_RCORD_NO  = P.MDEXMN_RCORD_NO 
 		WHERE MR.CHLDRN_NO = #{chldrnNo}
@@ -618,7 +618,7 @@
 			</collection>
 		</association>
 		<collection property="hsptlList" ofType="com.KidLove.comm.vo.HsptlVO" autoMapping="true">
-			<id property="hsptlNo" column="HSPTL_NO" />
+			<id property="id" column="id" />
 		</collection>
 	</resultMap>
 	
