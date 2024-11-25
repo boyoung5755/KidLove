@@ -44,6 +44,17 @@ public class HsptlSaveController {
 	private final HsptlService hsptlService;
 	
 	
+	
+	@GetMapping("/getHsptlByRegion")
+	public ResponseEntity<ResultVO<Object>> getHsptlByRegion(PageVO page){
+		try {
+			return hsptlService.getHsptlByRegion(page);
+		} catch (Exception e) {
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.BAD_REQUEST,e.getMessage(),""));	
+		}
+	}
+	
+	
 	@GetMapping("/getAllHsptl")
 	public ResponseEntity<ResultVO<Object>> getAllHsptl(PageVO page){
 		try {
@@ -52,7 +63,6 @@ public class HsptlSaveController {
 			return ResponseEntity.ok(ResultVO.res(HttpStatus.BAD_REQUEST,e.getMessage(),""));	
 		}
 	}
-	
 	
 	@PostMapping("/saveHsptlMdcnc")
 	public ResponseEntity<ResultVO<Object>> saveHsptlMdcnc(@RequestBody List<HsptlVO> hsptl){

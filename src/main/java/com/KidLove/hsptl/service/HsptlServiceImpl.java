@@ -82,4 +82,21 @@ public class HsptlServiceImpl implements HsptlService {
 		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success",map));
 	}
 
+
+	@Override
+	public ResponseEntity<ResultVO<Object>> getHsptlByRegion(PageVO page) {
+		int totRecCnt = hsptlDAO.getHsptlByRegionRecordTotRecCnt(page);
+		PageVO newPage = new PageVO(page.getPage(), page.getPageSize(),totRecCnt,page.getType1(), page.getType2());
+		
+		newPage.setSearchStr(page.getSearchStr());
+		newPage.setSort(page.getSort());
+		
+		List<HsptlVO> hspltList = hsptlDAO.getHsptlByRegion(newPage);
+		
+		Map<String, Object> map  = new HashMap<>();
+		map.put("pageInfo", newPage);
+		map.put("list", hspltList);
+		
+		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success",map));
+	}
 }

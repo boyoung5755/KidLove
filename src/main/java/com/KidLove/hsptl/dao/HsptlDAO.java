@@ -68,4 +68,28 @@ public interface HsptlDAO {
 	 */
 	List<HsptlVO> getAllHsptl(PageVO newPage);
 
+	/**
+	 * @MethodName	: getHsptlByRegionRecordTotRecCnt
+	 * @author		: Boyoung
+	 * @date 		: 2024.11.25
+	 * @description	: 지역별 조회 병원 레코스 수
+	 * @return 		: int
+	 * @param page
+	 * @return
+	 */
+	int getHsptlByRegionRecordTotRecCnt(PageVO page);
+
+	/**
+	 * @MethodName	: getHsptlByRegion
+	 * @author		: Boyoung
+	 * @date 		: 2024.11.25
+	 * @description	: 지역별 검색 병원 목록 조회
+	 * @return 		: List<HsptlVO>
+	 * @param newPage
+	 * @param searchStr
+	 * @param sort
+	 * @return
+	 */
+	List<HsptlVO> getHsptlByRegion(PageVO newPage);
+
 }

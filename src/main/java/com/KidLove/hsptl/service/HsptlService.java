@@ -45,4 +45,15 @@ public interface HsptlService {
 	 */
 	ResponseEntity<ResultVO<Object>> getAllHsptl(PageVO page);
 
+	/**
+	 * @MethodName	: getHsptlByRegion
+	 * @author		: Boyoung
+	 * @date 		: 2024.11.25
+	 * @description	:
+	 * @return 		: ResponseEntity<ResultVO<Object>>
+	 * @param page
+	 * @return
+	 */
+	ResponseEntity<ResultVO<Object>> getHsptlByRegion(PageVO page);
+
 }

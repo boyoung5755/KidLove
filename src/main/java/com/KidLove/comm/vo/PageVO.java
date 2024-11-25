@@ -37,6 +37,7 @@ public class PageVO {
 
     private String searchStr;
     private String category;
+    private String sort;
     
     private String type1;
     private String type2;
