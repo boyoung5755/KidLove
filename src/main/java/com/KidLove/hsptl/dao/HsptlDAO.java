@@ -92,4 +92,52 @@ public interface HsptlDAO {
 	 */
 	List<HsptlVO> getHsptlByRegion(PageVO newPage);
 
+	/**
+	 * @MethodName	: getHsptlByNameRecordTotRecCnt
+	 * @author		: Boyoung
+	 * @date 		: 2024.12.01
+	 * @description	: 이름별 검색 병원 레코드 수
+	 * @return 		: int
+	 * @param page
+	 * @return
+	 */
+	
+	int getHsptlByNameRecordTotRecCnt(PageVO page);
+
+	/**
+	 * @MethodName	: getHsptlByName
+	 * @author		: Boyoung
+	 * @date 		: 2024.12.01
+	 * @description	: 이름별 검색 병원
+	 * @return 		: List<HsptlVO>
+	 * @param newPage
+	 * @return
+	 */
+	
+	List<HsptlVO> getHsptlByName(PageVO newPage);
+
+	/**
+	 * @MethodName	: getNearHsptlRecordTotRecCnt
+	 * @author		: Boyoung
+	 * @date 		: 2024.12.01
+	 * @description	: 유저위치기반 반경 병원조회 레코드 수
+	 * @return 		: int
+	 * @param page
+	 * @return
+	 */
+	
+	int getNearHsptlRecordTotRecCnt(PageVO page);
+
+	/**
+	 * @MethodName	: getNearHsptl
+	 * @author		: Boyoung
+	 * @date 		: 2024.12.01
+	 * @description	: 유저위치기반 반경 병원조회
+	 * @return 		: List<HsptlVO>
+	 * @param newPage
+	 * @return
+	 */
+	
+	List<HsptlVO> getNearHsptl(PageVO newPage);
+
 }

@@ -99,4 +99,43 @@ public class HsptlServiceImpl implements HsptlService {
 		
 		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success",map));
 	}
+
+
+	@Override
+	public ResponseEntity<ResultVO<Object>> getHsptlByName(PageVO page) {
+		
+		int totRecCnt = hsptlDAO.getHsptlByNameRecordTotRecCnt(page);
+		PageVO newPage = new PageVO(page.getPage(), page.getPageSize(),totRecCnt,page.getType1(), page.getType2());
+		
+		newPage.setSearchStr(page.getSearchStr());
+		newPage.setSort(page.getSort());
+		
+		List<HsptlVO> hspltList = hsptlDAO.getHsptlByName(newPage);
+		
+		Map<String, Object> map  = new HashMap<>();
+		map.put("pageInfo", newPage);
+		map.put("list", hspltList);
+		
+		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success",map));
+	}
+
+
+	@Override
+	public ResponseEntity<ResultVO<Object>> getNearHsptl(PageVO page) {
+		
+		int totRecCnt = hsptlDAO.getNearHsptlRecordTotRecCnt(page);
+		PageVO newPage = new PageVO(page.getPage(), page.getPageSize(),totRecCnt,null, null);
+		
+		newPage.setLat(page.getLat());
+		newPage.setLon(page.getLon());
+		newPage.setLimit(page.getLimit());
+		
+		List<HsptlVO> hspltList = hsptlDAO.getNearHsptl(newPage);
+		
+		Map<String, Object> map  = new HashMap<>();
+		map.put("pageInfo", newPage);
+		map.put("list", hspltList);
+		
+		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success",map));
+	}
 }

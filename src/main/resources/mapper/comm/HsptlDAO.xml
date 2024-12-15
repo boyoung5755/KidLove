@@ -3,6 +3,68 @@
 <mapper namespace="com.KidLove.hsptl.dao.HsptlDAO">
 
 
+	<select id="getNearHsptl" parameterType="com.KidLove.comm.vo.PageVO" resultType="com.KidLove.comm.vo.HsptlVO">
+	
+		<![CDATA[
+			SELECT 
+			    *,
+			    ST_Distance_Sphere(POINT(#{lon}, #{lat}), POINT(wgs84Lon, wgs84Lat)) AS distance
+			FROM hsptl h
+			WHERE 
+			    ST_Distance_Sphere(POINT(#{lon}, #{lat}), POINT(wgs84Lon, wgs84Lat)) <= #{limit}
+			ORDER BY distance
+			LIMIT #{startIndexNo} , #{pageSize}
+		]]>
+		
+	</select>
+
+	<select id="getNearHsptlRecordTotRecCnt" parameterType="com.KidLove.comm.vo.PageVO">
+		<![CDATA[
+		
+			SELECT 
+			    COUNT(*)
+			FROM hsptl h
+			WHERE 
+			    ST_Distance_Sphere(POINT(#{lon}, #{lat}), POINT(wgs84Lon, wgs84Lat)) <= #{limit}
+		]]>
+	</select>
+
+
+	<select id="getHsptlByName" parameterType="com.KidLove.comm.vo.PageVO" resultType="com.KidLove.comm.vo.HsptlVO"> 
+	
+		SELECT 
+			*
+		FROM (
+			SELECT 
+				H.*
+			FROM hsptl H
+			WHERE 1=1
+			<if test="searchStr != '' and searchStr != null">
+				AND H.dutyName LIKE CONCAT('%',#{searchStr},'%')
+			</if>
+			ORDER BY H.dutyName DESC
+		)List
+		LIMIT #{startIndexNo} , #{pageSize}
+	
+	</select>
+
+	<select id="getHsptlByNameRecordTotRecCnt" parameterType="com.KidLove.comm.vo.PageVO" >
+	
+		SELECT 
+			COUNT(*)
+		FROM (
+			SELECT 
+				H.*
+			FROM hsptl H
+			WHERE 1=1
+			<if test="searchStr != '' and searchStr != null">
+				AND H.dutyName LIKE CONCAT('%',#{searchStr},'%')
+			</if>
+		)List
+	
+	</select>
+
+
 	<select id="getHsptlByRegion" parameterType="com.KidLove.comm.vo.PageVO"  resultType="com.KidLove.comm.vo.HsptlVO">
 		SELECT 
 			*

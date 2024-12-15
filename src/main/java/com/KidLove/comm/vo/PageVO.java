@@ -42,6 +42,10 @@ public class PageVO {
     private String type1;
     private String type2;
     
+    private Double lon;  //경도
+    private Double lat;  //위도
+    private int limit;
+    
     // paging 기본 설정 함수
     private void fn_basicPaging() {
         this.totPage = (totRecCnt % pageSize) == 0 ? totRecCnt / pageSize : (totRecCnt / pageSize) + 1;
