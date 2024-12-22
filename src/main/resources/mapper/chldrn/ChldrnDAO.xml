@@ -128,6 +128,83 @@
 				, 'N'
 			)
 	</insert>
-
+	
+	
+	<resultMap type="com.KidLove.chldrn.vo.ChldrnVO" id="chldrnInfoMap" autoMapping="true">
+		<id  property="chldrnNo" column="CHLDRN_NO"/>
+		<collection property="chldrnInfoList" ofType="com.KidLove.chldrn.vo.ChldrnInfoVO" autoMapping="true">
+			<id property="chldrnInfoNo"  column="CHLDRN_INFO_NO"/>
+		</collection>
+	</resultMap>
+	
+	<select id="selectChldrnProfileInfo" resultMap="chldrnInfoMap" parameterType="hashMap">
+		
+		SELECT 
+			C.CHLDRN_NO 
+			, C.CHLDRN_BRTHDY 
+			, C.CHLDRN_SEXDSTN 
+			, C.ATCH_CODE 
+			, C.CHLDRN_NM 
+			, C.CHLDRN_NCNM 
+			, CI.CHLDRN_HEIGHT
+			, CI.CHLDRN_BDWGH
+			, CI.CHLDRN_HEAD
+		FROM chldrn C
+		LEFT OUTER JOIN mber_chldrn MC
+		    ON MC.CHLDRN_NO = C.CHLDRN_NO
+		LEFT OUTER JOIN (
+		    SELECT CI.*
+		    FROM chldrn_info CI
+		    WHERE CI.CRT_DT = (
+		        SELECT MAX(CRT_DT)
+		        FROM chldrn_info
+		        WHERE CHLDRN_NO = CI.CHLDRN_NO
+		    )
+		) CI
+		    ON CI.CHLDRN_NO = C.CHLDRN_NO
+		WHERE (
+		        SELECT M.MBER_NO 
+		        FROM mber M
+		        WHERE M.MBER_ID = #{loginMberId}
+		    ) = MC.MBER_NO
+		AND C.CHLDRN_DEL_AT = 'N'
+		AND C.CHLDRN_HIDE_AT = 'N'
+		AND C.CHLDRN_NO = #{chldrnNo}
+		
+	</select>
+	
+	<select id="selectParentInfo" parameterType="hashMap">
+	
+		SELECT 
+			M.MBER_NCNM 
+			, M.MBER_ID
+			, M.MBER_NO  
+		FROM mber M 
+		LEFT OUTER JOIN mber_chldrn MC 
+		ON M.MBER_NO  = MC.MBER_NO 
+		WHERE  MC.CHLDRN_NO  = #{chldrnNo}
+	
+	</select>
+	
+	<select id="selectChldrnVacntn" parameterType="hashMap">
+	
+		WITH LBR AS (
+		    SELECT 
+		        V.*
+		        , VR.VACNTN_INOCL_DT
+		        , ROW_NUMBER() OVER (PARTITION BY V.VACNTN_ICTSD ORDER BY VR.CRT_DT DESC) AS RN
+		    FROM vacntn_rcord VR
+		    LEFT OUTER JOIN chldrn C
+		        ON C.CHLDRN_NO = VR.CHLDRN_NO
+		    LEFT OUTER JOIN vacntn V
+		        ON V.VACNTN_NO = VR.VACNTN_NO
+		    WHERE C.CHLDRN_NO = #{chldrnNo}
+		)
+		SELECT *
+		FROM LBR
+		WHERE RN = 1
+		AND LBR.VACNTN_ODR != LBR.VACNTN_CNT
+	
+	</select>
 
 </mapper>

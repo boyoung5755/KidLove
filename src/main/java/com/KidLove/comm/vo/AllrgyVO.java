@@ -3,6 +3,7 @@ package com.KidLove.comm.vo;
 import java.util.List;
 
 import com.KidLove.chldrn.vo.ChldrnAllrgyVO;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,6 +19,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AllrgyVO {
 	
 	private String allrgyNm;              			// 알레르기명

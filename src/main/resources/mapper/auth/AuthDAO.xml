@@ -126,4 +126,47 @@
 		AND M.MBER_USE_STTUS = "ACTIVE"
 	</select>
 	
+	
+	<select id="findChldrn" parameterType="String" resultMap="chldrnInfoMap">
+		SELECT 
+			C.CHLDRN_NO 
+			, C.CHLDRN_BRTHDY 
+			, C.CHLDRN_SEXDSTN 
+			, C.ATCH_CODE 
+			, C.CHLDRN_NM 
+			, C.CHLDRN_NCNM 
+			, CI.CHLDRN_HEIGHT
+			, CI.CHLDRN_BDWGH
+			, CI.CHLDRN_HEAD
+		FROM chldrn C
+		LEFT OUTER JOIN mber_chldrn MC
+		    ON MC.CHLDRN_NO = C.CHLDRN_NO
+		LEFT OUTER JOIN (
+		    SELECT CI.*
+		    FROM chldrn_info CI
+		    WHERE CI.CRT_DT = (
+		        SELECT MAX(CRT_DT)
+		        FROM chldrn_info
+		        WHERE CHLDRN_NO = CI.CHLDRN_NO
+		    )
+		) CI
+		    ON CI.CHLDRN_NO = C.CHLDRN_NO
+		WHERE (
+		        SELECT M.MBER_NO 
+		        FROM mber M
+		        WHERE M.MBER_ID = #{mberId}
+		    ) = MC.MBER_NO
+		AND C.CHLDRN_DEL_AT = 'N'
+		AND C.CHLDRN_HIDE_AT = 'N'
+	
+	</select>
+	
+	
+	<resultMap type="com.KidLove.chldrn.vo.ChldrnVO" id="chldrnInfoMap" autoMapping="true">
+		<id  property="chldrnNo" column="CHLDRN_NO"/>
+		<collection property="chldrnInfoList" ofType="com.KidLove.chldrn.vo.ChldrnInfoVO" autoMapping="true">
+			<id property="chldrnInfoNo"  column="CHLDRN_INFO_NO"/>
+		</collection>
+	</resultMap>
+	
 </mapper>

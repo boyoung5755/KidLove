@@ -5,7 +5,9 @@ package com.KidLove.auth.service;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -27,6 +29,7 @@ import com.KidLove.atch.vo.AtchVO;
 import com.KidLove.auth.dao.AuthDAO;
 import com.KidLove.auth.vo.JoinVO;
 import com.KidLove.auth.vo.LoginVO;
+import com.KidLove.chldrn.vo.ChldrnVO;
 import com.KidLove.comm.constant.FileTypeEnum;
 import com.KidLove.comm.utils.RandomStringGenerator;
 import com.KidLove.comm.vo.ResultVO;
@@ -152,8 +155,18 @@ public class AuthServiceImpl implements AuthService{
             // 5-2. Refresh Token의 유효기간이 3일 이상일 경우 Access Token만 재발급
         	tokenVO = tokenProvider.createAccessToken(authentication);
         }
+        
+        Map<String, Object> returnMap = new HashMap<>();
+        
+        //아이정보 추가
+        
+        List<ChldrnVO> chldrnInfo =  authDao.findChldrn(authentication.getName());
+        
+        returnMap.put("tokenInfo", tokenVO);
+        returnMap.put("chldrnInfo", chldrnInfo);
+        
         // 토큰 발급
-        return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success",tokenVO));
+        return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success",returnMap));
 	}
 
 
@@ -182,17 +195,43 @@ public class AuthServiceImpl implements AuthService{
 					.build();
 			authDao.join(mberVO);
 			
+			if( ! file.isEmpty()) {
+				AtchVO atchVO = AtchVO.builder()
+						.atchCode(makeFileCode)
+						.atchTy(FileTypeEnum.PROFILE)
+						.build();
+				atchService.saveFile(file, atchVO);
+			}
+			 
+			int mberNo=0;
+			try {
+				mberNo = authDao.findMberNo(joinRequest.getMberId());
+			} catch (Exception e) {
+				return ResponseEntity.ok(ResultVO.res(HttpStatus.BAD_REQUEST, "ID already registered", ""));	
+			}
 			
-			AtchVO atchVO = AtchVO.builder()
-					.atchCode(makeFileCode)
-					.atchTy(FileTypeEnum.PROFILE)
-					.build();
-			atchService.saveFile(file, atchVO);
-			
-			int mberNo = authDao.findMberNo(joinRequest.getMberId());
 			authDao.setMberAuthor(mberNo,"GNRL");
 			
-			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK, "success", ""));
+			//토큰생성
+			
+			List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+			Authentication authentication = new UsernamePasswordAuthenticationToken(joinRequest.getMberId(), null, authorities);
+			
+			TokenVO tokenVO = tokenProvider.generateTokenDto(authentication);
+			
+			RefreshToken refreshToken = RefreshToken.builder()
+					.key(authentication.getName())
+					.value(tokenVO.getRefreshToken())
+					.build();
+			
+			MberVO saveToken = MberVO.builder()
+					.mberId(joinRequest.getMberId())
+					.refreshToken(refreshToken.getValue())
+					.build();
+			
+			authDao.saveToken(saveToken);
+			
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK, "success", tokenVO));
 		
 		} catch (RuntimeException  e) {
 			throw new RuntimeException("Failed to create user", e);

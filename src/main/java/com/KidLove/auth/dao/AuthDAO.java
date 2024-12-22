@@ -3,9 +3,12 @@
  */
 package com.KidLove.auth.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.KidLove.chldrn.vo.ChldrnVO;
 import com.KidLove.mber.vo.MberVO;
 
 @Mapper
@@ -29,6 +32,8 @@ public interface AuthDAO {
 	public int findMberNo(@Param("mberId") String mberId);
 
 	public void setMberAuthor(@Param("mberNo") int mberNo, @Param("authorNm")String authorNm);
+	
+	public List<ChldrnVO> findChldrn(@Param("mberId") String name);
 
 
 

@@ -1,5 +1,9 @@
 package com.KidLove.chldrn.service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.inject.Inject;
 
 import org.springframework.http.HttpStatus;
@@ -17,7 +21,10 @@ import com.KidLove.chldrn.vo.ChldrnSymptmsVO;
 import com.KidLove.chldrn.vo.ChldrnVO;
 import com.KidLove.comm.utils.RandomStringGenerator;
 import com.KidLove.comm.utils.SQLErrorMessage;
+import com.KidLove.comm.vo.AllrgyVO;
 import com.KidLove.comm.vo.ResultVO;
+import com.KidLove.comm.vo.VacntnVO;
+import com.KidLove.mber.vo.MberVO;
 
 @Service
 public class ChldrnServiceImpl implements ChldrnService {
@@ -100,6 +107,78 @@ public class ChldrnServiceImpl implements ChldrnService {
             throw new RuntimeException(sqlErrorMsg, e);
 		} catch (Exception e) {
 			 return ResponseEntity.ok(ResultVO.res(HttpStatus.BAD_REQUEST, "create Failed", ""));
+		}	 
+	}
+
+	@Override
+	public ResponseEntity<ResultVO<Object>> findChldrnProfileInfo(Map<String, String> param) {
+		
+		try {
+			String loginMberId = SecurityContextHolder.getContext().getAuthentication().getName();
+			
+			int num = Integer.parseInt(param.get("chldrnNo"));
+			
+			Map<String , Object> map = new HashMap<>();
+			map.put("chldrnNo", num);
+			map.put("loginMberId", loginMberId);
+			
+			Map<String , Object> returnMap = new HashMap<>();
+			
+			//1.아이정보
+			ChldrnVO chldrn = chldrnDAO.selectChldrnProfileInfo(map);
+			returnMap.put("chldrnInfo", chldrn);
+			
+			//2. 보호자정보
+			List<MberVO> parent = chldrnDAO.selectParentInfo(map);
+			returnMap.put("parentInfo", parent);
+			
+			//3. 예방접종기록
+			List<VacntnVO> vacntn = chldrnDAO.selectChldrnVacntn(map);
+			returnMap.put("vacntnInfo", vacntn);
+			
+			//4. 검진접종 추후 작업 요망
+			
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success",returnMap));
+			
+		} catch (RuntimeException e) {
+			String sqlErrorMsg = sqlErrorMessage.extractSqlErrorMessage(e.getMessage());
+            throw new RuntimeException(sqlErrorMsg, e);
+		} catch (Exception e) {
+			 return ResponseEntity.ok(ResultVO.res(HttpStatus.BAD_REQUEST, "select Failed", ""));
+		}	 
+	}
+
+	@Override
+	public ResponseEntity<ResultVO<Object>> findChldrnHealthInfo(Map<String, String> param) {
+		try {
+			
+			String loginMberId = SecurityContextHolder.getContext().getAuthentication().getName();
+			int num = Integer.parseInt(param.get("chldrnNo"));
+			Map<String , Object> map = new HashMap<>();
+			map.put("chldrnNo", num);
+			map.put("loginMberId", loginMberId);
+			
+			Map<String , Object> returnMap = new HashMap<>();
+			
+			//1. 아이 알레르기 정보
+			List<AllrgyVO> allrgyInfo = chldrnDAO.selectAllrgyInfo(map);
+			returnMap.put("allrgyInfo", allrgyInfo);
+			
+			//2. 최근 진료정보
+			
+			//3. 약정보
+			
+			//4. 완료한 예방접종
+			List<VacntnVO> vacntn = chldrnDAO.selectChldrnVacntn(map);
+			returnMap.put("vacntnInfo", vacntn);
+			
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success",returnMap));
+			
+		} catch (RuntimeException e) {
+			String sqlErrorMsg = sqlErrorMessage.extractSqlErrorMessage(e.getMessage());
+            throw new RuntimeException(sqlErrorMsg, e);
+		} catch (Exception e) {
+			 return ResponseEntity.ok(ResultVO.res(HttpStatus.BAD_REQUEST, "select Failed", ""));
 		}	 
 	}
 
