@@ -140,4 +140,28 @@ public interface HsptlDAO {
 	
 	List<HsptlVO> getNearHsptl(PageVO newPage);
 
+	/**
+	 * @MethodName	: getHsptlByHourRecordTotRecCnt
+	 * @author		: Boyoung
+	 * @date 		: 2025.12.29
+	 * @description	: 요일별 운영시간 조회
+	 * @return 		: int
+	 * @param page
+	 * @return
+	 */
+	
+	int getHsptlByHourRecordTotRecCnt(PageVO page);
+
+	/**
+	 * @MethodName	: getHsptlByHour
+	 * @author		: Boyoung
+	 * @date 		: 2025.12.29
+	 * @description	: 요일별 운영시간 조회 레코드 수 
+	 * @return 		: List<HsptlVO>
+	 * @param newPage
+	 * @return
+	 */
+	
+	List<HsptlVO> getHsptlByHour(PageVO newPage);
+
 }

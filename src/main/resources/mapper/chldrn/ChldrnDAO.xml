@@ -206,5 +206,54 @@
 		AND LBR.VACNTN_ODR != LBR.VACNTN_CNT
 	
 	</select>
+	
+	<select id="selectAllrgyInfo"  parameterType="hashMap">
+	
+		SELECT 
+			(
+				SELECT 
+					A.ALLRGY_NM 
+				FROM allrgy A 
+				WHERE CA.ALLRGY_NO= A.ALLRGY_NO
+			) AS ALLRGY_NM
+		FROM chldrn_allrgy CA 
+		WHERE CA.CHLDRN_NO = #{chldrnNo}
+		
+	</select>
+	
+	<select id="selectSymptmsInfo" parameterType="hashMap">
+		
+		SELECT 
+			(
+				SELECT 
+					S.SYMPTMS_NM 
+				FROM symptms S 
+				WHERE CS.SYMPTMS_NO  =S.SYMPTMS_NO
+			) AS SYMPTMS_NM 
+		FROM chldrn_symptms CS 
+		WHERE CS.CHLDRN_NO = #{chldrnNo}
+		
+	</select>
+	
+	<select id="selectHsptlInfo" parameterType="hashMap">
+		
+		SELECT 
+			MR.MDEXMN_RCORD_NO 
+		 	, MR.MDEXMN_DGNSS_NM 
+		 	, MH.HSPTL_DRCTR 
+		 	, (
+		 		SELECT H.DUTYNAME 
+		 		FROM  hsptl H 
+		 		WHERE H.ID = MR.HSPTL_NO
+		 	) AS HSPTL_NM
+		 	, MH.HSPTL_NO 
+		FROM mdexmn_rcord MR 
+		LEFT OUTER JOIN mber_hsptl MH 
+		ON MH.MDEXMN_RCORD_NO = MR.MDEXMN_RCORD_NO 
+		WHERE CHLDRN_NO  = #{chldrnNo}
+		ORDER BY MDEXMN_RCORD_DT DESC
+		LIMIT 1
+	
+	</select>
 
 </mapper>

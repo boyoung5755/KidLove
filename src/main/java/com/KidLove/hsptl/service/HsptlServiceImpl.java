@@ -138,4 +138,33 @@ public class HsptlServiceImpl implements HsptlService {
 		
 		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success",map));
 	}
+
+
+	@Override
+	public ResponseEntity<ResultVO<Object>> getHsptlByHour(PageVO page) {
+		
+		int totRecCnt = hsptlDAO.getHsptlByHourRecordTotRecCnt(page);
+		PageVO newPage = new PageVO(page.getPage(), page.getPageSize(),totRecCnt,page.getType1(), page.getType2());
+		newPage.setSearchStr(page.getSearchStr());
+		
+		List<HsptlVO> hspltList = hsptlDAO.getHsptlByHour(newPage);
+		
+		Map<String, Object> map  = new HashMap<>();
+		Map<String, Object> pageInfoMap = new HashMap<>();
+		
+		pageInfoMap.put("page", newPage.getPage());
+		pageInfoMap.put("pageSize", newPage.getPageSize());
+		pageInfoMap.put("totRecCnt", newPage.getTotRecCnt());
+		pageInfoMap.put("totPage", newPage.getTotPage());
+		pageInfoMap.put("type1", newPage.getType1());
+		pageInfoMap.put("type2", newPage.getType2());
+		pageInfoMap.put("searchStr", page.getSearchStr());
+		
+		map.put("pageInfo", pageInfoMap);
+		map.put("list", hspltList);
+		
+		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success",map));
+	}
+
+	
 }

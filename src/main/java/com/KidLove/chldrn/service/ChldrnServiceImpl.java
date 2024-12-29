@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.KidLove.checkUp.vo.PrscrptnVO;
 import com.KidLove.chldrn.dao.ChldrnDAO;
 import com.KidLove.chldrn.dto.ChldrnProfileRequest;
 import com.KidLove.chldrn.vo.ChldrnAllrgyVO;
@@ -19,9 +20,11 @@ import com.KidLove.chldrn.vo.ChldrnInfoVO;
 import com.KidLove.chldrn.vo.ChldrnMemoVO;
 import com.KidLove.chldrn.vo.ChldrnSymptmsVO;
 import com.KidLove.chldrn.vo.ChldrnVO;
+import com.KidLove.chldrn.vo.SymptmsVO;
 import com.KidLove.comm.utils.RandomStringGenerator;
 import com.KidLove.comm.utils.SQLErrorMessage;
 import com.KidLove.comm.vo.AllrgyVO;
+import com.KidLove.comm.vo.HsptlVO;
 import com.KidLove.comm.vo.ResultVO;
 import com.KidLove.comm.vo.VacntnVO;
 import com.KidLove.mber.vo.MberVO;
@@ -164,11 +167,22 @@ public class ChldrnServiceImpl implements ChldrnService {
 			List<AllrgyVO> allrgyInfo = chldrnDAO.selectAllrgyInfo(map);
 			returnMap.put("allrgyInfo", allrgyInfo);
 			
-			//2. 최근 진료정보
+			//2. 아이 건강상태
+			List<SymptmsVO> symptms = chldrnDAO.selectSymptmsInfo(map);
+			returnMap.put("symptmsInfo", symptms);
 			
-			//3. 약정보
+			//3. 최근 진료정보
+			HsptlVO hsptl = chldrnDAO.selectHsptlInfo(map);
+			returnMap.put("hsptl", hsptl);
 			
-			//4. 완료한 예방접종
+			Long mdexmnRcordNo = hsptl.getMdexmnRcordNo();
+			map.put("mdexmnRcordNo", mdexmnRcordNo);
+			
+			//4. 약정보 
+			
+			//복용중인걸 어떻게 할것인지 상의 필요
+			
+			//5. 완료한 예방접종
 			List<VacntnVO> vacntn = chldrnDAO.selectChldrnVacntn(map);
 			returnMap.put("vacntnInfo", vacntn);
 			

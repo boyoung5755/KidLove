@@ -211,6 +211,187 @@
 		WHERE H.ID = #{id}
 	
 	</select>
+	
+	
+	<select id="getHsptlByHourRecordTotRecCnt" resultType="int">
+	
+		SELECT 
+			COUNT(*)
+		FROM (
+			SELECT *
+			FROM hsptl h
+			WHERE 
+				1=1
+			<if test="searchStr == 'Mon'">
+				<![CDATA[
+				   AND(h.dutyTime1s <= #{type1} AND h.dutyTime1c >= #{type1}) 
+				   OR (h.dutyTime1s >= #{type1} AND h.dutyTime1c <= #{type2}) 
+				   OR (h.dutyTime1s <= #{type1} AND h.dutyTime1c >= #{type2})
+				]]>
+			</if>	
+			<if test="searchStr == 'Tue'">
+				<![CDATA[
+				   AND(h.dutyTime2s <= #{type1} AND h.dutyTime2c >= #{type1}) 
+				   OR (h.dutyTime2s >= #{type1} AND h.dutyTime2c <= #{type2}) 
+				   OR (h.dutyTime2s <= #{type1} AND h.dutyTime2c >= #{type2})
+				]]>
+			</if>	
+			<if test="searchStr == 'Wed'">
+				<![CDATA[
+				   AND(h.dutyTime3s <= #{type1} AND h.dutyTime3c >= #{type1}) 
+				   OR (h.dutyTime3s >= #{type1} AND h.dutyTime3c <= #{type2}) 
+				   OR (h.dutyTime3s <= #{type1} AND h.dutyTime3c >= #{type2})
+				]]>
+			</if>	
+			<if test="searchStr == 'Thu'">
+				<![CDATA[
+				   AND(h.dutyTime4s <= #{type1} AND h.dutyTime4c >= #{type1}) 
+				   OR (h.dutyTime4s >= #{type1} AND h.dutyTime4c <= #{type2}) 
+				   OR (h.dutyTime4s <= #{type1} AND h.dutyTime4c >= #{type2})
+				]]>
+			</if>	
+			<if test="searchStr == 'Fri'">
+				<![CDATA[
+				   AND(h.dutyTime5s <= #{type1} AND h.dutyTime5c >= #{type1}) 
+				   OR (h.dutyTime5s >= #{type1} AND h.dutyTime5c <= #{type2}) 
+				   OR (h.dutyTime5s <= #{type1} AND h.dutyTime5c >= #{type2})
+				]]>
+			</if>	
+			<if test="searchStr == 'Sat'">
+				<![CDATA[
+				   AND(h.dutyTime6s <= #{type1} AND h.dutyTime6c >= #{type1}) 
+				   OR (h.dutyTime6s >= #{type1} AND h.dutyTime6c <= #{type2}) 
+				   OR (h.dutyTime6s <= #{type1} AND h.dutyTime6c >= #{type2})
+				]]>
+			</if>	
+			<if test="searchStr == 'Sun'">
+				<![CDATA[
+				   AND(h.dutyTime7s <= #{type1} AND h.dutyTime7c >= #{type1}) 
+				   OR (h.dutyTime7s >= #{type1} AND h.dutyTime7c <= #{type2}) 
+				   OR (h.dutyTime7s <= #{type1} AND h.dutyTime7c >= #{type2})
+				]]>
+			</if>	
+			<if test="searchStr == 'Holi'">
+				<![CDATA[
+				   AND(h.dutyTime8s <= #{type1} AND h.dutyTime8c >= #{type1}) 
+				   OR (h.dutyTime8s >= #{type1} AND h.dutyTime8c <= #{type2}) 
+				   OR (h.dutyTime8s <= #{type1} AND h.dutyTime8c >= #{type2})
+				]]>
+			</if>	
+		)LIST
+	</select>
+	
+	<select id="getHsptlByHour" resultType="com.KidLove.comm.vo.HsptlVO" >
+
+		SELECT 
+			*
+		FROM (
+			SELECT 
+				h.id
+				, h.dutyAddr
+				, h.dutyAddr1Depth
+				, h.dutyAddr2Depth
+				, h.dutyAddr3Depth
+				, h.dutyEtc
+				, h.dutyName
+				, h.dutyTel1
+				, h.wgs84Lat
+				, h.wgs84Lon
+				<if test="searchStr == 'Mon'">
+					, h.dutyTime1s
+					, h.dutyTime1c
+				</if>
+				<if test="searchStr == 'Tue'">
+					, h.dutyTime2s
+					, h.dutyTime2c
+				</if>
+				<if test="searchStr == 'Wed'">
+					, h.dutyTime3s
+					, h.dutyTime3c
+				</if>
+				<if test="searchStr == 'Thu'">
+					, h.dutyTime4s
+					, h.dutyTime4c
+				</if>
+				<if test="searchStr == 'Fri'">
+					, h.dutyTime5s
+					, h.dutyTime5c
+				</if>
+				<if test="searchStr == 'Sat'">
+					, h.dutyTime6s
+					, h.dutyTime6c
+				</if>
+				<if test="searchStr == 'Sun'">
+					, h.dutyTime7s
+					, h.dutyTime7c
+				</if>
+				<if test="searchStr == 'Holi'">
+					, h.dutyTime8s
+					, h.dutyTime8c
+				</if>
+			FROM hsptl h
+			WHERE 
+				1=1
+			<if test="searchStr == 'Mon'">
+				<![CDATA[
+				   AND(h.dutyTime1s <= #{type1} AND h.dutyTime1c >= #{type1}) 
+				   OR (h.dutyTime1s >= #{type1} AND h.dutyTime1c <= #{type2}) 
+				   OR (h.dutyTime1s <= #{type1} AND h.dutyTime1c >= #{type2})
+				]]>
+			</if>	
+			<if test="searchStr == 'Tue'">
+				<![CDATA[
+				   AND(h.dutyTime2s <= #{type1} AND h.dutyTime2c >= #{type1}) 
+				   OR (h.dutyTime2s >= #{type1} AND h.dutyTime2c <= #{type2}) 
+				   OR (h.dutyTime2s <= #{type1} AND h.dutyTime2c >= #{type2})
+				]]>
+			</if>	
+			<if test="searchStr == 'Wed'">
+				<![CDATA[
+				   AND(h.dutyTime3s <= #{type1} AND h.dutyTime3c >= #{type1}) 
+				   OR (h.dutyTime3s >= #{type1} AND h.dutyTime3c <= #{type2}) 
+				   OR (h.dutyTime3s <= #{type1} AND h.dutyTime3c >= #{type2})
+				]]>
+			</if>	
+			<if test="searchStr == 'Thu'">
+				<![CDATA[
+				   AND(h.dutyTime4s <= #{type1} AND h.dutyTime4c >= #{type1}) 
+				   OR (h.dutyTime4s >= #{type1} AND h.dutyTime4c <= #{type2}) 
+				   OR (h.dutyTime4s <= #{type1} AND h.dutyTime4c >= #{type2})
+				]]>
+			</if>	
+			<if test="searchStr == 'Fri'">
+				<![CDATA[
+				   AND(h.dutyTime5s <= #{type1} AND h.dutyTime5c >= #{type1}) 
+				   OR (h.dutyTime5s >= #{type1} AND h.dutyTime5c <= #{type2}) 
+				   OR (h.dutyTime5s <= #{type1} AND h.dutyTime5c >= #{type2})
+				]]>
+			</if>	
+			<if test="searchStr == 'Sat'">
+				<![CDATA[
+				   AND(h.dutyTime6s <= #{type1} AND h.dutyTime6c >= #{type1}) 
+				   OR (h.dutyTime6s >= #{type1} AND h.dutyTime6c <= #{type2}) 
+				   OR (h.dutyTime6s <= #{type1} AND h.dutyTime6c >= #{type2})
+				]]>
+			</if>	
+			<if test="searchStr == 'Sun'">
+				<![CDATA[
+				   AND(h.dutyTime7s <= #{type1} AND h.dutyTime7c >= #{type1}) 
+				   OR (h.dutyTime7s >= #{type1} AND h.dutyTime7c <= #{type2}) 
+				   OR (h.dutyTime7s <= #{type1} AND h.dutyTime7c >= #{type2})
+				]]>
+			</if>	
+			<if test="searchStr == 'Holi'">
+				<![CDATA[
+				   AND(h.dutyTime8s <= #{type1} AND h.dutyTime8c >= #{type1}) 
+				   OR (h.dutyTime8s >= #{type1} AND h.dutyTime8c <= #{type2}) 
+				   OR (h.dutyTime8s <= #{type1} AND h.dutyTime8c >= #{type2})
+				]]>
+			</if>	
+		)LIST	
+		LIMIT #{startIndexNo} , #{pageSize}
+	
+	</select>
 
 
 </mapper>

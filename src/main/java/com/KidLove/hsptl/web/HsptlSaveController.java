@@ -44,6 +44,16 @@ public class HsptlSaveController {
 	private final HsptlService hsptlService;
 	
 	
+	
+	@GetMapping("/getHsptlByHour")
+	public ResponseEntity<ResultVO<Object>> getHsptlByHour(PageVO page){
+		try {
+			return hsptlService.getHsptlByHour(page);
+		} catch (Exception e) {
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.BAD_REQUEST,e.getMessage(),""));	
+		}
+	}
+	
 	@GetMapping("/getNearHsptl")
 	public ResponseEntity<ResultVO<Object>> getNearHsptl(PageVO page){
 		try {

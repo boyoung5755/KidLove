@@ -11,7 +11,9 @@ import com.KidLove.chldrn.vo.ChldrnInfoVO;
 import com.KidLove.chldrn.vo.ChldrnMemoVO;
 import com.KidLove.chldrn.vo.ChldrnSymptmsVO;
 import com.KidLove.chldrn.vo.ChldrnVO;
+import com.KidLove.chldrn.vo.SymptmsVO;
 import com.KidLove.comm.vo.AllrgyVO;
+import com.KidLove.comm.vo.HsptlVO;
 import com.KidLove.comm.vo.VacntnVO;
 import com.KidLove.mber.vo.MberVO;
 
@@ -43,5 +45,9 @@ public interface ChldrnDAO {
 	public List<VacntnVO> selectChldrnVacntn(Map<String, Object> map);
 
 	public List<AllrgyVO> selectAllrgyInfo(Map<String, Object> map);
+
+	public List<SymptmsVO> selectSymptmsInfo(Map<String, Object> map);
+
+	public HsptlVO selectHsptlInfo(Map<String, Object> map);
 
 }

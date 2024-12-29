@@ -58,6 +58,8 @@ public class HsptlVO {
 	private Long chldrnSymptmsNo; 
 	private Long mberHsptlNo;
 	
+	private String mdexmnDgnssNm;
+	
 	
 	//1:1
 	private VacntnRcordVO vacntnRcord;
