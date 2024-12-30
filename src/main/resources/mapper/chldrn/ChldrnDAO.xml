@@ -255,5 +255,19 @@
 		LIMIT 1
 	
 	</select>
+	
+	<insert id="insertMberChdlrn" parameterType="hashMap">
+		
+		INSERT INTO mber_chldrn
+			(
+				CHLDRN_NO
+				, MBER_NO
+			)
+		VALUES
+			(
+				#{newChdlrnNo}
+				, (SELECT MBER_NO  FROM mber WHERE MBER_ID = #{loginMberId} )
+			)
+	</insert>
 
 </mapper>

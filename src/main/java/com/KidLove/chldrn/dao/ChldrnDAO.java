@@ -50,4 +50,6 @@ public interface ChldrnDAO {
 
 	public HsptlVO selectHsptlInfo(Map<String, Object> map);
 
+	public void insertMberChdlrn(Map<String, Object> paramMap);
+
 }

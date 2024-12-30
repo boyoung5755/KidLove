@@ -104,6 +104,14 @@ public class ChldrnServiceImpl implements ChldrnService {
 					.build();
 			chldrnDAO.insertChldrnMemo(memo);
 			
+			//6. 부모,자식 관계
+			Long newChdlrnNo = chdlrn.getChldrnNo();
+			Map<String, Object> paramMap = new  HashMap<>();
+			paramMap.put("newChdlrnNo", newChdlrnNo);
+			paramMap.put("loginMberId", loginMberId);
+			
+			chldrnDAO.insertMberChdlrn(paramMap);
+			
 			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success",chdlrn));
 		} catch (RuntimeException e) {
 			String sqlErrorMsg = sqlErrorMessage.extractSqlErrorMessage(e.getMessage());
