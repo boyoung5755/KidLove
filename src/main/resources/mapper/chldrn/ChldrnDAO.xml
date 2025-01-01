@@ -260,7 +260,7 @@
 		
 		INSERT INTO mber_chldrn
 			(
-				CHLDRN_NO
+				CHLDRN_NO  
 				, MBER_NO
 			)
 		VALUES

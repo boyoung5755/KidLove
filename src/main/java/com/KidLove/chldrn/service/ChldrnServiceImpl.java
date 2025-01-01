@@ -54,6 +54,7 @@ public class ChldrnServiceImpl implements ChldrnService {
 					.mberId(loginMberId)
 					.atchCode(makeFileCode)
 					.cnrsCd(makeCnrsCode)
+					.chldrnSexdstn(chldrnRequest.getChldrnSexdstn())
 					.build();
 			chldrnDAO.insertChldrn(chdlrn);
 			

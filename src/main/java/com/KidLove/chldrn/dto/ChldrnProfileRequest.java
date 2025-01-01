@@ -20,6 +20,7 @@ public class ChldrnProfileRequest {
 	private List<String> allrgyNm;
 	private List<String> symptmsNm;
 	private String chldrnMemo;
+	private String chldrnSexdstn;
 	
 	
 }
