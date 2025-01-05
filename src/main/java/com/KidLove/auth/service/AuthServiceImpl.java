@@ -173,7 +173,7 @@ public class AuthServiceImpl implements AuthService{
 
 	@Transactional
 	@Override
-	public ResponseEntity<ResultVO<Object>> signup(JoinVO joinRequest ,  MultipartFile file) {
+	public ResponseEntity<ResultVO<Object>> signup(JoinVO joinRequest ) {
 		
 		try {
 			
@@ -194,6 +194,7 @@ public class AuthServiceImpl implements AuthService{
 					.mberLoginTy("EML")
 					.build();
 			authDao.join(mberVO);
+			/*
 			
 			if( ! file.isEmpty()) {
 				AtchVO atchVO = AtchVO.builder()
@@ -202,6 +203,7 @@ public class AuthServiceImpl implements AuthService{
 						.build();
 				atchService.saveFile(file, atchVO);
 			}
+			*/
 			 
 			int mberNo=0;
 			try {

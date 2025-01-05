@@ -91,11 +91,10 @@ public class AuthController {
 	
 	@PostMapping("/signup")
     public ResponseEntity<ResultVO<Object>> signup(
-    		@RequestPart("Member") JoinVO joinRequest 
-    		,@RequestPart(value = "file", required = false) MultipartFile file ) throws Exception{
+    		@RequestBody JoinVO joinRequest ) throws Exception{
 		
 		try {
-			ResponseEntity<ResultVO<Object>> result = authService.signup(joinRequest,file);
+			ResponseEntity<ResultVO<Object>> result = authService.signup(joinRequest);
 			return result;
 		} catch (Exception e) {
 			 return ResponseEntity.status(HttpStatus.BAD_REQUEST)

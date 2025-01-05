@@ -21,7 +21,7 @@ public interface AuthService {
 
 	public ResponseEntity<ResultVO<Object>> reissue(TokenRequestVO tokenRequestDto, HttpServletRequest request);
 
-	public ResponseEntity<ResultVO<Object>> signup(JoinVO joinRequest ,  MultipartFile file);
+	public ResponseEntity<ResultVO<Object>> signup(JoinVO joinRequest);
 
 	public ResponseEntity<ResultVO<Object>> loginWithKakao(Authentication authentication);
 
