@@ -45,6 +45,7 @@ public class PageVO {
     private Double lon;  //경도
     private Double lat;  //위도
     private int limit;
+    private String week; //요일
     
     // paging 기본 설정 함수
     private void fn_basicPaging() {

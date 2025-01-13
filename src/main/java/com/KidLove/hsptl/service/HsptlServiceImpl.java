@@ -3,8 +3,9 @@
  */
 package com.KidLove.hsptl.service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -73,7 +74,13 @@ public class HsptlServiceImpl implements HsptlService {
 		int totRecCnt = hsptlDAO.getAllHsptlRecordTotRecCnt(page);
 		PageVO newPage = new PageVO(page.getPage(), page.getPageSize(),totRecCnt,null, null);
 		
-		List<HsptlVO> hspltList = hsptlDAO.getAllHsptl(newPage);
+		LocalDate today = LocalDate.now();
+		DayOfWeek dayOfWeek = today.getDayOfWeek();
+		
+		//MONDAY , TUESDAY , WEDNESDAY , THURSDAY , FRIDAY , SATURDAY , SUNDAY 
+		newPage.setWeek(String.valueOf(dayOfWeek));
+		
+		List<Map<String, String>> hspltList = hsptlDAO.getAllHsptl(newPage);
 		
 		Map<String, Object> map  = new HashMap<>();
 		map.put("pageInfo", newPage);
@@ -91,7 +98,11 @@ public class HsptlServiceImpl implements HsptlService {
 		newPage.setSearchStr(page.getSearchStr());
 		newPage.setSort(page.getSort());
 		
-		List<HsptlVO> hspltList = hsptlDAO.getHsptlByRegion(newPage);
+		LocalDate today = LocalDate.now();
+		DayOfWeek dayOfWeek = today.getDayOfWeek();
+		newPage.setWeek(String.valueOf(dayOfWeek));
+		
+		List<Map<String, String>> hspltList = hsptlDAO.getHsptlByRegion(newPage);
 		
 		Map<String, Object> map  = new HashMap<>();
 		map.put("pageInfo", newPage);
@@ -110,7 +121,11 @@ public class HsptlServiceImpl implements HsptlService {
 		newPage.setSearchStr(page.getSearchStr());
 		newPage.setSort(page.getSort());
 		
-		List<HsptlVO> hspltList = hsptlDAO.getHsptlByName(newPage);
+		LocalDate today = LocalDate.now();
+		DayOfWeek dayOfWeek = today.getDayOfWeek();
+		newPage.setWeek(String.valueOf(dayOfWeek));
+		
+		List<Map<String, String>> hspltList = hsptlDAO.getHsptlByName(newPage);
 		
 		Map<String, Object> map  = new HashMap<>();
 		map.put("pageInfo", newPage);
@@ -130,7 +145,11 @@ public class HsptlServiceImpl implements HsptlService {
 		newPage.setLon(page.getLon());
 		newPage.setLimit(page.getLimit());
 		
-		List<HsptlVO> hspltList = hsptlDAO.getNearHsptl(newPage);
+		LocalDate today = LocalDate.now();
+		DayOfWeek dayOfWeek = today.getDayOfWeek();
+		newPage.setWeek(String.valueOf(dayOfWeek));
+		
+		List<Map<String, String>> hspltList = hsptlDAO.getNearHsptl(newPage);
 		
 		Map<String, Object> map  = new HashMap<>();
 		map.put("pageInfo", newPage);

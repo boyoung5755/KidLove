@@ -4,6 +4,7 @@
 package com.KidLove.hsptl.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -66,7 +67,7 @@ public interface HsptlDAO {
 	 * @param newPage
 	 * @return
 	 */
-	List<HsptlVO> getAllHsptl(PageVO newPage);
+	List<Map<String, String>> getAllHsptl(PageVO newPage);
 
 	/**
 	 * @MethodName	: getHsptlByRegionRecordTotRecCnt
@@ -90,7 +91,7 @@ public interface HsptlDAO {
 	 * @param sort
 	 * @return
 	 */
-	List<HsptlVO> getHsptlByRegion(PageVO newPage);
+	List<Map<String, String>> getHsptlByRegion(PageVO newPage);
 
 	/**
 	 * @MethodName	: getHsptlByNameRecordTotRecCnt
@@ -114,7 +115,7 @@ public interface HsptlDAO {
 	 * @return
 	 */
 	
-	List<HsptlVO> getHsptlByName(PageVO newPage);
+	List<Map<String, String>> getHsptlByName(PageVO newPage);
 
 	/**
 	 * @MethodName	: getNearHsptlRecordTotRecCnt
@@ -138,7 +139,7 @@ public interface HsptlDAO {
 	 * @return
 	 */
 	
-	List<HsptlVO> getNearHsptl(PageVO newPage);
+	List<Map<String, String>> getNearHsptl(PageVO newPage);
 
 	/**
 	 * @MethodName	: getHsptlByHourRecordTotRecCnt

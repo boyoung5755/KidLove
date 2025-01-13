@@ -3,18 +3,57 @@
 <mapper namespace="com.KidLove.hsptl.dao.HsptlDAO">
 
 
-	<select id="getNearHsptl" parameterType="com.KidLove.comm.vo.PageVO" resultType="com.KidLove.comm.vo.HsptlVO">
-	
-		<![CDATA[
+	<select id="getNearHsptl" parameterType="com.KidLove.comm.vo.PageVO" resultType="map">
+		
 			SELECT 
-			    *,
-			    ST_Distance_Sphere(POINT(#{lon}, #{lat}), POINT(wgs84Lon, wgs84Lat)) AS distance
-			FROM hsptl h
+			    H.id 
+				, H.dutyAddr 
+				, H.dutyAddr1Depth 
+				, H.dutyAddr2Depth 
+				, H.dutyAddr3Depth 
+				, H.dutyEtc 
+				, H.dutyName 
+				, H.dutyTel1 
+				, H.wgs84Lat 
+				, H.wgs84Lon 
+				<choose>
+					<when test="week  == 'MONDAY'">
+						, H.dutyTime1c AS 1c
+						, H.dutyTime1s AS 1s
+					</when>
+					<when test="week  == 'TUESDAY'">
+						, H.dutyTime2c AS 2c
+						, H.dutyTime2s AS 2s
+					</when>
+					<when test="week  == 'WEDNESDAY'">
+						, H.dutyTime3c AS 3c
+						, H.dutyTime3s AS 3s
+					</when>
+					<when test="week  == 'THURSDAY'">
+						, H.dutyTime4c AS 4c
+						, H.dutyTime4s AS 4s
+					</when>
+					<when test="week  == 'FRIDAY'">
+						, H.dutyTime5c AS 5c
+						, H.dutyTime5s AS 5s
+					</when>
+					<when test="week  == 'SATURDAY'">
+						, H.dutyTime6c AS 6c
+						, H.dutyTime6s AS 6s
+					</when>
+					<when test="week  == 'SUNDAY'">
+						, H.dutyTime7c AS 7c
+						, H.dutyTime7s AS 7s
+					</when>
+				</choose>
+			    , ST_Distance_Sphere(POINT(#{lon}, #{lat}), POINT(H.wgs84Lon, H.wgs84Lat)) AS distance
+			FROM hsptl H
+			<![CDATA[
 			WHERE 
-			    ST_Distance_Sphere(POINT(#{lon}, #{lat}), POINT(wgs84Lon, wgs84Lat)) <= #{limit}
+			    ST_Distance_Sphere(POINT(#{lon}, #{lat}), POINT(H.wgs84Lon, H.wgs84Lat)) <= #{limit}
 			ORDER BY distance
 			LIMIT #{startIndexNo} , #{pageSize}
-		]]>
+			]]>
 		
 	</select>
 
@@ -23,20 +62,59 @@
 		
 			SELECT 
 			    COUNT(*)
-			FROM hsptl h
+			FROM hsptl 
 			WHERE 
 			    ST_Distance_Sphere(POINT(#{lon}, #{lat}), POINT(wgs84Lon, wgs84Lat)) <= #{limit}
 		]]>
 	</select>
 
 
-	<select id="getHsptlByName" parameterType="com.KidLove.comm.vo.PageVO" resultType="com.KidLove.comm.vo.HsptlVO"> 
+	<select id="getHsptlByName" parameterType="com.KidLove.comm.vo.PageVO" resultType="map"> 
 	
 		SELECT 
 			*
 		FROM (
 			SELECT 
-				H.*
+				H.id 
+				, H.dutyAddr 
+				, H.dutyAddr1Depth 
+				, H.dutyAddr2Depth 
+				, H.dutyAddr3Depth 
+				, H.dutyEtc 
+				, H.dutyName 
+				, H.dutyTel1 
+				, H.wgs84Lat 
+				, H.wgs84Lon 
+				<choose>
+					<when test="week  == 'MONDAY'">
+						, H.dutyTime1c AS 1c
+						, H.dutyTime1s AS 1s
+					</when>
+					<when test="week  == 'TUESDAY'">
+						, H.dutyTime2c AS 2c
+						, H.dutyTime2s AS 2s
+					</when>
+					<when test="week  == 'WEDNESDAY'">
+						, H.dutyTime3c AS 3c
+						, H.dutyTime3s AS 3s
+					</when>
+					<when test="week  == 'THURSDAY'">
+						, H.dutyTime4c AS 4c
+						, H.dutyTime4s AS 4s
+					</when>
+					<when test="week  == 'FRIDAY'">
+						, H.dutyTime5c AS 5c
+						, H.dutyTime5s AS 5s
+					</when>
+					<when test="week  == 'SATURDAY'">
+						, H.dutyTime6c AS 6c
+						, H.dutyTime6s AS 6s
+					</when>
+					<when test="week  == 'SUNDAY'">
+						, H.dutyTime7c AS 7c
+						, H.dutyTime7s AS 7s
+					</when>
+				</choose>
 			FROM hsptl H
 			WHERE 1=1
 			<if test="searchStr != '' and searchStr != null">
@@ -65,12 +143,51 @@
 	</select>
 
 
-	<select id="getHsptlByRegion" parameterType="com.KidLove.comm.vo.PageVO"  resultType="com.KidLove.comm.vo.HsptlVO">
+	<select id="getHsptlByRegion" parameterType="com.KidLove.comm.vo.PageVO"  resultType="map">
 		SELECT 
 			*
 		FROM (
 			SELECT 
-				H.*
+				H.id 
+				, H.dutyAddr 
+				, H.dutyAddr1Depth 
+				, H.dutyAddr2Depth 
+				, H.dutyAddr3Depth 
+				, H.dutyEtc 
+				, H.dutyName 
+				, H.dutyTel1 
+				, H.wgs84Lat 
+				, H.wgs84Lon 
+				<choose>
+					<when test="week  == 'MONDAY'">
+						, H.dutyTime1c AS 1c
+						, H.dutyTime1s AS 1s
+					</when>
+					<when test="week  == 'TUESDAY'">
+						, H.dutyTime2c AS 2c
+						, H.dutyTime2s AS 2s
+					</when>
+					<when test="week  == 'WEDNESDAY'">
+						, H.dutyTime3c AS 3c
+						, H.dutyTime3s AS 3s
+					</when>
+					<when test="week  == 'THURSDAY'">
+						, H.dutyTime4c AS 4c
+						, H.dutyTime4s AS 4s
+					</when>
+					<when test="week  == 'FRIDAY'">
+						, H.dutyTime5c AS 5c
+						, H.dutyTime5s AS 5s
+					</when>
+					<when test="week  == 'SATURDAY'">
+						, H.dutyTime6c AS 6c
+						, H.dutyTime6s AS 6s
+					</when>
+					<when test="week  == 'SUNDAY'">
+						, H.dutyTime7c AS 7c
+						, H.dutyTime7s AS 7s
+					</when>
+				</choose>
 			FROM hsptl H
 			WHERE 1=1
 			<if test="searchStr != '' and searchStr != null">
@@ -116,14 +233,54 @@
 	
 	</select> 
 
-	<select id="getAllHsptl" parameterType="com.KidLove.comm.vo.PageVO" resultType="com.KidLove.comm.vo.HsptlVO">
+	<select id="getAllHsptl" parameterType="com.KidLove.comm.vo.PageVO" resultType="map">
 		
 		SELECT 
 			*
 		FROM (
 			SELECT 
-				H.*
+				H.id 
+				, H.dutyAddr 
+				, H.dutyAddr1Depth 
+				, H.dutyAddr2Depth 
+				, H.dutyAddr3Depth 
+				, H.dutyEtc 
+				, H.dutyName 
+				, H.dutyTel1 
+				, H.wgs84Lat 
+				, H.wgs84Lon 
+				<choose>
+					<when test="week  == 'MONDAY'">
+						, H.dutyTime1c AS 1c
+						, H.dutyTime1s AS 1s
+					</when>
+					<when test="week  == 'TUESDAY'">
+						, H.dutyTime2c AS 2c
+						, H.dutyTime2s AS 2s
+					</when>
+					<when test="week  == 'WEDNESDAY'">
+						, H.dutyTime3c AS 3c
+						, H.dutyTime3s AS 3s
+					</when>
+					<when test="week  == 'THURSDAY'">
+						, H.dutyTime4c AS 4c
+						, H.dutyTime4s AS 4s
+					</when>
+					<when test="week  == 'FRIDAY'">
+						, H.dutyTime5c AS 5c
+						, H.dutyTime5s AS 5s
+					</when>
+					<when test="week  == 'SATURDAY'">
+						, H.dutyTime6c AS 6c
+						, H.dutyTime6s AS 6s
+					</when>
+					<when test="week  == 'SUNDAY'">
+						, H.dutyTime7c AS 7c
+						, H.dutyTime7s AS 7s
+					</when>
+				</choose>
 			FROM hsptl H
+			WHERE 1=1
 		)LIST
 		LIMIT #{startIndexNo} , #{pageSize}
 			

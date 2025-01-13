@@ -74,6 +74,7 @@
 		    , MAX(V.VACNTN_ODR) AS vacntnOdr
 		    , MAX(V.VACNTN_NO) AS vacntnNo
 		    , MAX(VR.CRT_DT) AS vacntnRcordCrtDt
+		    , MAX(VR.VACNTN_INOCL_DT) AS vacntnInoclDt
 		FROM vacntn_rcord VR 
 		LEFT OUTER JOIN vacntn V 
 		    ON V.VACNTN_NO = VR.VACNTN_NO 

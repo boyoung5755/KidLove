@@ -1,6 +1,5 @@
 package com.KidLove.comm.vo;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import com.KidLove.babyNote.vo.VacntnMthVO;
@@ -32,7 +31,7 @@ public class VacntnVO {
 	private Long  vacntnMthNo;
 	private Integer vacntnOdr;
 	
-	private LocalDateTime vacntnInoclDt;			// 백신접종일
+	//private LocalDateTime vacntnInoclDt;			// 백신접종일
 	
 	//1:1
 	private VacntnRcordVO vacntnRcord;
