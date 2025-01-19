@@ -261,6 +261,7 @@
 				, CHLDRN_NO
 				, SYMPTMS_TY
 				, SYMPTMS_VISITDT
+				, SYMPTMS_SEVERITY
 			)
 		VALUES
 			(
@@ -272,6 +273,7 @@
 				, #{chldrnNo}
 				, #{symptmsTy}
 				, #{symptmsVisitdt}
+				, #{symptmsSeverity}
 			)
 			
 	</insert>

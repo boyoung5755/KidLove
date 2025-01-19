@@ -30,6 +30,7 @@ public class ChldrnSymptmsVO {
 	private Long symptmsNo;            				// 질병번호
 	private String symptmsTy;
 	private Long hsptlNo;      
+	private String symptmsSeverity ;  //증상의 심각성 1,2,3 약함보통심함
 	
 	private LocalDateTime  symptmsVisitdt; 			//병원방문일
 	

@@ -310,6 +310,7 @@ public class ReportServiceImpl implements ReportService {
 					.symptmsVisitdt(LocalDateTime.parse(param.get("symptmsVisitdt"), formatter))
 					.hsptlNo(Long.parseLong(param.get("hsptlNo")))
 					.atchCode(makeFileCode)
+					.symptmsSeverity(param.get("symptmsSeverity"))
 					.build();
 			
 			reportDAO.insertChldrnSymptms(chldrnSymptms);
