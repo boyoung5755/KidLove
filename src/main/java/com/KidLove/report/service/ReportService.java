@@ -204,4 +204,28 @@ public interface ReportService {
 	 */
 	public ResponseEntity<ResultVO<Object>> getBabyHome(Map<String, String> param);
 
+	/**
+	 * @MethodName	: createEmotion
+	 * @author		: Boyoung
+	 * @date 		: 2025.01.27
+	 * @description	: 아이 감정기록
+	 * @return 		: ResponseEntity<ResultVO<Object>>
+	 * @param param
+	 * @return
+	 */
+	
+	public ResponseEntity<ResultVO<Object>> createEmotion(Map<String, String> param);
+
+	/**
+	 * @MethodName	: getTotHist
+	 * @author		: Boyoung
+	 * @date 		: 2025.01.27
+	 * @description	:
+	 * @return 		: ResponseEntity<ResultVO<Object>>
+	 * @param param
+	 * @return
+	 */
+	
+	public ResponseEntity<ResultVO<Object>> getTotHist(Map<String, Object> param);
+
 }

@@ -4,6 +4,7 @@
 package com.KidLove.report.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -327,6 +328,30 @@ public interface ReportDAO {
 	 * @return
 	 */
 	public List<SignificantVO> getChldrnSignificant(@Param("chldrnNo") int chldrnNo);
+
+
+	/**
+	 * @MethodName	: insertEmotion
+	 * @author		: Boyoung
+	 * @date 		: 2025.01.27
+	 * @description	:
+	 * @param param
+	 * @return
+	 */
+	
+	public void insertEmotion(Map<String, String> param);
+
+	/**
+	 * @MethodName	: getTotHist
+	 * @author		: Boyoung
+	 * @date 		: 2025.01.27
+	 * @description	:
+	 * @return 		: List<Map<String,Object>>
+	 * @param param
+	 * @return
+	 */
+	
+	public List<Map<String, Object>> getTotHist(Map<String, Object> param);
 
 	
 

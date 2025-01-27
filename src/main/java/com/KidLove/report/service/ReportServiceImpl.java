@@ -3,11 +3,17 @@
  */
 package com.KidLove.report.service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -388,6 +394,93 @@ public class ReportServiceImpl implements ReportService {
 		
 		
 		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success",combinedMap));
+	}
+
+	@Override
+	@Transactional
+	public ResponseEntity<ResultVO<Object>> createEmotion(Map<String, String> param) {
+		
+		try {
+			reportDAO.insertEmotion(param);
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success",param));
+		} catch (RuntimeException e) {
+			String sqlErrorMsg = sqlErrorMessage.extractSqlErrorMessage(e.getMessage());
+            throw new RuntimeException(sqlErrorMsg, e);
+		} catch (Exception e) {
+			 return ResponseEntity.ok(ResultVO.res(HttpStatus.BAD_REQUEST, "create Failed", ""));
+		}	 
+	}
+
+	@Override
+	public ResponseEntity<ResultVO<Object>> getTotHist(Map<String, Object> param) {
+		
+		List<Map<String, Object>>  resultMap =  new ArrayList<>();
+		List<Map<String, Object>> scheduleList = new ArrayList<>();
+		
+		try {
+			
+			resultMap = reportDAO.getTotHist(param);
+			
+			String searchDt = (String) param.get("searchDt");
+			
+			if(! searchDt.equals("")) {
+				
+				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+				Date searchDate = format.parse(searchDt); 
+				resultMap = resultMap.stream()
+						.filter(item -> {
+							try {
+								String itemDate = (String) item.get("date");
+								Date itemParsedDate = format.parse(itemDate);
+								return !itemParsedDate.after(searchDate); // searchDt 이후의 데이터는 제외
+							} catch (ParseException e) {
+								return false; // 날짜 형식이 잘못된 경우 제외
+							}
+						})
+						.collect(Collectors.toList());
+			}
+			
+			Map<String, List<Map<String, Object>>> groupedByDate = resultMap.stream()
+	                .collect(Collectors.groupingBy(item -> (String) item.get("date")));
+			
+			for (Map.Entry<String, List<Map<String, Object>>> entry : groupedByDate.entrySet()) {
+	            String date = entry.getKey();
+	            List<Map<String, Object>> items = entry.getValue();
+
+	            // 날짜를 '일요일' 같은 형식으로 변환하는 부분
+	            String dayOfWeek = getDayOfWeek(date); 
+
+	            // 각 날짜에 대해 schedule 항목 생성
+	            Map<String, Object> scheduleItem = new HashMap<>();
+	            scheduleItem.put("date", date);
+	            scheduleItem.put("dayOfWeek", dayOfWeek);
+	            scheduleItem.put("items", items);
+
+	            // scheduleList에 추가
+	            scheduleList.add(scheduleItem);
+	        }
+			
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK, "success", scheduleList));
+			
+		} catch (RuntimeException e) {
+			String sqlErrorMsg = sqlErrorMessage.extractSqlErrorMessage(e.getMessage());
+            throw new RuntimeException(sqlErrorMsg, e);
+		} catch (Exception e) {
+			 return ResponseEntity.ok(ResultVO.res(HttpStatus.BAD_REQUEST, "create Failed", ""));
+		}	 
+	}
+	
+	
+	private String getDayOfWeek(String date) {
+	    try {
+	        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+	        Date parsedDate = format.parse(date);
+
+	        SimpleDateFormat dayOfWeekFormat = new SimpleDateFormat("EEEE", Locale.KOREAN); // 한글 요일
+	        return dayOfWeekFormat.format(parsedDate);
+	    } catch (ParseException e) {
+	        return "Unknown"; // 날짜 형식이 잘못된 경우
+	    }
 	}
 
 }

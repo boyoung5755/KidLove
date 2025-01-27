@@ -3,6 +3,230 @@
 <mapper namespace="com.KidLove.report.dao.ReportDAO">
 	
 	
+	
+	<select id="getTotHist" parameterType="hashMap" resultType="hashMap">
+	
+		SELECT * FROM (
+		<if test="searchList != null and searchList.contains('SLEEP')">
+			<![CDATA[
+			SELECT
+			    DATE_FORMAT(s.SLEEP_BGNDT, '%Y-%m-%d') AS date
+			    , CASE 
+			    	WHEN s.SLEEP_TY = 'DAYTM' THEN '낮잠'
+			    	WHEN s.SLEEP_TY = 'NIGHT' THEN '밤잠'
+			    END AS content
+			    , TIME_FORMAT(s.SLEEP_BGNDT, '%H:%i') AS time
+			    , IF(HOUR(s.SLEEP_BGNDT) < 12, 'AM', 'PM') AS ampm 
+			    , TIMESTAMPDIFF(MINUTE, s.SLEEP_BGNDT, s.SLEEP_ENDDT) AS duration
+			    , NULL AS amount
+			FROM sleep s
+			WHERE s.SLEEP_BGNDT IS NOT null
+			AND s.CHLDRN_NO = #{chldrnNo}
+			]]>
+		</if>
+		<if test="searchList != null and searchList.contains('MEAL')">
+			<if test="searchList.contains('SLEEP')">
+				UNION ALL
+			</if>
+			<![CDATA[
+			SELECT
+			    DATE_FORMAT(m.MEAL_BGNDT, '%Y-%m-%d') AS date
+			    , CASE 
+			    	WHEN m.MEAL_TY = 'MHRSM' THEN '모유'
+			    	WHEN m.MEAL_TY = 'BABYFD' THEN '이유식'
+			    	WHEN m.MEAL_TY = 'FOMULA' THEN '분유'
+			    	WHEN m.MEAL_TY = 'MIXED' THEN '혼합'
+			    END AS content
+			    , TIME_FORMAT(m.MEAL_BGNDT, '%H:%i') AS time
+			    , IF(HOUR(m.MEAL_BGNDT) < 12, 'AM', 'PM') AS ampm  
+			    , TIMESTAMPDIFF(MINUTE, m.MEAL_BGNDT, m.MEAL_ENDDT) AS duration
+			    , concat(m.MEAL_AMOUNT , m.MEAL_UNIT)  AS amount
+			FROM meal m
+			WHERE m.MEAL_BGNDT IS NOT null
+			AND m.CHLDRN_NO = #{chldrnNo}
+			]]>
+		</if>
+		<if test="searchList != null and searchList.contains('URINE')">
+			<if test="searchList.contains('SLEEP') or searchList.contains('MEAL')">
+				UNION ALL
+			</if>
+			<![CDATA[
+			SELECT
+			    DATE_FORMAT(u.CRT_DT, '%Y-%m-%d') AS date
+			    , CASE 
+			    	WHEN u.URINE_TY = 'PEE' THEN '소변'
+			    	WHEN u.URINE_TY = 'POO' THEN '대변'
+			    	WHEN u.URINE_TY = 'N' THEN '알수없음'
+			    END AS content
+			    , TIME_FORMAT(u.CRT_DT, '%H:%i') AS time
+			    , IF(HOUR(u.CRT_DT) < 12, 'AM', 'PM') AS ampm 
+			    , null AS duration
+			    , u.URINE_STLE  AS amount
+			FROM urine u
+			WHERE u.CRT_DT IS NOT null
+			AND u.CHLDRN_NO = #{chldrnNo}
+			]]>
+		</if>
+		<if test="searchList != null and searchList.contains('BDHEAT')">
+			<if test="searchList.contains('SLEEP') or searchList.contains('MEAL') or searchList.contains('URINE')">
+				UNION ALL
+			</if>
+			<![CDATA[
+			SELECT
+			    DATE_FORMAT(b.BDHEAT_BGNDT, '%Y-%m-%d') AS date
+			    , '체온' AS content
+			    , TIME_FORMAT(b.BDHEAT_BGNDT, '%H:%i') AS time
+			    ,  IF(HOUR(b.BDHEAT_BGNDT) < 12, 'AM', 'PM') AS ampm 
+			    , TIMESTAMPDIFF(MINUTE, b.BDHEAT_BGNDT, b.BDHEAT_ENDDT) AS duration
+			    , b.BDHEAT_TP  AS amount
+			FROM bdheat b
+			WHERE b.BDHEAT_BGNDT IS NOT null
+			AND b.CHLDRN_NO = #{chldrnNo}
+			]]>
+		</if>
+		<if test="searchList != null and searchList.contains('INFO')">
+			<if test="searchList.contains('SLEEP') or searchList.contains('MEAL') or searchList.contains('URINE')
+				or searchList.contains('BDHEAT')">
+				UNION ALL
+			</if>
+			<![CDATA[
+			SELECT
+			    DATE_FORMAT(ci.CRT_DT, '%Y-%m-%d') AS date
+			    , '성장' AS content
+			    , TIME_FORMAT(ci.CRT_DT, '%H:%i') AS time
+			    ,  IF(HOUR(ci.CRT_DT) < 12, 'AM', 'PM') AS ampm 
+			    , null AS duration
+			    , CONCAT(
+			        IF(ci.CHLDRN_HEIGHT IS NOT NULL, CONCAT(ci.CHLDRN_HEIGHT, 'cm, '), ''),
+			        IF(ci.CHLDRN_BDWGH IS NOT NULL, CONCAT(ci.CHLDRN_BDWGH, 'kg, '), ''),
+			        IF(ci.CHLDRN_HEAD IS NOT NULL, CONCAT(ci.CHLDRN_HEAD, 'cm'), '없음')
+			    ) AS amount
+			FROM chldrn_info ci 
+			WHERE ci.CRT_DT IS NOT null
+			AND ci.CHLDRN_NO = #{chldrnNo}
+			]]>
+		</if>
+		<if test="searchList != null and searchList.contains('EMOTION')">
+			<if test="searchList.contains('SLEEP') or searchList.contains('MEAL') or searchList.contains('URINE')
+				or searchList.contains('BDHEAT') or searchList.contains('INFO')">
+				UNION ALL
+			</if>
+			<![CDATA[
+			SELECT
+			    DATE_FORMAT(e.EMOTION_DT, '%Y-%m-%d') AS date
+			    , '감정' AS content
+			    , TIME_FORMAT(e.EMOTION_DT, '%H:%i') AS time
+			    , IF(HOUR(e.EMOTION_DT) < 12, 'AM', 'PM') AS ampm 
+			    , null AS duration
+			    , e.EMOTION_TY AS amount
+			FROM emotion e 
+			WHERE e.EMOTION_DT IS NOT null
+			AND e.CHLDRN_NO = #{chldrnNo}
+			]]>
+		</if>
+		<if test="searchList != null and searchList.contains('SYMPTMS')">
+			<if test="searchList.contains('SLEEP') or searchList.contains('MEAL') or searchList.contains('URINE')
+				or searchList.contains('BDHEAT') or searchList.contains('INFO') or searchList.contains('EMOTION')">
+				UNION ALL
+			</if>
+			<![CDATA[
+			SELECT
+			    DATE_FORMAT(cs.SYMPTMS_BGNDT, '%Y-%m-%d') AS date
+			    , '증상' AS content
+			    , TIME_FORMAT(cs.SYMPTMS_BGNDT, '%H:%i') AS time
+			    , IF(HOUR(cs.SYMPTMS_BGNDT) < 12, 'AM', 'PM') AS ampm 
+			    , TIMESTAMPDIFF(MINUTE, cs.SYMPTMS_BGNDT, cs.SYMPTMS_ENDDT) AS duration
+			    , (select s.SYMPTMS_NM from symptms s where s.SYMPTMS_NO = cs.SYMPTMS_NO) AS amount
+			FROM chldrn_symptms cs 
+			WHERE cs.SYMPTMS_BGNDT IS NOT null
+			AND cs.CHLDRN_NO = #{chldrnNo}
+			]]>
+		</if>
+		<if test="searchList != null and searchList.contains('TAKNG')">
+			<if test="searchList.contains('SLEEP') or searchList.contains('MEAL') or searchList.contains('URINE')
+				or searchList.contains('BDHEAT') or searchList.contains('INFO') or searchList.contains('EMOTION')
+				or searchList.contains('SYMPTMS')
+			">
+				UNION ALL
+			</if>
+			<![CDATA[
+			SELECT
+			    DATE_FORMAT(t.TAKNG_DT, '%Y-%m-%d') AS date
+			    , '복용' AS content
+			    , TIME_FORMAT(t.TAKNG_DT, '%H:%i') AS time
+			    , IF(HOUR(t.TAKNG_DT) < 12, 'AM', 'PM') AS ampm 
+			    , TIMESTAMPDIFF(MINUTE, t.TAKNG_DT, t.TAKNG_ENDDT) AS duration
+			    , CONCAT(
+			        IF(t.TAKNG_MDCIN_NM IS NOT NULL, CONCAT(t.TAKNG_MDCIN_NM, ', '), ''),
+			        IF(t.TAKNG_MDCIN_AMT IS NOT NULL, CONCAT(t.TAKNG_MDCIN_AMT, ''), ''),
+			        IF(t.TAKNG_MDCIN_UNIT IS NOT NULL, CONCAT(t.TAKNG_MDCIN_UNIT), '')
+			    ) AS amount
+			FROM takng t 
+			WHERE t.TAKNG_DT IS NOT null
+			AND t.CHLDRN_NO = #{chldrnNo}
+			]]>
+		</if>
+		<if test="searchList != null and searchList.contains('MEMO')">
+			<if test="searchList.contains('SLEEP') or searchList.contains('MEAL') or searchList.contains('URINE')
+				or searchList.contains('BDHEAT') or searchList.contains('INFO') or searchList.contains('EMOTION')
+				or searchList.contains('SYMPTMS') or searchList.contains('TAKNG')
+			">
+				UNION ALL
+			</if>
+			<![CDATA[
+			SELECT
+			    DATE_FORMAT(cm.CRT_DT, '%Y-%m-%d') AS date
+			    , '기타' AS content
+			    , TIME_FORMAT(cm.CRT_DT, '%H:%i') AS time
+			    , IF(HOUR(cm.CRT_DT) < 12, 'AM', 'PM') AS ampm 
+			    , null AS duration
+			    , cm.CHLDRN_MEMO AS amount
+			FROM chldrn_memo cm 
+			WHERE cm.CRT_DT IS NOT null
+			AND cm.CHLDRN_NO = #{chldrnNo}
+			]]>
+		</if>
+		) AS LIST
+		<choose>
+			<when test="searchDt != '' and searchDt != null">
+				ORDER BY 
+			    	CASE 
+			        	WHEN date = #{searchDt} THEN 0    
+		                WHEN date > #{searchDt} THEN 1    
+		                ELSE 2                             
+			        END, date DESC, time DESC
+			</when>
+			<otherwise>
+				ORDER BY date DESC, time DESC
+			</otherwise>          
+		</choose>
+	</select>
+	
+	<insert id="insertEmotion" parameterType="hashMap"
+		useGeneratedKeys="true" keyProperty="emotionNo">
+		
+		INSERT INTO emotion
+			(
+				EMOTION_DT
+				, EMOTION_TY
+				, EMOTION_MEMO
+				, EMOTION_STATE
+				, EMOTION_SPECL
+				, CHLDRN_NO
+			)
+		VALUES
+			(
+				#{emotionDt}
+				, #{emotionTy}
+				, #{emotionMemo}
+				, #{emotionState}
+				, #{emotionSpecl}
+				, #{chldrnNo}
+			)
+			
+	</insert>
+	
+	
 	<select id="getChldrnSignificant" resultType="com.KidLove.chldrn.vo.SignificantVO">
 	
 		SELECT 

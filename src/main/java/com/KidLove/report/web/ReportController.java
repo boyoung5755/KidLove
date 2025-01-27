@@ -44,6 +44,25 @@ public class ReportController {
 
 	private final ReportService  reportService;
 	
+	@PostMapping("/getTotHist")
+	public ResponseEntity<ResultVO<Object>> getTotHist ( @RequestBody Map<String, Object> param) {
+		try {
+			return reportService.getTotHist(param);
+		} catch (Exception e) {
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.BAD_REQUEST,e.getMessage(),""));	
+		}
+	} 
+	
+	
+	@PostMapping("/createEmotion")
+	public ResponseEntity<ResultVO<Object>> createEmotion (@RequestBody Map<String, String> param) {
+		try {
+			return reportService.createEmotion(param);
+		} catch (Exception e) {
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.BAD_REQUEST,e.getMessage(),""));	
+		}
+	} 
+	
 	
 	@GetMapping("/getBabyHome")
 	public ResponseEntity<ResultVO<Object>> getBabyHome ( @RequestParam Map<String, String> param) {

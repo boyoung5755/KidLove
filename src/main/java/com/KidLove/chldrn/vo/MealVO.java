@@ -34,6 +34,8 @@ public class MealVO {
 	private Integer mealTime;             			// 수유시간
 	private String mealTy;                			// 식사타입
 	private String mealUnit;              			// 식사량단위
+	private LocalDateTime mealBgndt;
+	private LocalDateTime mealEnddt;
 	
 	private int mealCount;
 	private Double avgIntervalHours;
