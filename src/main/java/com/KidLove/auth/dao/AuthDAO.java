@@ -35,6 +35,8 @@ public interface AuthDAO {
 	
 	public List<ChldrnVO> findChldrn(@Param("mberId") String name);
 
+	public int checkMberId(String mberId);
+
 
 
 	

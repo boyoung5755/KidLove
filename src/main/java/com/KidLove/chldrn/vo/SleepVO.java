@@ -29,11 +29,12 @@ public class SleepVO {
 	private String sleepMemo;             			// 수면메모
 	private Integer sleepNo;              			// 수면번호
 	private String sleepTy;               			// 수면타입(낮,밤)
+	private String sleepPd;							// 수면주기
 
 	private LocalDateTime recordDate;
 	private int sleepCount;
 	private Double avgIntervalHours;
-	private Double avgSleepHours;
+	private Double avgSleepHours;   
 	
 	//1:1
 	private ChldrnVO chldrn;

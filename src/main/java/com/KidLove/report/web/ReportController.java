@@ -44,6 +44,7 @@ public class ReportController {
 
 	private final ReportService  reportService;
 	
+	
 	@PostMapping("/getTotHist")
 	public ResponseEntity<ResultVO<Object>> getTotHist ( @RequestBody Map<String, Object> param) {
 		try {

@@ -3,6 +3,8 @@
  */
 package com.KidLove.auth.service;
 
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,6 +32,8 @@ public interface AuthService {
 	public ResponseEntity<ResultVO<Object>> signWithKakao(JoinVO joinRequest);
 
 	public ResponseEntity<ResultVO<Object>> signWithGoogle(JoinVO joinRequest);
+
+	public ResponseEntity<ResultVO<Object>> isDuplicationId(Map<String, Object> param);
 
 	
 	

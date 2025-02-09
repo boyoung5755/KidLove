@@ -17,5 +17,6 @@ public class JoinVO {
 	private String mberZip;
 	private String mberSexdstn;
 	private String mberSttus;
+	private String mberNm;
 	
 }

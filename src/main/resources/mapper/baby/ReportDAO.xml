@@ -757,6 +757,7 @@
 				, SLEEP_MEMO
 				, SLEEP_BGNDT
 				, SLEEP_ENDDT
+				, SLEEP_PD
 			)
 		VALUES
 			(
@@ -766,6 +767,7 @@
 				, #{sleepMemo}
 				, #{sleepBgndt}
 				, #{sleepEnddt}
+				, #{sleepPd}
 			)
 	</insert>
 	

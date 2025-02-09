@@ -3,6 +3,8 @@
  */
 package com.KidLove.auth.web;
 
+import java.util.Map;
+
 import javax.inject.Inject;
 
 import org.springframework.http.HttpStatus;
@@ -36,6 +38,17 @@ public class AuthController {
 	
 	@Inject
 	private final AuthService authService;
+	
+	
+	
+	@PostMapping("/isDuplicationId")
+	public ResponseEntity<ResultVO<Object>> isDuplicationId ( @RequestBody Map<String, Object> param) {
+		try {
+			return authService.isDuplicationId(param);
+		} catch (Exception e) {
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.BAD_REQUEST,e.getMessage(),""));	
+		}
+	} 
 	
 	
 	@PostMapping("/sign-with-kakao")

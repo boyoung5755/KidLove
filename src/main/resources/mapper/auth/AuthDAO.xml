@@ -10,6 +10,14 @@
 		AND M.MBER_USE_STTUS = "ACTIVE"
 	</select>
 	
+	<select id="checkMberId" parameterType="String">
+		SELECT	
+			COUNT(*)
+		FROM mber M
+		WHERE M.MBER_ID = #{mberId}
+		AND M.MBER_USE_STTUS = "ACTIVE"
+	</select>
+	
 	<insert id="setMberAuthor" parameterType="map">
 		INSERT INTO author
 			(
@@ -81,6 +89,7 @@
 				, CRT_DT
 				, MBER_LAST_CONECTDT
 				, MBER_LOGIN_TY
+				, MBER_NM
 			)
 		VALUES
 			(
@@ -98,6 +107,7 @@
 				, CURRENT_TIMESTAMP
 				, CURRENT_TIMESTAMP
 				, #{mberLoginTy}
+				, #{mberNm}
 			)
 	</insert>	
 

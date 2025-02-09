@@ -192,6 +192,7 @@ public class AuthServiceImpl implements AuthService{
 					.atchCode(makeFileCode)
 					.cnrsCd(makeCnrsCode)
 					.mberLoginTy("EML")
+					.mberNm(joinRequest.getMberNm())
 					.build();
 			authDao.join(mberVO);
 			/*
@@ -377,5 +378,25 @@ public class AuthServiceImpl implements AuthService{
 		authDao.saveToken(newMber);
 		
 		return tokenVO;
+	}
+
+	@Override
+	public ResponseEntity<ResultVO<Object>> isDuplicationId(Map<String, Object> param) {
+		
+		try {
+			
+			MberVO mber = new MberVO();
+			mber.setMberId(String.valueOf(param.get("mberId")));
+			int result = authDao.checkMberId(mber.getMberId());
+			
+			if(result== 0) {
+				return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success",param.get("mberId")));		
+			} else {
+				return ResponseEntity.ok(ResultVO.res(HttpStatus.BAD_REQUEST, "ID already registered", ""));	
+			}
+			
+		} catch (Exception e) {
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.BAD_REQUEST, "ID already registered", ""));	
+		}
 	}
 }

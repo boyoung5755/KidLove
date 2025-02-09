@@ -50,6 +50,7 @@ public class MberVO {
 	private String refreshToken;          			// 
 	private String mberUseSttus;					// 유저 사용 상태 
 	private String mberPushToken;
+	private String mberNm;
 	
 	//탈퇴
 	private LocalDateTime whdwlDt;        			// 탈퇴일
